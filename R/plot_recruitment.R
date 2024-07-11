@@ -50,8 +50,8 @@ plot_recruitment <- function(dat,
     sr_plt <- ggplot2::ggplot(data = sr2) +
       ggplot2::geom_line(ggplot2::aes(x = spawn_bio, y = exp_recr)) + # exp. R
       # add exp R after bias adjustment (dotted line)
-      ggplot2::geom_point(ggplot2::aes(x = spawn_bio, y = pred_recr, color = year))+
-      ggplot2::geom_text()
+      ggplot2::geom_point(ggplot2::aes(x = spawn_bio, y = pred_recr, color = year)) + # change colors
+      ggplot2::geom_text() +
       ggplot2::labs(x = "Spawning Biomass",
            y = "Recruitment") +
       ggplot2::theme_classic() +

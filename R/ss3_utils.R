@@ -20,3 +20,25 @@ SS3_extract_df <- function(output, label){
 
   return(clean_df)
 }
+
+
+SS3_extract_bio_info <- function(
+    dat,
+    parameter = c("SPB", "Recr", "SPRratio", "F", "Bratio", "SSB", "TotBio", "SmryBio", "SPR", "Fstd", "TotYield", "RetYield", "ForeCatch", "OFLCatch", "ForeCatchret", "Bzero"),
+    reference.points = TRUE) {
+  parameter <- match.arg(parameter, several.ok = FALSE)
+
+  bio_info <- SS3_extract_df(dat, "DERIVED_QUANTITIES")[-c(1:4),]
+  colnames(bio_info) <- bio_info[1,]
+  bio_info <- bio_info[-1,] |>
+    tidyr::separate_wider_delim(cols = LABEL, delim = "_", names = c("label", "year")) |>
+    dplyr::filter(label == parameter)
+  bio_info <- Filter(function(x)!all(is.na(x)), bio_info)
+
+  if (isTRUE(reference.points)) {
+
+  }
+
+  return(bio_info)
+
+}

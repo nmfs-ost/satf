@@ -13,8 +13,18 @@ plot_recruitment <- function(dat,
                     with_env = as.numeric(with_env),
                     adjusted = as.numeric(adjusted),
                     pred_recr = as.numeric(pred_recr),
-                    dev = as.numeric(dev),
+                    # dev = as.numeric(dev),
                     biasadj = as.numeric(biasadj))
+
+    # Store virgin and initial recruitment for reference in plotting
+    time_series <- SS3_extract_df(dat, "TIME_SERIES")
+    colnames(time_series) <- time_series[2,]
+    time_series <- time_series[-c(1:2),]
+    # Adapted from r4ss
+    B0 <- sum(time_series[["SpawnBio"]][time_series[["Era"]] == "VIRG"], na.rm = TRUE)
+    B1 <- sum(time_series[["SpawnBio"]][time_series[["Era"]] == "INIT"], na.rm = TRUE)
+    R0 <- sum(time_series[["Recruit_0"]][time_series[["Era"]] == "VIRG"], na.rm = TRUE)
+    R1 <- sum(time_series[["Recruit_0"]][time_series[["Era"]] == "INIT"], na.rm = TRUE)
 
 
     # extract sr_err
@@ -42,20 +52,21 @@ plot_recruitment <- function(dat,
                 )
             )
 
-
-    # sr_plt <-
+    # remove inital and virg recruitment
     sr2 <- sr |> dplyr::filter(year!="Init" & year!="Virg")
 
     # need to rescale to 1000s rather than xe..
     sr_plt <- ggplot2::ggplot(data = sr2) +
-      ggplot2::geom_line(ggplot2::aes(x = spawn_bio, y = exp_recr)) + # exp. R
+      ggplot2::geom_line(ggplot2::aes(x = spawn_bio/1000, y = exp_recr/1000)) + # exp. R
       # add exp R after bias adjustment (dotted line)
-      ggplot2::geom_point(ggplot2::aes(x = spawn_bio, y = pred_recr, color = year)) + # change colors
-      ggplot2::geom_text() +
-      ggplot2::labs(x = "Spawning Biomass",
-           y = "Recruitment") +
+      ggplot2::geom_point(ggplot2::aes(x = spawn_bio/1000, y = pred_recr/1000, color = year)) + # change colors
+      # ggplot2::geom_text() +
+      ggplot2::labs(x = "Spawning Biomass (1000s)",
+           y = "Recruitment (1000s)") +
       ggplot2::theme_classic() +
       ggplot2::theme(legend.position = "none")
+
+    rts <- ggplot2::ggplot()
   }
 }
 

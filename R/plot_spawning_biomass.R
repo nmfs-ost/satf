@@ -1,10 +1,33 @@
+#' Plot Spawning Biomass
+#'
+#' @param dat
+#' @param model
+#' @param refpts
+#' @param warnings
+#' @param units If units are not available in the output file or are not the
+#'              default of metric tons, then state the units of spawning biomass applicable
+#'              to the stock. For plotting purposes, spawning biomass is divided by 1000.
+#'
+#' @return Plot spawning biomass from a stock assessment model as found in a NOAA
+#' stock assessment report. Units of spawning biomass can either be manually added
+#' or will be extracted from the provided file if possible.
+#' @export
+#'
+#' @examples plot_spawning_biomass(dat = "spp.rdat",model = "BAM")
 plot_spawning_biomass <- function(dat,
                          model,
                          refpts = FALSE,
-                         warnings = FALSE) {
+                         warnings = FALSE,
+                         units = NULL) {
   # if(warnings){
   #   suppressWarnings()
   # }
+
+  if(!is.null(units)){
+    sb_unit <- units
+  } else {
+    sb_unit <- "metric tons"
+  }
 
   if (model == "SS3") {
     # load SS3 data file
@@ -36,7 +59,7 @@ plot_spawning_biomass <- function(dat,
     biomass_info <- SS3_extract_bio_info(dat = dat, parameter = "SPB")
     # Extract B0 from DERIVED_QUANITIES df
     # B0 <- as.numeric(biomass_info[['Value']][biomass_info[['year']]=='Virgin'])
-    biomass <- biomass_info |>
+    sb <- biomass_info |>
       dplyr::mutate(year = as.numeric(year),
                     value = as.numeric(Value),
                     stddev = as.numeric(StdDev)) |>
@@ -57,14 +80,18 @@ plot_spawning_biomass <- function(dat,
     # ggplot2::ggplot(dat = sbr) +
     #   ggplot2::geom_line(ggplot2::aes(x = year, y = value/1000, color = era), linewidth = 1)
 
-    plt <- ggplot2::ggplot(data = biomass) +
+    max_yr <- max(unique(sb$year))
+    plt <-ggplot2::ggplot(data = sb) +
       ggplot2::geom_line(ggplot2::aes(x = year, y = value/1000), linewidth = 1) +
       ggplot2::geom_ribbon(ggplot2::aes(x = year, ymin = (value/1000 - stddev/1000), ymax = (value/1000 + stddev/1000)), colour = "grey", alpha = 0.3) +
       ggplot2::geom_hline(yintercept = unfished/1000, linetype = 2) +
+      ggplot2::annotate("text", x = max_yr+0.5, y=unfished/1000, label = "SB_unfished") +
       ggplot2::geom_hline(yintercept = tgt/1000, linetype = 3) +
+      ggplot2::annotate("text", x = max_yr+0.5, y=tgt/1000, label = "SBtarg") +
       ggplot2::geom_hline(yintercept = msy/1000, linetype = 4) +
+      ggplot2::annotate("text", x = max_yr+0.5, y=msy/1000, label = "SBmsy") +
       ggplot2::labs(x = "Year",
-                    y = "Spawning Biomass (metric tons)") +
+                    y = paste("Spawning Biomass (", sb_unit, ")", sep = "")) +
       ggplot2::theme_classic()
   } # close SS3 if statement
 
@@ -79,7 +106,7 @@ plot_spawning_biomass <- function(dat,
       dplyr::select(year, SSB.proj) |>
       dplyr::rename(SSB = SSB.proj)
 
-    biomass <- rbind(sb, proj) |>
+    sb2 <- rbind(sb, proj) |>
       dplyr::rename(value = SSB)
 
     # Pull reference pts
@@ -87,14 +114,19 @@ plot_spawning_biomass <- function(dat,
     msy <- output$parms$SSBmsy
     tgt <- output$parms$SSB.F30 # SSBF30 but calling tgt to use same plotting for all
 
-    plt <- ggplot2::ggplot(data = biomass) +
+    max_yr <- max(unique(sb2$year))
+
+    plt <- ggplot2::ggplot(data = sb2) +
       ggplot2::geom_line(ggplot2::aes(x = year, y = value/1000), linewidth = 1) +
       # ggplot2::geom_ribbon(ggplot2::aes(x = year, ymin = (value/1000 - stddev/1000), ymax = (value/1000 + stddev/1000)), colour = "grey", alpha = 0.3) +
       ggplot2::geom_hline(yintercept = unfished/1000, linetype = 2) +
+      ggplot2::annotate("text", x = max_yr+0.5, y=unfished/1000, label = "SB_unfished") +
       ggplot2::geom_hline(yintercept = tgt/1000, linetype = 3) +
+      ggplot2::annotate("text", x = max_yr+0.5, y=tgt/1000, label = "SBtarg") +
       ggplot2::geom_hline(yintercept = msy/1000, linetype = 4) +
+      ggplot2::annotate("text", x = max_yr+0.5, y=msy/1000, label = "SBmsy") +
       ggplot2::labs(x = "Year",
-                    y = "Spawning Biomass (metric tons)") +
+                    y = paste("Spawning Biomass (", sb_unit, ")", sep = "")) +
       ggplot2::theme_classic()
 
   }

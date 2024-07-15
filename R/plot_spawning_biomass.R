@@ -16,7 +16,7 @@
 #'
 #' @examples plot_spawning_biomass(dat = "spp.rdat",model = "BAM")
 plot_spawning_biomass <- function(dat,
-                         model = c('SS3','BAM', 'ASAP', 'AMAK'),
+                         model = c('SS3','BAM', 'ASAP', 'AMAK', 'WHAM'),
                          refpts = FALSE,
                          warnings = FALSE,
                          units = NULL) {

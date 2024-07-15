@@ -1,7 +1,27 @@
+#' Plot Recruitment
+#'
+#' @template dat
+#' @template model
+#' @param params Print/export the parameters of the stock recruitment function?
+#' @param params_only Only export the stock recruitment function or both the parameters and the plot(s)?
+#' @param units If units are not available in the output file, in metric tons,
+#' or are different for SB and R, then report them here starting with SB units
+#' and following with R units.
+#' @param include_fxn Include the stock recruitment function on the SR curve plot?
+#' @param warnings Include warnings? Default FALSE
+#'
+#' @return A series of plots are exported including recruitment over time with R0
+#' reference line, stock recruitment curve, and other related figures.
+#' @export
+#'
+#' @examples
 plot_recruitment <- function(dat,
                              model,
                              params = FALSE,
-                             params_only = FALSE){
+                             params_only = FALSE,
+                             units = NULL,
+                             include_fxn = FALSE,
+                             warnings = FALSE){
   if(model == "SS3"){
     # extract recruitment
     sr_info <- SS3_extract_df(dat, "SPAWN_RECRUIT")
@@ -42,13 +62,19 @@ plot_recruitment <- function(dat,
       stop("Only stock recruitment model parameters were exported and plots were not created.")
     }
 
+    lnr0 <- sr_vars$value[sr_vars$variable=="Ln(R0)"]
+    steep <- sr_vars$value[sr_vars$variable=="steep"]
+    sigr <- sr_vars$value[sr_vars$variable=="sigmaR"]
+    envlink <- sr_vars$value[sr_vars$variable=="env_link_"]
+    ini_eq <- sr_vars$value[sr_vars$variable=="init_eq"]
+
     # Export message
     message(cat("Stock Recrutiment Fxn: ", sr_fxn, "\n", # need to add conversion to what this number means to analyst
-                "    ", "    ", "   ", "ln(R0): ", sr_vars$value[sr_vars$variable=="Ln(R0)"], "\n",
-                "     ", "      ", "     ", "h: ", sr_vars$value[sr_vars$variable=="steep"], "\n",
-                "    ", "    ", "   ", "sigmaR: ", sr_vars$value[sr_vars$variable=="sigmaR"], "\n",
-                "    ", "    ", " ", "env_link: ", sr_vars$value[sr_vars$variable=="env_link_"], "\n",
-                "    ", "    ", "  ", "init_eq: ", sr_vars$value[sr_vars$variable=="init_eq"], "\n"
+                "    ", "    ", "   ", "ln(R0): ", lnr0, "\n",
+                "     ", "      ", "     ", "h: ", steep, "\n",
+                "    ", "    ", "   ", "sigmaR: ", sigr, "\n",
+                "    ", "    ", " ", "env_link: ", envlink, "\n",
+                "    ", "    ", "  ", "init_eq: ", ini_eq, "\n"
                 )
             )
 
@@ -65,6 +91,14 @@ plot_recruitment <- function(dat,
            y = "Recruitment (1000s)") +
       ggplot2::theme_classic() +
       ggplot2::theme(legend.position = "none")
+
+    if(include_fxn){
+      # identify SR fxn
+
+
+      sr_plt <- sr_plt +
+        ggplot2::geom_annotate("text", x = 1, y = 1, label = paste())
+    }
 
     rts <- ggplot2::ggplot()
   }

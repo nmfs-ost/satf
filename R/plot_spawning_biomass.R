@@ -1,12 +1,13 @@
 #' Plot Spawning Biomass
 #'
-#' @param dat
-#' @param model
-#' @param refpts
-#' @param warnings
+#' @template dat
+#' @template model
+#' @param refpts Output a dataframe of reference points for spawning biomass
+#' rather than plot. Default is FALSE.
+#' @param warnings Option to suppress warnings
 #' @param units If units are not available in the output file or are not the
-#'              default of metric tons, then state the units of spawning biomass applicable
-#'              to the stock. For plotting purposes, spawning biomass is divided by 1000.
+#' default of metric tons, then state the units of spawning biomass applicable
+#' to the stock. For plotting purposes, spawning biomass is divided by 1000.
 #'
 #' @return Plot spawning biomass from a stock assessment model as found in a NOAA
 #' stock assessment report. Units of spawning biomass can either be manually added
@@ -15,13 +16,17 @@
 #'
 #' @examples plot_spawning_biomass(dat = "spp.rdat",model = "BAM")
 plot_spawning_biomass <- function(dat,
-                         model,
+                         model = c('SS3','BAM', 'ASAP', 'AMAK'),
                          refpts = FALSE,
                          warnings = FALSE,
                          units = NULL) {
   # if(warnings){
+  #
+  # } else {
   #   suppressWarnings()
   # }
+
+  model <- match.arg(model, several.ok = FALSE)
 
   if(!is.null(units)){
     sb_unit <- units
@@ -41,7 +46,7 @@ plot_spawning_biomass <- function(dat,
         return(nummax)
       }
 
-      output <- read.table(
+      output <- utils::read.table(
         file = dat, col.names = 1:get_ncol(dat), fill = TRUE, quote = "",
         colClasses = "character", nrows = -1, comment.char = "",
         blank.lines.skip = FALSE

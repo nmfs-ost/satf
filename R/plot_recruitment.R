@@ -87,15 +87,13 @@ plot_recruitment <- function(dat,
       # add exp R after bias adjustment (dotted line)
       ggplot2::geom_point(ggplot2::aes(x = spawn_bio/1000, y = pred_recr/1000, color = year)) + # change colors
       # ggplot2::geom_text() +
-      ggplot2::labs(x = "Spawning Biomass (1000s)",
-           y = "Recruitment (1000s)") +
+      ggplot2::labs(x = "Spawning Biomass (metric tons)",
+           y = "Recruitment (metric tons)") +
       ggplot2::theme_classic() +
       ggplot2::theme(legend.position = "none")
 
     if(include_fxn){
       # identify SR fxn
-
-
       sr_plt <- sr_plt +
         ggplot2::geom_annotate("text", x = 1, y = 1, label = paste())
     }

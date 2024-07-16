@@ -4,10 +4,14 @@
 #' @template model
 #' @param refpts Output a dataframe of reference points for spawning biomass
 #' rather than plot. Default is FALSE.
-#' @param warnings Option to suppress warnings
+#' @param show_warnings Option to suppress warnings
 #' @param units If units are not available in the output file or are not the
 #' default of metric tons, then state the units of spawning biomass applicable
 #' to the stock. For plotting purposes, spawning biomass is divided by 1000.
+#' @param ref_line choose with reference point to plot a reference line and use
+#' in relative sb calculations
+#' @param endyr input the end year of the stock assessment data (not including
+#' projections). This parameter will be depricated once the output converter is fully developed.
 #'
 #' @return Plot spawning biomass from a stock assessment model as found in a NOAA
 #' stock assessment report. Units of spawning biomass can either be manually added
@@ -18,8 +22,11 @@
 plot_spawning_biomass <- function(dat,
                          model = c('SS3','BAM', 'ASAP', 'AMAK', 'WHAM'),
                          refpts = FALSE,
-                         warnings = FALSE,
-                         units = NULL) {
+                         show_warnings = FALSE,
+                         units = NULL,
+                         ref_line = c("target", "MSY", "msy", "unfished"),
+                         endyr = NULL
+                         ) {
   # if(warnings){
   #
   # } else {
@@ -27,6 +34,12 @@ plot_spawning_biomass <- function(dat,
   # }
 
   model <- match.arg(model, several.ok = FALSE)
+
+  if(length(ref_line)>1){
+    ref_line = "target"
+  } else {
+    ref_line <- match.arg(ref_line, several.ok = FALSE)
+  }
 
   if(!is.null(units)){
     sb_unit <- units
@@ -65,39 +78,45 @@ plot_spawning_biomass <- function(dat,
     # Extract B0 from DERIVED_QUANITIES df
     # B0 <- as.numeric(biomass_info[['Value']][biomass_info[['year']]=='Virgin'])
     sb <- biomass_info |>
+      dplyr::filter(year != 'Virgin' & year != "Initial") |>
       dplyr::mutate(year = as.numeric(year),
                     value = as.numeric(Value),
                     stddev = as.numeric(StdDev)) |>
       dplyr::select(year, value, stddev) |>
-      dplyr::filter(year!='Virgin' & year!="Initial")
+      dplyr::filter(year < endyr + 1)
 
     # Extract reference points, Btarget, Unfished biomass, and Bmsy
-    tgt <- as.numeric(bio_info[['Value']][bio_info[['label']]=="SSB" & bio_info[['year']]=="Btgt"])
-    unfished <- as.numeric(bio_info[['Value']][bio_info[['label']]=="SSB" & bio_info[['year']]=="Unfished"])
-    msy <- as.numeric(bio_info[['Value']][bio_info[['label']]=="SSB" & bio_info[['year']]=="MSY"])
+      # tgt <- as.numeric(bio_info[['Value']][bio_info[['label']]=="SSB" & bio_info[['year']]=="Btgt"])
+      # unfished <- as.numeric(bio_info[['Value']][bio_info[['label']]=="SSB" & bio_info[['year']]=="Unfished"])
+      # msy <- as.numeric(bio_info[['Value']][bio_info[['label']]=="SSB" & bio_info[['year']]=="MSY"])
 
-    # sbr <- SS3_extract_df(dat, "Spawning_Biomass_Report_1")[-c(1:3),]
-    # colnames(sbr) <- c("year", "era", "value")
-    # sbr <- sbr |>
-    #   dplyr::filter(era!='VIRG' & era!="INIT") |>
-    #   dplyr::mutate(year = as.numeric(year),
-    #                 value = as.numeric(value))
-    # ggplot2::ggplot(dat = sbr) +
-    #   ggplot2::geom_line(ggplot2::aes(x = year, y = value/1000, color = era), linewidth = 1)
+    # Select value for reference line and label
+    if (ref_line == "target") {
+      ref_line_val <- as.numeric(bio_info[['Value']][bio_info[['label']]=="SSB" & bio_info[['year']]=="Btgt"])
+      ref_line_label <- "target"
+      ann_add <- ggplot2::annotate("text", x = endyr+0.5, y=ref_line_val/1000, label = bquote(SB[target]))
+    } else if (ref_line == "MSY" | ref_line == "msy") {
+      ref_line_val <- as.numeric(bio_info[['Value']][bio_info[['label']]=="SSB" & bio_info[['year']]=="MSY"])
+      ref_line_label <- "MSY"
+      ann_add <- ggplot2::annotate("text", x = endyr+0.5, y=ref_line_val/1000, label = bquote(SB[MSY]))
+    } else if (ref_line == "unfished") {
+      ref_line_val <- as.numeric(bio_info[['Value']][bio_info[['label']]=="SSB" & bio_info[['year']]=="Unfished"])
+      ref_line_label <- "unfished"
+      ann_add <- ggplot2::annotate("text", x = endyr+0.5, y=ref_line_val/1000, label = bquote(SB[unfished]))
+    }
 
-    max_yr <- max(unique(sb$year))
-    plt <-ggplot2::ggplot(data = sb) +
+    # max_yr <- max(unique(sb$year))
+    plt <- ggplot2::ggplot(data = sb) +
       ggplot2::geom_line(ggplot2::aes(x = year, y = value/1000), linewidth = 1) +
       ggplot2::geom_ribbon(ggplot2::aes(x = year, ymin = (value/1000 - stddev/1000), ymax = (value/1000 + stddev/1000)), colour = "grey", alpha = 0.3) +
-      ggplot2::geom_hline(yintercept = unfished/1000, linetype = 2) +
-      ggplot2::annotate("text", x = max_yr+0.5, y=unfished/1000, label = "SB_unfished") +
-      ggplot2::geom_hline(yintercept = tgt/1000, linetype = 3) +
-      ggplot2::annotate("text", x = max_yr+0.5, y=tgt/1000, label = "SBtarg") +
-      ggplot2::geom_hline(yintercept = msy/1000, linetype = 4) +
-      ggplot2::annotate("text", x = max_yr+0.5, y=msy/1000, label = "SBmsy") +
+      ggplot2::geom_hline(yintercept = ref_line_val/1000, linetype = 2) +
       ggplot2::labs(x = "Year",
                     y = paste("Spawning Biomass (", sb_unit, ")", sep = "")) +
-      ggplot2::theme_classic()
+      ggplot2::scale_x_continuous(n.breaks = round(length(subset(sb, year<=endyr)$year)/10),
+                                  guide = ggplot2::guide_axis(minor.ticks = TRUE))
+    plt <- plt + ann_add
+
+    plt_fin <- add_theme(plt)
   } # close SS3 if statement
 
   if (model == "BAM"){
@@ -114,27 +133,45 @@ plot_spawning_biomass <- function(dat,
     sb2 <- rbind(sb, proj) |>
       dplyr::rename(value = SSB)
 
+    # max_yr <- max(unique(sb2$year))
+    if(is.null(endyr)){
+      endyr <- output$parms$endyr
+    }
+    stryr <- output$parms$styr
+
     # Pull reference pts
-    unfished <- output$parms$SSB0
-    msy <- output$parms$SSBmsy
-    tgt <- output$parms$SSB.F30 # SSBF30 but calling tgt to use same plotting for all
+    # unfished <- output$parms$SSB0
+    # msy <- output$parms$SSBmsy
+    # tgt <- output$parms$SSB.F30 # SSBF30 but calling tgt to use same plotting for all
 
-    max_yr <- max(unique(sb2$year))
+    # Select value for reference line and label
+    if (ref_line == "target") {
+      ref_line_val <- output$parms$SSB.F30
+      ref_line_label <- "target"
+      ann_add <- ggplot2::annotate("text", x = endyr+0.5, y=ref_line_val/1000 + 100, label = bquote(SB[F30])) # this might need to change
+    } else if (ref_line == "MSY" | ref_line == "msy") {
+      ref_line_val <- output$parms$SSBmsy
+      ref_line_label <- "MSY"
+      ann_add <- ggplot2::annotate("text", x = endyr+0.5, y=ref_line_val/1000 + 100, label = bquote(SB[MSY]))
+    } else if (ref_line == "unfished") {
+      ref_line_val <- output$parms$SSB0
+      ref_line_label <- "unfished"
+      ann_add <- ggplot2::annotate("text", x = endyr+0.5, y=ref_line_val/1000 + 100, label = bquote(SB[unfished]))
+    }
 
-    plt <- ggplot2::ggplot(data = sb2) +
+    plt <- ggplot2::ggplot(data = subset(sb2, year<=endyr)) +
       ggplot2::geom_line(ggplot2::aes(x = year, y = value/1000), linewidth = 1) +
       # ggplot2::geom_ribbon(ggplot2::aes(x = year, ymin = (value/1000 - stddev/1000), ymax = (value/1000 + stddev/1000)), colour = "grey", alpha = 0.3) +
-      ggplot2::geom_hline(yintercept = unfished/1000, linetype = 2) +
-      ggplot2::annotate("text", x = max_yr+0.5, y=unfished/1000, label = "SB_unfished") +
-      ggplot2::geom_hline(yintercept = tgt/1000, linetype = 3) +
-      ggplot2::annotate("text", x = max_yr+0.5, y=tgt/1000, label = "SBtarg") +
-      ggplot2::geom_hline(yintercept = msy/1000, linetype = 4) +
-      ggplot2::annotate("text", x = max_yr+0.5, y=msy/1000, label = "SBmsy") +
+      ggplot2::geom_hline(yintercept = ref_line_val/1000, linetype = 2) +
       ggplot2::labs(x = "Year",
                     y = paste("Spawning Biomass (", sb_unit, ")", sep = "")) +
-      ggplot2::theme_classic()
+      ggplot2::scale_x_continuous(n.breaks = round(length(subset(sb2, year<=endyr)$year)/10),
+                                  guide = ggplot2::guide_axis(minor.ticks = TRUE))
+      # ggplot2::theme_classic()
+    plt <- plt + ann_add
 
+    plt_fin <- add_theme(plt)
   }
 
-  return(plt)
+  return(plt_fin)
 }

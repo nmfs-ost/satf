@@ -106,6 +106,7 @@ plot_spawning_biomass <- function(dat,
     }
 
     # max_yr <- max(unique(sb$year))
+    # SB ts
     plt <- ggplot2::ggplot(data = sb) +
       ggplot2::geom_line(ggplot2::aes(x = year, y = value/1000), linewidth = 1) +
       ggplot2::geom_ribbon(ggplot2::aes(x = year, ymin = (value/1000 - stddev/1000), ymax = (value/1000 + stddev/1000)), colour = "grey", alpha = 0.3) +
@@ -117,6 +118,16 @@ plot_spawning_biomass <- function(dat,
     plt <- plt + ann_add
 
     plt_fin <- add_theme(plt)
+
+    # Plot of rel. SB
+    plt <- ggplot2::ggplot(data = sb) +
+      ggplot2::geom_line(ggplot2::aes(x = year, y = value/ref_line_value), linewidth = 1) +
+      ggplot2::geom_ribbon(ggplot2::aes(x = year, ymin = (value/ref_line_value - stddev/ref_line_value), ymax = (value/1000 + stddev/1000)), colour = "grey", alpha = 0.3) +
+      ggplot2::geom_hline(yintercept = ref_line_val/ref_line_value, linetype = 2) +
+      ggplot2::labs(x = "Year",
+                    y = paste("Spawning Biomass (", sb_unit, ")", sep = "")) +
+      ggplot2::scale_x_continuous(n.breaks = round(length(subset(sb, year<=endyr)$year)/10),
+                                  guide = ggplot2::guide_axis(minor.ticks = TRUE))
   } # close SS3 if statement
 
   if (model == "BAM"){

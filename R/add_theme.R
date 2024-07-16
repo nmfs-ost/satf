@@ -13,9 +13,22 @@ add_theme <- function(x) {
   # this is bad coding practice, but what I have for now
   if (as.character(class(x)[1]) == "gg" | as.character(class(x)[2]) == "ggplot") {
     theme_obj <- x +
-      # temporary formatting for example
-      ggplot2::theme_classic()
-    # theme()
+      ggplot2::theme(
+        plot.background = ggplot2::element_rect(fill = "transparent"),
+        panel.background = ggplot2::element_rect(fill = "transparent"),
+        panel.grid = ggplot2::element_blank(),
+        panel.border = ggplot2::element_rect(colour = "black", fill = NA, linewidth = 0.5),
+        text = ggplot2::element_text(size = 12, family = "Cambria")
+      )
+    # Determining how to treat a legend if there is one
+    # check if one is present
+    # check_for_legend <- function(x) {
+    #   'gtable' %in% class(try(cowplot::get_legend(x), silent = TRUE))
+    # }
+    # if (check_for_legend(x)) {
+    #   move_legend <- theme_obj +
+    #     ggplot2::theme()
+    # }
   }
 
   if (as.character(class(x)[1]) == "flextable") {

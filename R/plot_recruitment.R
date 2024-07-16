@@ -8,7 +8,7 @@
 #' or are different for SB and R, then report them here starting with SB units
 #' and following with R units.
 #' @param include_fxn Include the stock recruitment function on the SR curve plot?
-#' @param warnings Include warnings? Default FALSE
+#' @param show_warnings Include warnings? Default FALSE
 #'
 #' @return A series of plots are exported including recruitment over time with R0
 #' reference line, stock recruitment curve, and other related figures.
@@ -21,7 +21,7 @@ plot_recruitment <- function(dat,
                              params_only = FALSE,
                              units = NULL,
                              include_fxn = FALSE,
-                             warnings = FALSE){
+                             show_warnings = FALSE){
   if(model == "SS3"){
     # extract recruitment
     sr_info <- SS3_extract_df(dat, "SPAWN_RECRUIT")

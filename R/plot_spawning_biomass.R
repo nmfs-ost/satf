@@ -120,14 +120,16 @@ plot_spawning_biomass <- function(dat,
     plt_fin <- add_theme(plt)
 
     # Plot of rel. SB
-    plt <- ggplot2::ggplot(data = sb) +
-      ggplot2::geom_line(ggplot2::aes(x = year, y = value/ref_line_value), linewidth = 1) +
-      ggplot2::geom_ribbon(ggplot2::aes(x = year, ymin = (value/ref_line_value - stddev/ref_line_value), ymax = (value/1000 + stddev/1000)), colour = "grey", alpha = 0.3) +
-      ggplot2::geom_hline(yintercept = ref_line_val/ref_line_value, linetype = 2) +
+    plt_rel <- ggplot2::ggplot(data = sb) +
+      ggplot2::geom_line(ggplot2::aes(x = year, y = value/ref_line_val), linewidth = 1) +
+      ggplot2::geom_ribbon(ggplot2::aes(x = year, ymin = (value/ref_line_val - stddev/ref_line_val), ymax = (value/ref_line_val + stddev/ref_line_val)), colour = "grey", alpha = 0.3) +
+      ggplot2::geom_hline(yintercept = ref_line_val/ref_line_val, linetype = 2) +
       ggplot2::labs(x = "Year",
                     y = paste("Spawning Biomass (", sb_unit, ")", sep = "")) +
       ggplot2::scale_x_continuous(n.breaks = round(length(subset(sb, year<=endyr)$year)/10),
                                   guide = ggplot2::guide_axis(minor.ticks = TRUE))
+
+    plt_rel2 <- add_theme(plt_rel)
   } # close SS3 if statement
 
   if (model == "BAM"){
@@ -178,10 +180,20 @@ plot_spawning_biomass <- function(dat,
                     y = paste("Spawning Biomass (", sb_unit, ")", sep = "")) +
       ggplot2::scale_x_continuous(n.breaks = round(length(subset(sb2, year<=endyr)$year)/10),
                                   guide = ggplot2::guide_axis(minor.ticks = TRUE))
-      # ggplot2::theme_classic()
     plt <- plt + ann_add
 
     plt_fin <- add_theme(plt)
+
+    # plot relative SB
+    plt_rel <- ggplot2::ggplot(data = subset(sb2, year<=endyr)) +
+      ggplot2::geom_line(ggplot2::aes(x = year, y = value/ref_line_val), linewidth = 1) +
+      # ggplot2::geom_ribbon(ggplot2::aes(x = year, ymin = (value/ref_line_val - stddev/ref_line_val), ymax = (value/ref_line_val + stddev/ref_line_val)), colour = "grey", alpha = 0.3) +
+      ggplot2::geom_hline(yintercept = ref_line_val/ref_line_val, linetype = 2) +
+      ggplot2::labs(x = "Year",
+                    y = paste("Spawning Biomass (", sb_unit, ")", sep = "")) +
+      ggplot2::scale_x_continuous(n.breaks = round(length(subset(sb2, year<=endyr)$year)/10),
+                                  guide = ggplot2::guide_axis(minor.ticks = TRUE))
+    plt_rel2 <- add_theme(plt_rel)
   }
 
   return(plt_fin)

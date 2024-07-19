@@ -7,8 +7,8 @@
 #' @param units If units are not available in the output file, in metric tons,
 #' or are different for SB and R, then report them here starting with SB units
 #' and following with R units.
-#' @param include_fxn Include the stock recruitment function on the SR curve plot?
 #' @param show_warnings Include warnings? Default FALSE
+#' @param return Default returns recruitment over time. Options to display stock recruitment curve/recruitment fit
 #'
 #' @return A series of plots are exported including recruitment over time with R0
 #' reference line, stock recruitment curve, and other related figures.
@@ -20,8 +20,8 @@ plot_recruitment <- function(dat,
                              params = FALSE,
                              params_only = FALSE,
                              units = NULL,
-                             include_fxn = FALSE,
-                             show_warnings = FALSE){
+                             show_warnings = FALSE,
+                             return = "recruitment"){
   if(model == "SS3"){
     # Read rep file or rename
     if(grepl("Report.sso", dat)){
@@ -96,28 +96,148 @@ plot_recruitment <- function(dat,
                 )
             )
 
+    # Units
+    if(!is.null(units)){
+      if(length(units)>1){
+        sb_units <- units[1]
+        rec_units <- units[2]
+        message("Please check the units on your axes are correct. If they are flipped, change the order of names in the units argument.")
+      } else {
+        if(grepl("eggs", units)){
+          sb_units <- "1e10 eggs"
+          rec_units <- "metric tons"
+        } else if(grepl("number", units)){
+          rec_units <- "number of fish"
+          sb_units <- "metric tons"
+        } else {
+          warning("Unit type is not defined for this function. Please leave an issue at https://github.com/nmfs-ost/satf/issues")
+        }
+      }
+    } else {
+      sb_units <- "metric tons"
+      rec_units <- "metric tons"
+      message("Default units for both SB and R are metric tons.")
+    }
+
     # remove inital and virg recruitment
-    sr2 <- sr |> dplyr::filter(year!="Init" & year!="Virg")
+    sr <- sr |>
+      dplyr::filter(year!="Init" & year!="Virg" & era != "Forecast") |>
+      dplyr::mutate(year = as.numeric(year))
 
     # need to rescale to 1000s rather than xe..
-    sr_plt <- ggplot2::ggplot(data = sr2) +
+    sr_plt <- ggplot2::ggplot(data = sr) +
       ggplot2::geom_line(ggplot2::aes(x = spawn_bio/1000, y = exp_recr/1000), linewidth = 1) + # exp. R
       # add exp R after bias adjustment (dotted line)
       ggplot2::geom_point(ggplot2::aes(x = spawn_bio/1000, y = pred_recr/1000, color = year)) + # change colors
       # ggplot2::geom_text() +
-      ggplot2::labs(x = "Spawning Biomass (metric tons)",
-           y = "Recruitment (metric tons)") +
-      ggplot2::theme_classic() +
+      ggplot2::labs(x = paste("Spawning Biomass (", sb_units, ")", sep = ""),
+           y = paste("Recruitment (", rec_units, ")", sep = "")) +
+      ggplot2::theme(legend.position = "none")
+    sr_plt <- add_theme(sr_plt)
+
+    r_plt <- ggplot2::ggplot(data = sr) +
+      ggplot2::geom_point(ggplot2::aes(x = year, y = exp_recr)) +
+      ggplot2::geom_line(ggplot2::aes(x = year, y = exp_recr), linewidth = 1) +
+      ggplot2::labs(x = "Year",
+                    y = paste("Recruitment (", rec_units, ")", sep = "")) +
+      ggplot2::theme(legend.position = "none")
+    r_plt <- add_theme(r_plt)
+
+  } # close SS3 if statement
+
+  if(model == "BAM"){
+    # read in output
+    output <- dget(dat)
+
+    R_virg <- output$parms$R.virgin.bc
+    R0 <- output$parms$R0
+    SSBmsy <- output$parms$SSBmsy
+    SSB0 <- output$parms$SSB0
+
+    # lnr0 <- "Ln(R0)"
+    # steep <- "steep"
+    sigr <- output$parms$R.sigma.par
+    sigr_dev <- output$parms$R.sigma.logdevs
+    # envlink <- "env_link_" # is there an equivalent in BAM?
+    # ini_eq <- "init_eq" # what is this SR param?
+
+    # Export message
+    # message(cat("Stock Recrutiment Fxn: ", sr_fxn, "\n", # need to add conversion to what this number means to analyst
+    #             "    ", "    ", "   ", "ln(R0): ", lnr0, "\n",
+    #             "     ", "      ", "     ", "h: ", steep, "\n",
+    #             "    ", "    ", "   ", "sigmaR: ", sigr, "\n",
+    #             "    ", "    ", " ", "env_link: ", envlink, "\n",
+    #             "    ", "    ", "  ", "init_eq: ", ini_eq, "\n"
+    #   )
+    # )
+
+    # SSB time series
+    sr <- data.frame(year = output$t.series$year,
+                     spawn_bio = output$t.series$SSB,
+                     pred_recr = output$t.series$recruits,
+                     exp_recr = output$t.series,
+                     log_rec_dev = output$t.series$logR.dev)
+
+    # Check if units were declared
+    if(!is.null(units)){
+      if(length(units)>1){
+        sb_units <- units[1]
+        rec_units <- units[2]
+        message("Please check the units on your axes are correct. If they are flipped, change the order of names in the units argument.")
+      } else {
+        if(grepl("eggs", units)){
+          sb_units <- "1e10 eggs"
+          rec_units <- "metric tons"
+        } else if(grepl("number", units)){
+          rec_units <- "number of fish"
+          sb_units <- "metric tons"
+        } else {
+          warning("Unit type is not defined for this function. Please leave an issue at https://github.com/nmfs-ost/satf/issues")
+        }
+      }
+    } else {
+      sb_units <- "metric tons"
+      rec_units <- "metric tons"
+      message("Default units for both SB and R are metric tons.")
+    }
+    # plot stock recruitment in 1000
+    sr_plt <- ggplot2::ggplot(data = sr) +
+      ggplot2::geom_line(ggplot2::aes(x = spawn_bio, y = exp_recr), linewidth = 1) + # exp. R
+      # add exp R after bias adjustment (dotted line)
+      ggplot2::geom_point(ggplot2::aes(x = spawn_bio, y = pred_recr, color = year)) + # change colors
+      # ggplot2::geom_text() +
+      ggplot2::labs(x = paste("Spawning Biomass (", sb_units, ")", sep = ""),
+                    y = paste("Recruitment (", rec_units, ")", sep = "")) +
       ggplot2::theme(legend.position = "none")
 
     sr_plt <- add_theme(sr_plt)
 
-    rts <- ggplot2::ggplot()
-  } # close SS3 if statement
+    r_plt <- ggplot2::ggplot(data = sr) +
+      ggplot2::geom_line(ggplot2::aes(x = year, y = pred_recr), linewidth = 1) + # exp. R
+      ggplot2::geom_point(ggplot2::aes(x = year, y = pred_recr)) + # change colors
+      # ggplot2::geom_text() +
+      ggplot2::labs(x = "Year",
+                    y = paste("Recruitment (", rec_units, ")", sep = "")) +
+      ggplot2::theme(legend.position = "none")
 
-  if(model == "BAM"){
+    r_plt <- add_theme(r_plt)
+
+    rdev_plt <- ggplot2::ggplot(data = sr) +
+      # ggplot2::geom_point(ggplot2::aes(x = year, y = log_rec_dev), shape = 1, size = 2.5) +
+      ggplot2::geom_pointrange(ggplot2::aes(x = year, y = log_rec_dev, ymax = log_rec_dev, ymin = 0),  fatten = 1, size = 2, shape = 1) +
+      ggplot2::geom_hline(yintercept = 0, linetype = "dashed") +
+      ggplot2::labs(x = "Year",
+                    y = "logR Deviations")
+    rdev_plt <- add_theme(rdev_plt)
 
   } # close BAM if statement
-  return(sr_plt)
+  if(return == "recruitment"){
+    return(r_plt)
+  } else if (return == "stock recruitment") {
+    return(sr_plt)
+  } else if (return == "recruitment deviations"){
+    return(rdev_plt)
+  }
+
 }
 

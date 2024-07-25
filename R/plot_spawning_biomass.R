@@ -90,6 +90,29 @@ plot_spawning_biomass <- function(dat,
       # unfished <- as.numeric(bio_info[['Value']][bio_info[['label']]=="SSB" & bio_info[['year']]=="Unfished"])
       # msy <- as.numeric(bio_info[['Value']][bio_info[['label']]=="SSB" & bio_info[['year']]=="MSY"])
 
+    # Check if units were declared
+    if(!is.null(units)){
+      if(length(units)>1){
+        sb_units <- units[1]
+        rec_units <- units[2]
+        message("Please check the units on your axes are correct. If they are flipped, change the order of names in the units argument.")
+      } else {
+        if(grepl("eggs", units)){
+          sb_units <- "1e10 eggs"
+          rec_units <- "metric tons"
+        } else if(grepl("number", units)){
+          rec_units <- "number of fish"
+          sb_units <- "metric tons"
+        } else {
+          warning("Unit type is not defined for this function. Please leave an issue at https://github.com/nmfs-ost/satf/issues")
+        }
+      }
+    } else {
+      sb_units <- "metric tons"
+      rec_units <- "metric tons"
+      message("Default units for both SB and R are metric tons.")
+    }
+
     # Select value for reference line and label
     if (ref_line == "target") {
       ref_line_val <- as.numeric(bio_info[['Value']][bio_info[['label']]=="SSB" & bio_info[['year']]=="Btgt"])
@@ -112,7 +135,7 @@ plot_spawning_biomass <- function(dat,
       ggplot2::geom_ribbon(ggplot2::aes(x = year, ymin = (value/1000 - stddev/1000), ymax = (value/1000 + stddev/1000)), colour = "grey", alpha = 0.3) +
       ggplot2::geom_hline(yintercept = ref_line_val/1000, linetype = 2) +
       ggplot2::labs(x = "Year",
-                    y = paste("Spawning Biomass (", sb_unit, ")", sep = "")) +
+                    y = paste("Spawning Biomass (", sb_units, ")", sep = "")) +
       ggplot2::scale_x_continuous(n.breaks = round(length(subset(sb, year<=endyr)$year)/10),
                                   guide = ggplot2::guide_axis(minor.ticks = TRUE))
     plt <- plt + ann_add
@@ -135,11 +158,11 @@ plot_spawning_biomass <- function(dat,
   if (model == "BAM"){
     # extract spawning biomass from output
     output <- dget(dat)
-    sb <- data.frame(sapply(output$t.series, c))|>
+    sb <- data.frame(sapply(output$t.series, c)) |>
       dplyr::select(year, SSB)
 
     # Projection years
-    proj <- data.frame(sapply(output$projection, c)) |>
+    proj <- data.frame(sapply(output$proj.t.series, c)) |>
       dplyr::select(year, SSB.proj) |>
       dplyr::rename(SSB = SSB.proj)
 
@@ -152,6 +175,16 @@ plot_spawning_biomass <- function(dat,
     }
     stryr <- output$parms$styr
 
+    # Check if units were declared
+    if(!is.null(units)){
+      sb_units <- units[1]
+      rec_units <- units[2]
+      message("Please check the units on your axes are correct. If they are flipped, change the order of names in the units argument.")
+    } else {
+      sb_units <- output$info$units.ssb
+      rec_units <- output$info$units.rec
+    }
+
     # Pull reference pts
     # unfished <- output$parms$SSB0
     # msy <- output$parms$SSBmsy
@@ -159,17 +192,17 @@ plot_spawning_biomass <- function(dat,
 
     # Select value for reference line and label
     if (ref_line == "target") {
-      ref_line_val <- output$parms$SSB.F30
+      ref_line_val <- output$parms$SSB.Fproxy
       ref_line_label <- "target"
-      ann_add <- ggplot2::annotate("text", x = endyr+0.5, y=ref_line_val/1000 + 100, label = bquote(SB[F30])) # this might need to change
+      ann_add <- ggplot2::annotate("text", x = endyr+0.5, y=ref_line_val/1000, label = bquote(SB[F30])) # this might need to change
     } else if (ref_line == "MSY" | ref_line == "msy") {
       ref_line_val <- output$parms$SSBmsy
       ref_line_label <- "MSY"
-      ann_add <- ggplot2::annotate("text", x = endyr+0.5, y=ref_line_val/1000 + 100, label = bquote(SB[MSY]))
+      ann_add <- ggplot2::annotate("text", x = endyr+0.5, y=ref_line_val/1000, label = bquote(SB[MSY]))
     } else if (ref_line == "unfished") {
       ref_line_val <- output$parms$SSB0
       ref_line_label <- "unfished"
-      ann_add <- ggplot2::annotate("text", x = endyr+0.5, y=ref_line_val/1000 + 100, label = bquote(SB[unfished]))
+      ann_add <- ggplot2::annotate("text", x = endyr+0.5, y=ref_line_val/1000, label = bquote(SB[unfished]))
     }
 
     plt <- ggplot2::ggplot(data = subset(sb2, year<=endyr)) +
@@ -177,7 +210,7 @@ plot_spawning_biomass <- function(dat,
       # ggplot2::geom_ribbon(ggplot2::aes(x = year, ymin = (value/1000 - stddev/1000), ymax = (value/1000 + stddev/1000)), colour = "grey", alpha = 0.3) +
       ggplot2::geom_hline(yintercept = ref_line_val/1000, linetype = 2) +
       ggplot2::labs(x = "Year",
-                    y = paste("Spawning Biomass (", sb_unit, ")", sep = "")) +
+                    y = paste("Spawning Biomass (", sb_units, ")", sep = "")) +
       ggplot2::scale_x_continuous(n.breaks = round(length(subset(sb2, year<=endyr)$year)/10),
                                   guide = ggplot2::guide_axis(minor.ticks = TRUE))
     plt <- plt + ann_add

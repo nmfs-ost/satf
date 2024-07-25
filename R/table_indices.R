@@ -81,4 +81,6 @@ table_indices <- function(dat,
 
 
   } # close BAM if statement
+
+  return(tab)
 }

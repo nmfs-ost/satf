@@ -19,7 +19,7 @@ plot_recruitment <- function(dat,
                              model,
                              params = FALSE,
                              params_only = FALSE,
-                             units = NULL,
+                             units = c(sb = "metric tons", recruitment = "metric tons"),
                              show_warnings = FALSE,
                              return = "recruitment"){
   if(model == "SS3"){
@@ -96,11 +96,11 @@ plot_recruitment <- function(dat,
                 )
             )
 
-    # Units
+    # Units - change this statement to fit new convention
     if(!is.null(units)){
       if(length(units)>1){
-        sb_units <- units[1]
-        rec_units <- units[2]
+        sb_units <- units["sb"]
+        rec_units <- units["recruitment"]
         message("Please check the units on your axes are correct. If they are flipped, change the order of names in the units argument.")
       } else {
         if(grepl("eggs", units)){
@@ -113,9 +113,6 @@ plot_recruitment <- function(dat,
           warning("Unit type is not defined for this function. Please leave an issue at https://github.com/nmfs-ost/satf/issues")
         }
       }
-    } else {
-      sb_units <- "metric tons"
-      rec_units <- "metric tons"
       message("Default units for both SB and R are metric tons.")
     }
 
@@ -133,15 +130,41 @@ plot_recruitment <- function(dat,
       ggplot2::labs(x = paste("Spawning Biomass (", sb_units, ")", sep = ""),
            y = paste("Recruitment (", rec_units, ")", sep = "")) +
       ggplot2::theme(legend.position = "none")
-    sr_plt <- add_theme(sr_plt)
+    # sr_plt <- add_theme(sr_plt)
 
     r_plt <- ggplot2::ggplot(data = sr) +
-      ggplot2::geom_point(ggplot2::aes(x = year, y = exp_recr)) +
-      ggplot2::geom_line(ggplot2::aes(x = year, y = exp_recr), linewidth = 1) +
+      ggplot2::geom_point(ggplot2::aes(x = year, y = pred_recr)) +
+      ggplot2::geom_line(ggplot2::aes(x = year, y = pred_recr), linewidth = 1) +
       ggplot2::labs(x = "Year",
                     y = paste("Recruitment (", rec_units, ")", sep = "")) +
       ggplot2::theme(legend.position = "none")
-    r_plt <- add_theme(r_plt)
+    # r_plt <- add_theme(r_plt)
+
+    # recruitment deviations
+    params <- SS3_extract_df(output, "PARAMETERS")
+    colnames(params) <- params[2,]
+    params2 <- params[-c(1:2),] |>
+      dplyr::filter(grepl('RecrDev', Label)) |>
+      dplyr::select(Label, Value) |>
+      tidyr::separate_wider_delim(Label, delim = "_", names = c("Era", "Recr", "Year"))
+    params_proj <-  params[-c(1:2),] |>
+      dplyr::filter(grepl('ForeRecr', Label)) |>
+      dplyr::select(Label, Value) |>
+      tidyr::separate_wider_delim(Label, delim = "_", names = c("Recr", "Year")) |>
+      dplyr::mutate(Era = "Fore")
+
+    params_fin <- rbind(params2, params_proj)
+
+    rdev_plt <- ggplot2::ggplot(data = params) +
+      # ggplot2::geom_point(ggplot2::aes(x = year, y = log_rec_dev), shape = 1, size = 2.5) +
+      ggplot2::geom_pointrange(ggplot2::aes(x = Year, y = Value, ymax = log_rec_dev, ymin = 0),  fatten = 1, size = 2, shape = 1) +
+      ggplot2::geom_hline(yintercept = 0, linetype = "dashed") +
+      ggplot2::labs(x = "Year",
+                    y = "logR Deviations")
+
+    # params_sub = params[grep("Recr",params$Label),]
+    # Years = t(data.frame(strsplit(params_sub$Label,"_")))
+    # Years = as.data.frame(t(data.frame(strsplit(params_sub$Label,"_"))))
 
   } # close SS3 if statement
 
@@ -210,7 +233,7 @@ plot_recruitment <- function(dat,
                     y = paste("Recruitment (", rec_units, ")", sep = "")) +
       ggplot2::theme(legend.position = "none")
 
-    sr_plt <- add_theme(sr_plt)
+    # sr_plt <- add_theme(sr_plt)
 
     r_plt <- ggplot2::ggplot(data = sr) +
       ggplot2::geom_line(ggplot2::aes(x = year, y = pred_recr), linewidth = 1) + # exp. R
@@ -220,7 +243,7 @@ plot_recruitment <- function(dat,
                     y = paste("Recruitment (", rec_units, ")", sep = "")) +
       ggplot2::theme(legend.position = "none")
 
-    r_plt <- add_theme(r_plt)
+    # r_plt <- add_theme(r_plt)
 
     rdev_plt <- ggplot2::ggplot(data = sr) +
       # ggplot2::geom_point(ggplot2::aes(x = year, y = log_rec_dev), shape = 1, size = 2.5) +
@@ -228,15 +251,15 @@ plot_recruitment <- function(dat,
       ggplot2::geom_hline(yintercept = 0, linetype = "dashed") +
       ggplot2::labs(x = "Year",
                     y = "logR Deviations")
-    rdev_plt <- add_theme(rdev_plt)
+    # rdev_plt <- add_theme(rdev_plt)
 
   } # close BAM if statement
   if(return == "recruitment"){
-    return(r_plt)
+    return(add_theme(r_plt))
   } else if (return == "stock recruitment") {
-    return(sr_plt)
+    return(add_theme(sr_plt))
   } else if (return == "recruitment deviations"){
-    return(rdev_plt)
+    return(add_theme(rdev_plt))
   }
 
 }

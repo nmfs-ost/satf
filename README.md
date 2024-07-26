@@ -17,7 +17,7 @@ devtools::install_github("nmfs-ost/satf")
 Alternatively, you can install satf using the `remotes` package:
 
 ```r
-install.packages('remotes)
+install.packages("remotes")
 remotes::install_github("nmfs-ost/satf")
 ```
 

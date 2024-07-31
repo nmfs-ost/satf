@@ -77,8 +77,44 @@ table_indices <- function(dat,
 
   if(model == "BAM"){
     output <- dget(dat)
+    indices <- output$t.series |>
+      dplyr::select(year, contains("U.") & contains(".ob") | contains("cv.U"))
 
+    # Create function to reorder column names so ordered by fleet
+    fleet_names <- function(x){
+      extract_names <- colnames(x)[-1] |>
+        stringr::str_replace("U.", "") |>
+        stringr::str_replace("cv.", "") |>
+        stringr::str_replace(".ob", "") |>
+        unique()
+      return(extract_names)
+    }
+    col_order <- function(x){
+      extract_names <- fleet_names(x)
+      out_df <- x |> dplyr::select(year)
+      for(i in 1:length(extract_names)){
+        cols <- grep(extract_names[i], names(x), value = TRUE)
+        cols_extract <- x[, cols]
+        out_df <- cbind(out_df, cols_extract)
+      }
+      return(out_df)
+    }
 
+    indices <- col_order(indices)
+    indices[is.na(indices)] <- "-"
+    ind_fleets <- fleet_names(indices)
+
+    tab <- indices |>
+      dplyr::mutate(year = as.factor(year)) |>
+      flextable::flextable() |>
+      flextable::set_header_labels(values = c(
+        "Year", rep(c("Obs.", "CV"),
+                    length(ind_fleets))
+      )) |>
+      flextable::add_header_row(top = TRUE, values = c(
+        "", rep(ind_fleets, each = 2))
+      )
+    tab <- add_theme(tab)
 
   } # close BAM if statement
 

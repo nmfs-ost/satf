@@ -1,3 +1,13 @@
+#' Create Indices of Abundance Table
+#'
+#' @template dat
+#' @template model
+#'
+#' @return Create table of observed annual indices of abundance plus error
+#' stratified by fleet.
+#' @export
+#'
+#' @examples table_indices(dat = dat, model = "BAM")
 table_indices <- function(dat,
                           model){
   if(model == "SS3"){

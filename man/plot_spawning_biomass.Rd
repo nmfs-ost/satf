@@ -6,10 +6,12 @@
 \usage{
 plot_spawning_biomass(
   dat,
-  model = c("SS3", "BAM", "ASAP", "AMAK"),
+  model = c("SS3", "BAM", "ASAP", "AMAK", "WHAM"),
   refpts = FALSE,
-  warnings = FALSE,
-  units = NULL
+  show_warnings = FALSE,
+  units = NULL,
+  ref_line = c("target", "MSY", "msy", "unfished"),
+  endyr = NULL
 )
 }
 \arguments{
@@ -23,11 +25,17 @@ are options for plotting spawning biomass.}
 \item{refpts}{Output a dataframe of reference points for spawning biomass
 rather than plot. Default is FALSE.}
 
-\item{warnings}{Option to suppress warnings}
+\item{show_warnings}{Option to suppress warnings}
 
 \item{units}{If units are not available in the output file or are not the
 default of metric tons, then state the units of spawning biomass applicable
 to the stock. For plotting purposes, spawning biomass is divided by 1000.}
+
+\item{ref_line}{choose with reference point to plot a reference line and use
+in relative sb calculations}
+
+\item{endyr}{input the end year of the stock assessment data (not including
+projections). This parameter will be depricated once the output converter is fully developed.}
 }
 \value{
 Plot spawning biomass from a stock assessment model as found in a NOAA

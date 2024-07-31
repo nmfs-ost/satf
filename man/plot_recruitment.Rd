@@ -9,9 +9,9 @@ plot_recruitment(
   model,
   params = FALSE,
   params_only = FALSE,
-  units = NULL,
-  include_fxn = FALSE,
-  warnings = FALSE
+  units = c(sb = "metric tons", recruitment = "metric tons"),
+  show_warnings = FALSE,
+  return = "recruitment"
 )
 }
 \arguments{
@@ -30,9 +30,9 @@ are options for plotting spawning biomass.}
 or are different for SB and R, then report them here starting with SB units
 and following with R units.}
 
-\item{include_fxn}{Include the stock recruitment function on the SR curve plot?}
+\item{show_warnings}{Include warnings? Default FALSE}
 
-\item{warnings}{Include warnings? Default FALSE}
+\item{return}{Default returns recruitment over time. Options to display stock recruitment curve/recruitment fit}
 }
 \value{
 A series of plots are exported including recruitment over time with R0
@@ -40,4 +40,7 @@ reference line, stock recruitment curve, and other related figures.
 }
 \description{
 Plot Recruitment
+}
+\examples{
+plot_recruitment(dat = dat, model = "BAM")
 }

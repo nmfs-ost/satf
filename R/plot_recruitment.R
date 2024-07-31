@@ -14,7 +14,7 @@
 #' reference line, stock recruitment curve, and other related figures.
 #' @export
 #'
-#' @examples
+#' @examples plot_recruitment(dat = dat, model = "BAM")
 plot_recruitment <- function(dat,
                              model,
                              params = FALSE,

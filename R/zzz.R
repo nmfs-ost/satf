@@ -8,9 +8,13 @@
 # Things to load on start up
 .onLoad <- function(libname, pkgname){
   # import NOAA approved fonts from package
-  extrafont::loadfonts()
+  suppressPackageStartupMessages(
+    extrafont::loadfonts()
+    )
   suppressWarnings(
-    extrafont::font_import(pattern = c("cambria", "arial"), prompt = FALSE)
+    suppressMessages(
+      extrafont::font_import(pattern = c("cambria", "arial"), prompt = FALSE)
+    )
   )
 
 }

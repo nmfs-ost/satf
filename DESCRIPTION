@@ -5,7 +5,7 @@ Version: 0.1.0
 Author: Samantha Schiano, Bai Li, Steve Saul, Kelli F. Johnson, & Megumi Oshima
 Maintainer: Samantha Schiano <samantha.schiano@noaa.gov>
 Description: Creates exploratory and finished tables and figures for stock assessment 
-  documents from U.S. stock assessment model outputs.    This packages addresses 
+  documents from U.S. stock assessment model outputs. This packages addresses 
   parts of the stock assessment workflow that interprets outputs of stock 
   assessment models as well as allows the analyst to create report ready tables 
   and figures, reducing the need to create their own and format then when adding 
@@ -21,12 +21,11 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.3.1
 Imports: 
-    cowplot,
     dplyr,
     extrafont,
     flextable,
     ggplot2,
     naniar,
-    stats,
+    stringr,
     tidyr,
     utils

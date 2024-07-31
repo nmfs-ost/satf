@@ -1,3 +1,9 @@
+#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+# Utility functions to read and support SS3
+#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+# Before converted development
+
 SS3_extract_df <- function(dat, label){
   # Read SS3 report file
 
@@ -41,7 +47,7 @@ SS3_extract_bio_info <- function(
     return(nummax)
   }
 
-  output <- read.table(
+  output <- utils::read.table(
     file = dat, col.names = 1:get_ncol(dat), fill = TRUE, quote = "",
     colClasses = "character", nrows = -1, comment.char = "",
     blank.lines.skip = FALSE

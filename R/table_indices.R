@@ -68,7 +68,7 @@ table_indices <- function(dat,
     indices <- merge(index2_obs, index2_se) |>
       dplyr::rename(year = Yr)
     indices <- indices[, sort(names(indices))] |>
-      dplyr::select("year", everything())
+      dplyr::select("year", dplyr::everything())
     indices[is.na(indices)] <- "-"
 
     tab <- indices |>
@@ -88,7 +88,7 @@ table_indices <- function(dat,
   if(model == "BAM"){
     output <- dget(dat)
     indices <- output$t.series |>
-      dplyr::select(year, contains("U.") & contains(".ob") | contains("cv.U"))
+      dplyr::select(year, dplyr::contains("U.") & contains(".ob") | contains("cv.U"))
 
     # Create function to reorder column names so ordered by fleet
     fleet_names <- function(x){

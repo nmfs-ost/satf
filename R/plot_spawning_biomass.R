@@ -18,7 +18,6 @@
 #' or will be extracted from the provided file if possible.
 #' @export
 #'
-#' @examples plot_spawning_biomass(dat = "spp.rdat",model = "BAM")
 plot_spawning_biomass <- function(dat,
                          model = c('SS3','BAM', 'ASAP', 'AMAK', 'WHAM'),
                          refpts = FALSE,

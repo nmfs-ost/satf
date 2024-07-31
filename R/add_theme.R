@@ -31,8 +31,8 @@ add_theme <- function(x) {
         plot.background = ggplot2::element_rect(fill = "transparent"),
         panel.background = ggplot2::element_rect(fill = "transparent"),
         panel.grid = ggplot2::element_blank(),
-        panel.border = ggplot2::element_rect(colour = "black", fill = NA, linewidth = 0.5),
-        text = ggplot2::element_text(size = 12, family = "Cambria")
+        panel.border = ggplot2::element_rect(colour = "black", fill = NA, linewidth = 0.5)
+        # text = ggplot2::element_text(size = 12, family = "Cambria")
       )
     # Determining how to treat a legend if there is one
     # check if one is present

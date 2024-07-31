@@ -21,6 +21,3 @@ stratified by fleet.
 \description{
 Create Indices of Abundance Table
 }
-\examples{
-table_indices(dat = dat, model = "BAM")
-}

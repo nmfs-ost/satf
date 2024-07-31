@@ -45,6 +45,3 @@ or will be extracted from the provided file if possible.
 \description{
 Plot Spawning Biomass
 }
-\examples{
-plot_spawning_biomass(dat = "spp.rdat",model = "BAM")
-}

@@ -7,7 +7,7 @@
 #' stratified by fleet.
 #' @export
 #'
-#' @examples table_indices(dat = dat, model = "BAM")
+
 table_indices <- function(dat,
                           model){
   if(model == "SS3"){

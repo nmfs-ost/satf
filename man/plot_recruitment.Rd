@@ -41,6 +41,3 @@ reference line, stock recruitment curve, and other related figures.
 \description{
 Plot Recruitment
 }
-\examples{
-plot_recruitment(dat = dat, model = "BAM")
-}

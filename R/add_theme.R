@@ -15,8 +15,8 @@ add_theme <- function(x) {
     theme_obj <- x |>
       flextable::merge_h(i = 1, part = "header") |>
       flextable::align(part = "header", align = "center") |>
-      flextable::font(fontname = "cambria",
-                      part = "all") |>
+      # flextable::font(fontname = "cambria",
+      #                 part = "all") |>
       flextable::add_header_lines(top = FALSE)
   } else if (class(x)[1] == "gt_tbl") {
     theme_obj <- x

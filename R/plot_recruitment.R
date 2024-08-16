@@ -262,5 +262,33 @@ plot_recruitment <- function(dat,
     return(add_theme(rdev_plt))
   }
 
+  if(model == "base"){
+    out <- readRDS(dat)
+    # Stock Recruitment
+    sr_plt <- ggplot2::ggplot(data = sr) +
+      ggplot2::geom_line(ggplot2::aes(x = spawn_bio/1000, y = exp_recr/1000), linewidth = 1) + # exp. R
+      # add exp R after bias adjustment (dotted line)
+      ggplot2::geom_point(ggplot2::aes(x = spawn_bio/1000, y = pred_recr/1000, color = year)) + # change colors
+      # ggplot2::geom_text() +
+      ggplot2::labs(x = paste("Spawning Biomass (", sb_units, ")", sep = ""),
+                    y = paste("Recruitment (", rec_units, ")", sep = "")) +
+      ggplot2::theme(legend.position = "none")
+
+    # Recruitment time series
+    r_plt <- ggplot2::ggplot(data = sr) +
+      ggplot2::geom_point(ggplot2::aes(x = year, y = pred_recr)) +
+      ggplot2::geom_line(ggplot2::aes(x = year, y = pred_recr), linewidth = 1) +
+      ggplot2::labs(x = "Year",
+                    y = paste("Recruitment (", rec_units, ")", sep = "")) +
+      ggplot2::theme(legend.position = "none")
+    # Recruitment deviations
+    rdev_plt <- ggplot2::ggplot(data = params) +
+      # ggplot2::geom_point(ggplot2::aes(x = year, y = log_rec_dev), shape = 1, size = 2.5) +
+      ggplot2::geom_pointrange(ggplot2::aes(x = Year, y = Value, ymax = log_rec_dev, ymin = 0),  fatten = 1, size = 2, shape = 1) +
+      ggplot2::geom_hline(yintercept = 0, linetype = "dashed") +
+      ggplot2::labs(x = "Year",
+                    y = "logR Deviations")
+  }
+
 }
 

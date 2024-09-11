@@ -57,7 +57,7 @@ SS3_extract_bio_info <- function(
   bio_info <- SS3_extract_df(output, "DERIVED_QUANTITIES")[-c(1:4),]
   colnames(bio_info) <- bio_info[1,]
   bio_info <- bio_info[-1,] |>
-    tidyr::separate_wider_delim(cols = LABEL, delim = "_", names = c("label", "year")) |>
+    tidyr::separate_wider_delim(cols = Label, delim = "_", names = c("label", "year")) |>
     dplyr::filter(label == parameter)
   bio_info <- Filter(function(x)!all(is.na(x)), bio_info)
 

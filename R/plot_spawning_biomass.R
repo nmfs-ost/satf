@@ -26,7 +26,7 @@ plot_spawning_biomass <- function(dat,
                          units = NULL,
                          biomass_units = NULL,
                          spawning_biomass_units = NULL,
-                         scaled = TRUE,
+                         scaled = FALSE,
                          scale_amount = 1000,
                          ref_line = c("target", "MSY", "msy", "unfished"),
                          endyr = NULL
@@ -113,9 +113,7 @@ plot_spawning_biomass <- function(dat,
       ggplot2::scale_x_continuous(n.breaks = round(length(subset(sb2, year<=endyr)$year)/10),
                                   guide = ggplot2::guide_axis(minor.ticks = TRUE))
     plt_rel2 <- add_theme(plt_rel)
-  }
-
-  if (model == "SS3") {
+  } else if (model == "SS3") {
     # load SS3 data file
     # check if dat parameter is a report file or a mutates df
     if(grepl(".sso", dat)){
@@ -141,6 +139,13 @@ plot_spawning_biomass <- function(dat,
     bio_info <- bio_info[-1,] |>
       dplyr::mutate(year = stringr::str_extract(Label, "[0-9]+$"),
                     Label = stringr::str_remove(Label, "_[0-9]+$"))
+
+    sb <- bio_info |>
+      dplyr::filter(Label == "SSB") |>
+      dplyr::mutate(Value = as.numeric(Value),
+                    year = as.numeric(year),
+                    StdDev = as.numeric(StdDev))
+    endyr <- max(sb$year)
       # dplyr::mutate(Label = dplyr::case_when(grepl("_[0-9]+", Label) ~ stringr::str_split()))
       # tidyr::separate_wider_regex(cols = Label, patterns = c(label = "^\\w+?",
       #                                                        "_",
@@ -233,12 +238,7 @@ plot_spawning_biomass <- function(dat,
 
     # max_yr <- max(unique(sb$year))
     # SB ts
-    sb <- bio_info |>
-      dplyr::filter(Label == "SSB") |>
-      dplyr::mutate(Value = as.numeric(Value),
-                    year = as.numeric(year),
-                    StdDev = as.numeric(StdDev))
-    endyr <- max(sb$year)
+
     if (scaled) {
       plt <- ggplot2::ggplot(data = sb) +
         ggplot2::geom_line(ggplot2::aes(x = year, y = Value), linewidth = 1) +

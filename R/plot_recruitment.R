@@ -7,6 +7,10 @@
 #' @param units If units are not available in the output file, in metric tons,
 #' or are different for SB and R, then report them here starting with SB units
 #' and following with R units.
+#' @param spawning_biomass_units units of spawning biomass if different from biomass
+#' @param recruitment_units units for recruitment
+#' @param scaled_values T/F; indicate whether the output values for biomass and recruitment are scaled
+#' @param scale_amount indicate the exact amount of scale (i.e. 1000)
 #' @param show_warnings Include warnings? Default FALSE
 #' @param return Default returns recruitment over time. Options to display stock recruitment curve/recruitment fit
 #'
@@ -16,15 +20,30 @@
 #'
 
 plot_recruitment <- function(dat,
-                             model,
+                             model = "base",
                              params = FALSE,
                              params_only = FALSE,
                              units = c(sb = "metric tons", recruitment = "metric tons"),
                              show_warnings = FALSE,
                              return = "recruitment"){
+  # check units
+  # biomass
+  if(!is.null(recruitment_units)){
+    ru <- recruitment_units
+  } else {
+    ru <- "metric tons"
+  }
+  # spawning biomass
+  if(!is.null(spawning_biomass_units)){
+    sbu <- spawning_biomass_units
+  } else {
+    sbu <- "metric tons"
+  }
+
+
   if(model == "SS3"){
     # Read rep file or rename
-    if(grepl("Report.sso", dat)){
+    if(grepl(".sso", dat)){
       get_ncol <- function(file, skip = 0) {
         nummax <- max(utils::count.fields(file,
                                           skip = skip, quote = "",
@@ -42,59 +61,61 @@ plot_recruitment <- function(dat,
     }
     # extract recruitment
     sr_info <- SS3_extract_df(output, "SPAWN_RECRUIT")
-    sr <- sr_info[-c(1:13),]
-    colnames(sr) <- sr_info[12,]
+    sr <- sr_info[-c(1:14),]
+    colnames(sr) <- tolower(sr_info[13,])
     sr <- sr  |>
-      dplyr::mutate(spawn_bio = as.numeric(spawn_bio),
+      dplyr::mutate(year = yr,
+                    spawnbio = as.numeric(spawnbio),
                     exp_recr = as.numeric(exp_recr),
-                    with_env = as.numeric(with_env),
-                    adjusted = as.numeric(adjusted),
+                    with_regime = as.numeric(with_regime),
+                    bias_adjusted = as.numeric(bias_adjusted),
                     pred_recr = as.numeric(pred_recr),
                     # dev = as.numeric(dev),
-                    biasadj = as.numeric(biasadj))
+                    # biasadjuster = as.numeric(biasadjuster)
+                    )
 
     # Store virgin and initial recruitment for reference in plotting
     time_series <- SS3_extract_df(output, "TIME_SERIES")
-    colnames(time_series) <- time_series[2,]
+    colnames(time_series) <- tolower(time_series[2,])
     time_series <- time_series[-c(1:2),]
     time_series[, 5:ncol(time_series)] <- lapply(5:ncol(time_series), function(x) suppressWarnings(as.numeric(time_series[[x]])))
 
     # Adapted from r4ss
-    B0 <- sum(time_series[["SpawnBio"]][time_series[["Era"]] == "VIRG"], na.rm = TRUE)
-    B1 <- sum(time_series[["SpawnBio"]][time_series[["Era"]] == "INIT"], na.rm = TRUE)
-    R0 <- sum(time_series[["Recruit_0"]][time_series[["Era"]] == "VIRG"], na.rm = TRUE)
-    R1 <- sum(time_series[["Recruit_0"]][time_series[["Era"]] == "INIT"], na.rm = TRUE)
+    B0 <- sum(time_series[["spawnbio"]][time_series[["era"]] == "VIRG"], na.rm = TRUE)
+    B1 <- sum(time_series[["spawnbio"]][time_series[["era"]] == "INIT"], na.rm = TRUE)
+    R0 <- sum(time_series[["recruit_0"]][time_series[["era"]] == "VIRG"], na.rm = TRUE)
+    R1 <- sum(time_series[["recruit_0"]][time_series[["era"]] == "INIT"], na.rm = TRUE)
 
     # extract sr_err
-    sr_err <- sr_info[10:11,]
-    colnames(sr_err) <- sr_info[9,]
-    sr_err <- Filter(function(x)!all(is.na(x)), sr_err)
+    # sr_err <- sr_info[10:11,]
+    # colnames(sr_err) <- sr_info[9,]
+    # sr_err <- Filter(function(x)!all(is.na(x)), sr_err)
 
     # sr fxn variables
-    sr_vars <- sr_info[2:6,1:2]
-    colnames(sr_vars) <- c("value", "variable")
-    sr_fxn <- sr_info[1,3][[1]]
+    # sr_vars <- sr_info[2:6,1:2]
+    # colnames(sr_vars) <- c("value", "variable")
+    # sr_fxn <- sr_info[1,3][[1]]
 
-    if (isTRUE(params) & isTRUE(params_only)){
-      return(sr_vars)
-      stop("Only stock recruitment model parameters were exported and plots were not created.")
-    }
+    # if (isTRUE(params) & isTRUE(params_only)){
+    #   return(sr_vars)
+    #   stop("Only stock recruitment model parameters were exported and plots were not created.")
+    # }
 
-    lnr0 <- sr_vars$value[sr_vars$variable=="Ln(R0)"]
-    steep <- sr_vars$value[sr_vars$variable=="steep"]
-    sigr <- sr_vars$value[sr_vars$variable=="sigmaR"]
-    envlink <- sr_vars$value[sr_vars$variable=="env_link_"]
-    ini_eq <- sr_vars$value[sr_vars$variable=="init_eq"]
+    # lnr0 <- sr_vars$value[sr_vars$variable=="Ln(R0)"]
+    # steep <- sr_vars$value[sr_vars$variable=="steep"]
+    # sigr <- sr_vars$value[sr_vars$variable=="sigmaR"]
+    # envlink <- sr_vars$value[sr_vars$variable=="env_link_"]
+    # ini_eq <- sr_vars$value[sr_vars$variable=="init_eq"]
 
     # Export message
-    message(cat("Stock Recrutiment Fxn: ", sr_fxn, "\n", # need to add conversion to what this number means to analyst
-                "    ", "    ", "   ", "ln(R0): ", lnr0, "\n",
-                "     ", "      ", "     ", "h: ", steep, "\n",
-                "    ", "    ", "   ", "sigmaR: ", sigr, "\n",
-                "    ", "    ", " ", "env_link: ", envlink, "\n",
-                "    ", "    ", "  ", "init_eq: ", ini_eq, "\n"
-                )
-            )
+    # message(cat("Stock Recrutiment Fxn: ", sr_fxn, "\n", # need to add conversion to what this number means to analyst
+    #             "    ", "    ", "   ", "ln(R0): ", lnr0, "\n",
+    #             "     ", "      ", "     ", "h: ", steep, "\n",
+    #             "    ", "    ", "   ", "sigmaR: ", sigr, "\n",
+    #             "    ", "    ", " ", "env_link: ", envlink, "\n",
+    #             "    ", "    ", "  ", "init_eq: ", ini_eq, "\n"
+    #             )
+    #         )
 
     # Units - change this statement to fit new convention
     if(!is.null(units)){
@@ -123,9 +144,9 @@ plot_recruitment <- function(dat,
 
     # need to rescale to 1000s rather than xe..
     sr_plt <- ggplot2::ggplot(data = sr) +
-      ggplot2::geom_line(ggplot2::aes(x = spawn_bio/1000, y = exp_recr/1000), linewidth = 1) + # exp. R
+      ggplot2::geom_line(ggplot2::aes(x = spawnbio/1000, y = exp_recr/1000), linewidth = 1) + # exp. R
       # add exp R after bias adjustment (dotted line)
-      ggplot2::geom_point(ggplot2::aes(x = spawn_bio/1000, y = pred_recr/1000, color = year)) + # change colors
+      ggplot2::geom_point(ggplot2::aes(x = spawnbio/1000, y = pred_recr/1000, color = year)) + # change colors
       # ggplot2::geom_text() +
       ggplot2::labs(x = paste("Spawning Biomass (", sb_units, ")", sep = ""),
            y = paste("Recruitment (", rec_units, ")", sep = "")) +
@@ -155,9 +176,12 @@ plot_recruitment <- function(dat,
 
     params_fin <- rbind(params2, params_proj)
 
-    rdev_plt <- ggplot2::ggplot(data = params) +
+    sr2 <- dplyr::left_join(sr, params_fin, by = c("yr" = "Year")) |>
+      dplyr::mutate(Value = as.numeric(Value))
+
+    rdev_plt <- ggplot2::ggplot(data = sr2) +
       # ggplot2::geom_point(ggplot2::aes(x = year, y = log_rec_dev), shape = 1, size = 2.5) +
-      ggplot2::geom_pointrange(ggplot2::aes(x = Year, y = Value, ymax = log_rec_dev, ymin = 0),  fatten = 1, size = 2, shape = 1) +
+      ggplot2::geom_pointrange(ggplot2::aes(x = year, y = exp_recr, ymax = Value, ymin = 0),  fatten = 1, size = 2, shape = 1) +
       ggplot2::geom_hline(yintercept = 0, linetype = "dashed") +
       ggplot2::labs(x = "Year",
                     y = "logR Deviations")

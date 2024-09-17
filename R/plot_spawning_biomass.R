@@ -12,8 +12,9 @@
 #' @param scale_amount indicate the exact amount of scale (i.e. 1000)
 #' @param ref_line choose with reference point to plot a reference line and use
 #' in relative sb calculations
-#' @param endyr input the end year of the stock assessment data (not including
+#' @param end_year input the end year of the stock assessment data (not including
 #' projections). This parameter will be deprecated once the output converter is fully developed.
+#' @param relative Plot relative spawning biomass. Ref line indicates which reference point to use
 #'
 #' @return Plot spawning biomass from a stock assessment model as found in a NOAA
 #' stock assessment report. Units of spawning biomass can either be manually added
@@ -21,7 +22,7 @@
 #' @export
 #'
 plot_spawning_biomass <- function(dat,
-                         model = c('SS3','BAM', 'ASAP', 'AMAK', 'WHAM'),
+                         model = c('SS3','BAM', 'ASAP', 'AMAK', 'WHAM', "standard"),
                          show_warnings = FALSE,
                          units = NULL,
                          biomass_units = NULL,
@@ -29,13 +30,9 @@ plot_spawning_biomass <- function(dat,
                          scaled = FALSE,
                          scale_amount = 1000,
                          ref_line = c("target", "MSY", "msy", "unfished"),
-                         endyr = NULL
-                         ) {
-  # if(warnings){
-  #
-  # } else {
-  #   suppressWarnings()
-  # }
+                         end_year = NULL,
+                         relative = FALSE
+                         ){
 
   model <- match.arg(model, several.ok = FALSE)
 
@@ -59,60 +56,80 @@ plot_spawning_biomass <- function(dat,
     sbu <- "metric tons"
   }
 
-  if(model == "base"){
+  if(model == "standard"){
     output <- read.csv(dat)
-    output2 <- output |>
+    sb <- output |>
       dplyr::filter(label == "spawning_biomass",
-                    module_name == "DERIVED_QUANTITIES" | module_name == "") # SS3 and BAM target module names
+                    module_name == "DERIVED_QUANTITIES" | module_name == "") |> # SS3 and BAM target module names
+      dplyr::mutate(estimate = as.numeric(estimate),
+                    year = as.numeric(year))
+    if (is.null(end_year)){
+      endyr <- max(sb$year)
+    }
     # Select value for reference line and label
     if (any(grepl("target", output$label))) {
-      ref_line_val <- output[grep("(?=.*spawning_biomass)(?=.*target)", output$label, perl = TRUE),]$estimate
+      ref_line_val <- as.numeric(output[grep("(?=.*spawning_biomass)(?=.*target)", output$label, perl = TRUE),]$estimate)
       ref_line_label <- "target"
-      ann_add <- ggplot2::annotate("text", x = endyr+0.5, y=ref_line_val/1000, label = bquote(SB[F30])) # this might need to change
+      if (scaled) {
+        ann_add <- ggplot2::annotate("text", x = endyr + 0.05, y=ref_line_val, label = bquote(SB[target])) # this might need to change
+      } else {
+        ann_add <- ggplot2::annotate("text", x = endyr + 0.05, y=ref_line_val/1000, label = bquote(SB[target]))
+      }
     } else if (ref_line == "MSY" | ref_line == "msy") {
-      ref_line_val <- output[grep("(?=.*spawning_biomass)(?=.*msy)", output$label, perl = TRUE),]$estimate
+      ref_line_val <- as.numeric(output[grep("(?=.*spawning_biomass)(?=.*msy)", output$label, perl = TRUE),]$estimate)
       ref_line_label <- "MSY"
-      ann_add <- ggplot2::annotate("text", x = endyr+0.5, y=ref_line_val/1000, label = bquote(SB[MSY]))
+      if (scaled) {
+        ann_add <- ggplot2::annotate("text", x = endyr + 0.05, y=ref_line_val, label = bquote(SB[MSY]))
+      } else {
+        ann_add <- ggplot2::annotate("text", x = endyr + 0.05, y=ref_line_val/1000, label = bquote(SB[MSY]))
+      }
     } else if (ref_line == "unfished") {
-      ref_line_val <- output[grep("(?=.*spawning_biomass)(?=.*target)", output$label, perl = TRUE),]$estimate
+      ref_line_val <- as.numeric(output[grep("(?=.*spawning_biomass)(?=.*target)", output$label, perl = TRUE),]$estimate)
       ref_line_label <- "unfished"
-      ann_add <- ggplot2::annotate("text", x = endyr+0.5, y=ref_line_val/1000, label = bquote(SB[unfished]))
+      if (scaled) {
+        ann_add <- ggplot2::annotate("text", x = endyr + 0.05, y=ref_line_val, label = bquote(SB[unfished]))
+      } else {
+        ann_add <- ggplot2::annotate("text", x = endyr + 0.05, y=ref_line_val/1000, label = bquote(SB[unfished]))
+      }
     }
-
-    if(scaled_values){
-      plt <- ggplot2::ggplot(data = output2) +
-        ggplot2::geom_line(ggplot2::aes(x = year, y = value), linewidth = 1) +
-        ggplot2::geom_hline(yintercept = ref_line_val, linetype = 2) +
-        ggplot2::labs(x = "Year",
-                      y = paste("Spawning Biomass (", sbu, ")", sep = "")) +
-        ggplot2::scale_x_continuous(n.breaks = round(length(output2$year)/10),
-                                    guide = ggplot2::guide_axis(minor.ticks = TRUE))
-      plt <- plt + ann_add
-    } else {
-      plt <- ggplot2::ggplot(data = output) +
-        ggplot2::geom_line(ggplot2::aes(x = year, y = value/1000), linewidth = 1) +
-        # ggplot2::geom_ribbon(ggplot2::aes(x = year, ymin = (value/1000 - stddev/1000), ymax = (value/1000 + stddev/1000)), colour = "grey", alpha = 0.3) +
-        ggplot2::geom_hline(yintercept = ref_line_val/1000, linetype = 2) +
-        ggplot2::labs(x = "Year",
-                      y = paste("Spawning Biomass (", sbu, ")", sep = "")) +
-        ggplot2::scale_x_continuous(n.breaks = round(length(subset(sb2, year<=endyr)$year)/10),
-                                    guide = ggplot2::guide_axis(minor.ticks = TRUE))
-      plt <- plt + ann_add
+    # Choose number of breaks for x-axis
+    x_n_breaks <- round(length(subset(sb, year<=endyr)$year)/10)
+    if (x_n_breaks <= 5) {
+      x_n_breaks <- round(length(subset(sb, year<=endyr)$year)/5)
     }
-
-
-    plt_fin <- add_theme(plt)
-
+    if (relative) {
     # plot relative SB
-    plt_rel <- ggplot2::ggplot(data = subset(sb2, year<=endyr)) +
-      ggplot2::geom_line(ggplot2::aes(x = year, y = value/ref_line_val), linewidth = 1) +
-      # ggplot2::geom_ribbon(ggplot2::aes(x = year, ymin = (value/ref_line_val - stddev/ref_line_val), ymax = (value/ref_line_val + stddev/ref_line_val)), colour = "grey", alpha = 0.3) +
-      ggplot2::geom_hline(yintercept = ref_line_val/ref_line_val, linetype = 2) +
-      ggplot2::labs(x = "Year",
-                    y = paste("Spawning Biomass (", sbu, ")", sep = "")) +
-      ggplot2::scale_x_continuous(n.breaks = round(length(subset(sb2, year<=endyr)$year)/10),
-                                  guide = ggplot2::guide_axis(minor.ticks = TRUE))
-    plt_rel2 <- add_theme(plt_rel)
+      plt <- ggplot2::ggplot(data = subset(sb, year<=endyr)) +
+        ggplot2::geom_line(ggplot2::aes(x = year, y = estimate/ref_line_val), linewidth = 1) +
+        # ggplot2::geom_ribbon(ggplot2::aes(x = year, ymin = (value/ref_line_val - stddev/ref_line_val), ymax = (value/ref_line_val + stddev/ref_line_val)), colour = "grey", alpha = 0.3) +
+        ggplot2::geom_hline(yintercept = ref_line_val/ref_line_val, linetype = 2) +
+        ggplot2::labs(x = "Year",
+                      y = paste("Spawning Biomass (", sbu, ")", sep = "")) +
+        ggplot2::scale_x_continuous(n.breaks = x_n_breaks,
+                                    guide = ggplot2::guide_axis(minor.ticks = TRUE))
+    } else {
+      if(scaled){
+        plt <- ggplot2::ggplot(data = sb) +
+          ggplot2::geom_line(ggplot2::aes(x = year, y = estimate), linewidth = 1) +
+          ggplot2::geom_hline(yintercept = ref_line_val, linetype = 2) +
+          ggplot2::labs(x = "Year",
+                        y = paste("Spawning Biomass (", sbu, ")", sep = "")) +
+          ggplot2::scale_x_continuous(n.breaks = x_n_breaks,
+                                      guide = ggplot2::guide_axis(minor.ticks = TRUE))
+        plt <- plt + ann_add
+      } else {
+        plt <- ggplot2::ggplot(data = sb) +
+          ggplot2::geom_line(ggplot2::aes(x = year, y = estimate/1000), linewidth = 1) +
+          # ggplot2::geom_ribbon(ggplot2::aes(x = year, ymin = (value/1000 - stddev/1000), ymax = (value/1000 + stddev/1000)), colour = "grey", alpha = 0.3) +
+          ggplot2::geom_hline(yintercept = ref_line_val/1000, linetype = 2) +
+          ggplot2::labs(x = "Year",
+                        y = paste("Spawning Biomass (", sbu, ")", sep = "")) +
+          ggplot2::scale_x_continuous(n.breaks = x_n_breaks,
+                                      guide = ggplot2::guide_axis(minor.ticks = TRUE))
+        plt <- plt + ann_add
+      }
+    }
+    plt_fin <- add_theme(plt)
   } else if (model == "SS3") {
     # load SS3 data file
     # check if dat parameter is a report file or a mutates df
@@ -145,29 +162,9 @@ plot_spawning_biomass <- function(dat,
       dplyr::mutate(Value = as.numeric(Value),
                     year = as.numeric(year),
                     StdDev = as.numeric(StdDev))
-    endyr <- max(sb$year)
-      # dplyr::mutate(Label = dplyr::case_when(grepl("_[0-9]+", Label) ~ stringr::str_split()))
-      # tidyr::separate_wider_regex(cols = Label, patterns = c(label = "^\\w+?",
-      #                                                        "_",
-      #                                                        year = "[0-9]+$"),
-      #                             too_few = "align_start")
-
-    # Extract spawning biomass from data
-    # biomass_info <- SS3_extract_bio_info(dat = dat, parameter = "SPB")
-    # Extract B0 from DERIVED_QUANITIES df
-    # B0 <- as.numeric(biomass_info[['Value']][biomass_info[['year']]=='Virgin'])
-    # sb <- biomass_info |>
-    #   dplyr::filter(year != 'Virgin' & year != "Initial") |>
-    #   dplyr::mutate(year = as.numeric(year),
-    #                 value = as.numeric(Value),
-    #                 stddev = as.numeric(StdDev)) |>
-    #   dplyr::select(year, value, stddev) |>
-    #   dplyr::filter(year < endyr + 1)
-
-    # Extract reference points, Btarget, Unfished biomass, and Bmsy
-      # tgt <- as.numeric(bio_info[['Value']][bio_info[['label']]=="SSB" & bio_info[['year']]=="Btgt"])
-      # unfished <- as.numeric(bio_info[['Value']][bio_info[['label']]=="SSB" & bio_info[['year']]=="Unfished"])
-      # msy <- as.numeric(bio_info[['Value']][bio_info[['label']]=="SSB" & bio_info[['year']]=="MSY"])
+    if(is.null(end_year)){
+      endyr <- max(sb$year)
+    }
 
     # Check if units were declared
     if(!is.null(units)){
@@ -235,45 +232,44 @@ plot_spawning_biomass <- function(dat,
         ann_add <- ggplot2::annotate("text", x = endyr+0.5, y=ref_line_val/1000, label = bquote(SB[ref]))
       }
     }
-
-    # max_yr <- max(unique(sb$year))
-    # SB ts
-
-    if (scaled) {
-      plt <- ggplot2::ggplot(data = sb) +
-        ggplot2::geom_line(ggplot2::aes(x = year, y = Value), linewidth = 1) +
-        ggplot2::geom_ribbon(ggplot2::aes(x = year, ymin = (Value - StdDev), ymax = (Value + StdDev)), colour = "grey", alpha = 0.3) +
-        ggplot2::geom_hline(yintercept = ref_line_val, linetype = 2) +
+    # Choose number of breaks for x-axis
+    x_n_breaks <- round(length(subset(sb, year<=endyr)$year)/10)
+    if (x_n_breaks <= 5) {
+      x_n_breaks <- round(length(subset(sb, year<=endyr)$year)/5)
+    }
+    # Plot of rel. SB
+    if (relative) {
+      plt <- ggplot2::ggplot(data = subset(sb, year <= endyr)) +
+        ggplot2::geom_line(ggplot2::aes(x = year, y = Value/ref_line_val), linewidth = 1) +
+        ggplot2::geom_ribbon(ggplot2::aes(x = year, ymin = (Value/ref_line_val - StdDev/ref_line_val), ymax = (Value/ref_line_val + StdDev/ref_line_val)), colour = "grey", alpha = 0.3) +
+        ggplot2::geom_hline(yintercept = ref_line_val/ref_line_val, linetype = 2) +
         ggplot2::labs(x = "Year",
-                      y = paste("Spawning Biomass (", sb_units, ")", sep = "")) +
-        ggplot2::scale_x_continuous(n.breaks = round(length(subset(sb, year<=endyr)$year)/10),
+                      y = paste("Rel. Spawning Biomass", sep = "")) +
+        ggplot2::scale_x_continuous(n.breaks = x_n_breaks,
                                     guide = ggplot2::guide_axis(minor.ticks = TRUE))
     } else {
-      plt <- ggplot2::ggplot(data = sb) +
-        ggplot2::geom_line(ggplot2::aes(x = year, y = Value/1000), linewidth = 1) +
-        ggplot2::geom_ribbon(ggplot2::aes(x = year, ymin = (Value/1000 - StdDev/1000), ymax = (Value/1000 + StdDev/1000)), colour = "grey", alpha = 0.3) +
-        ggplot2::geom_hline(yintercept = ref_line_val/1000, linetype = 2) +
-        ggplot2::labs(x = "Year",
-                      y = paste("Spawning Biomass (", sb_units, ")", sep = "")) +
-        ggplot2::scale_x_continuous(n.breaks = round(length(subset(sb, year<=endyr)$year)/10),
-                                    guide = ggplot2::guide_axis(minor.ticks = TRUE))
+      if (scaled) {
+        plt <- ggplot2::ggplot(data = subset(sb, year < endyr + 1)) +
+          ggplot2::geom_line(ggplot2::aes(x = year, y = Value), linewidth = 1) +
+          ggplot2::geom_ribbon(ggplot2::aes(x = year, ymin = (Value - StdDev), ymax = (Value + StdDev)), colour = "grey", alpha = 0.3) +
+          ggplot2::geom_hline(yintercept = ref_line_val, linetype = 2) +
+          ggplot2::labs(x = "Year",
+                        y = paste("Spawning Biomass (", sb_units, ")", sep = "")) +
+          ggplot2::scale_x_continuous(n.breaks = x_n_breaks,
+                                      guide = ggplot2::guide_axis(minor.ticks = TRUE))
+      } else {
+        plt <- ggplot2::ggplot(data = subset(sb, year < endyr + 1)) +
+          ggplot2::geom_line(ggplot2::aes(x = year, y = Value/1000), linewidth = 1) +
+          ggplot2::geom_ribbon(ggplot2::aes(x = year, ymin = (Value/1000 - StdDev/1000), ymax = (Value/1000 + StdDev/1000)), colour = "grey", alpha = 0.3) +
+          ggplot2::geom_hline(yintercept = ref_line_val/1000, linetype = 2) +
+          ggplot2::labs(x = "Year",
+                        y = paste("Spawning Biomass (", sb_units, ")", sep = "")) +
+          ggplot2::scale_x_continuous(n.breaks = x_n_breaks,
+                                      guide = ggplot2::guide_axis(minor.ticks = TRUE))
+      }
+      plt <- plt + ann_add
     }
-
-    plt <- plt + ann_add
-
     plt_fin <- add_theme(plt)
-
-    # Plot of rel. SB
-    plt_rel <- ggplot2::ggplot(data = sb) +
-      ggplot2::geom_line(ggplot2::aes(x = year, y = Value/ref_line_val), linewidth = 1) +
-      ggplot2::geom_ribbon(ggplot2::aes(x = year, ymin = (Value/ref_line_val - StdDev/ref_line_val), ymax = (Value/ref_line_val + StdDev/ref_line_val)), colour = "grey", alpha = 0.3) +
-      ggplot2::geom_hline(yintercept = ref_line_val/ref_line_val, linetype = 2) +
-      ggplot2::labs(x = "Year",
-                    y = paste("Rel. Spawning Biomass", sep = "")) +
-      ggplot2::scale_x_continuous(n.breaks = round(length(subset(sb, year<=endyr)$year)/10),
-                                  guide = ggplot2::guide_axis(minor.ticks = TRUE))
-
-    plt_rel2 <- add_theme(plt_rel)
   } # close SS3 if statement
 
   if (model == "BAM"){
@@ -291,7 +287,7 @@ plot_spawning_biomass <- function(dat,
       dplyr::rename(value = SSB)
 
     # max_yr <- max(unique(sb2$year))
-    if(is.null(endyr)){
+    if(is.null(end_year)){
       endyr <- output$parms$endyr
     }
     stryr <- output$parms$styr
@@ -315,40 +311,66 @@ plot_spawning_biomass <- function(dat,
     if (ref_line == "target") {
       ref_line_val <- output$parms$SSB.Fproxy
       ref_line_label <- "target"
-      ann_add <- ggplot2::annotate("text", x = endyr+0.5, y=ref_line_val/1000, label = bquote(SB[F30])) # this might need to change
+      if (scaled) {
+        ann_add <- ggplot2::annotate("text", x = endyr+0.5, y=ref_line_val, label = bquote(SB[F30]))
+      } else {
+        ann_add <- ggplot2::annotate("text", x = endyr+0.5, y=ref_line_val/1000, label = bquote(SB[F30])) # this might need to change
+      }
     } else if (ref_line == "MSY" | ref_line == "msy") {
       ref_line_val <- output$parms$SSBmsy
       ref_line_label <- "MSY"
-      ann_add <- ggplot2::annotate("text", x = endyr+0.5, y=ref_line_val/1000, label = bquote(SB[MSY]))
+      if (scaled) {
+        ann_add <- ggplot2::annotate("text", x = endyr+0.5, y=ref_line_val, label = bquote(SB[MSY]))
+      } else {
+        ann_add <- ggplot2::annotate("text", x = endyr+0.5, y=ref_line_val/1000, label = bquote(SB[MSY]))
+      }
     } else if (ref_line == "unfished") {
       ref_line_val <- output$parms$SSB0
       ref_line_label <- "unfished"
-      ann_add <- ggplot2::annotate("text", x = endyr+0.5, y=ref_line_val/1000, label = bquote(SB[unfished]))
+      if (scaled) {
+        ann_add <- ggplot2::annotate("text", x = endyr+0.5, y=ref_line_val, label = bquote(SB[unfished]))
+      } else {
+        ann_add <- ggplot2::annotate("text", x = endyr+0.5, y=ref_line_val/1000, label = bquote(SB[unfished]))
+      }
     }
-
-    plt <- ggplot2::ggplot(data = subset(sb2, year<=endyr)) +
-      ggplot2::geom_line(ggplot2::aes(x = year, y = value/1000), linewidth = 1) +
-      # ggplot2::geom_ribbon(ggplot2::aes(x = year, ymin = (value/1000 - stddev/1000), ymax = (value/1000 + stddev/1000)), colour = "grey", alpha = 0.3) +
-      ggplot2::geom_hline(yintercept = ref_line_val/1000, linetype = 2) +
-      ggplot2::labs(x = "Year",
-                    y = paste("Spawning Biomass (", sb_units, ")", sep = "")) +
-      ggplot2::scale_x_continuous(n.breaks = round(length(subset(sb2, year<=endyr)$year)/10),
-                                  guide = ggplot2::guide_axis(minor.ticks = TRUE))
-    plt <- plt + ann_add
-
-    plt_fin <- add_theme(plt)
-
-    # plot relative SB
-    plt_rel <- ggplot2::ggplot(data = subset(sb2, year<=endyr)) +
-      ggplot2::geom_line(ggplot2::aes(x = year, y = value/ref_line_val), linewidth = 1) +
-      # ggplot2::geom_ribbon(ggplot2::aes(x = year, ymin = (value/ref_line_val - stddev/ref_line_val), ymax = (value/ref_line_val + stddev/ref_line_val)), colour = "grey", alpha = 0.3) +
-      ggplot2::geom_hline(yintercept = ref_line_val/ref_line_val, linetype = 2) +
-      ggplot2::labs(x = "Year",
-                    y = paste("Spawning Biomass (", sb_unit, ")", sep = "")) +
-      ggplot2::scale_x_continuous(n.breaks = round(length(subset(sb2, year<=endyr)$year)/10),
-                                  guide = ggplot2::guide_axis(minor.ticks = TRUE))
-    plt_rel2 <- add_theme(plt_rel)
+    # Choose number of breaks for x-axis
+    x_n_breaks <- round(length(subset(sb2, year<=endyr)$year)/10)
+    if (x_n_breaks <= 5) {
+      x_n_breaks <- round(length(subset(sb2, year<=endyr)$year)/5)
+    }
+    if (relative) {
+      # plot relative SB
+      plt <- ggplot2::ggplot(data = subset(sb2, year<=endyr)) +
+        ggplot2::geom_line(ggplot2::aes(x = year, y = value/ref_line_val), linewidth = 1) +
+        # ggplot2::geom_ribbon(ggplot2::aes(x = year, ymin = (value/ref_line_val - stddev/ref_line_val), ymax = (value/ref_line_val + stddev/ref_line_val)), colour = "grey", alpha = 0.3) +
+        ggplot2::geom_hline(yintercept = ref_line_val/ref_line_val, linetype = 2) +
+        ggplot2::labs(x = "Year",
+                      y = paste("Spawning Biomass (", sb_units, ")", sep = "")) +
+        ggplot2::scale_x_continuous(n.breaks = x_n_breaks,
+                                    guide = ggplot2::guide_axis(minor.ticks = TRUE))
+    } else {
+      if (scaled) {
+        plt <- ggplot2::ggplot(data = subset(sb2, year<=endyr)) +
+          ggplot2::geom_line(ggplot2::aes(x = year, y = value), linewidth = 1) +
+          # ggplot2::geom_ribbon(ggplot2::aes(x = year, ymin = (value/1000 - stddev/1000), ymax = (value/1000 + stddev/1000)), colour = "grey", alpha = 0.3) +
+          ggplot2::geom_hline(yintercept = ref_line_val, linetype = 2) +
+          ggplot2::labs(x = "Year",
+                        y = paste("Spawning Biomass (", sb_units, ")", sep = "")) +
+          ggplot2::scale_x_continuous(n.breaks = xn_n_breaks,
+                                      guide = ggplot2::guide_axis(minor.ticks = TRUE))
+      } else {
+        plt <- ggplot2::ggplot(data = subset(sb2, year<=endyr)) +
+          ggplot2::geom_line(ggplot2::aes(x = year, y = value/1000), linewidth = 1) +
+          # ggplot2::geom_ribbon(ggplot2::aes(x = year, ymin = (value/1000 - stddev/1000), ymax = (value/1000 + stddev/1000)), colour = "grey", alpha = 0.3) +
+          ggplot2::geom_hline(yintercept = ref_line_val/1000, linetype = 2) +
+          ggplot2::labs(x = "Year",
+                        y = paste("Spawning Biomass (", sb_units, ")", sep = "")) +
+          ggplot2::scale_x_continuous(n.breaks = x_n_breaks,
+                                      guide = ggplot2::guide_axis(minor.ticks = TRUE))
+      }
+      plt <- plt + ann_add
+    }
+    plt_fin <- suppressWarnings(add_theme(plt))
   }
-
   return(plt_fin)
 }

@@ -9,10 +9,11 @@
 #' and following with R units.
 #' @param spawning_biomass_units units of spawning biomass if different from biomass
 #' @param recruitment_units units for recruitment
-#' @param scaled_values T/F; indicate whether the output values for biomass and recruitment are scaled
+#' @param scaled T/F; indicate whether the output values for biomass and recruitment are scaled
 #' @param scale_amount indicate the exact amount of scale (i.e. 1000)
 #' @param show_warnings Include warnings? Default FALSE
-#' @param return Default returns recruitment over time. Options to display stock recruitment curve/recruitment fit
+#' @param end_year last year of assessment
+#' @param return Default returns recruitment over time. Options to display recruitment time series, stock recruitment curve, or recruitment fit
 #'
 #' @return A series of plots are exported including recruitment over time with R0
 #' reference line, stock recruitment curve, and other related figures.
@@ -20,11 +21,16 @@
 #'
 
 plot_recruitment <- function(dat,
-                             model = "base",
+                             model = "standard",
                              params = FALSE,
                              params_only = FALSE,
                              units = c(sb = "metric tons", recruitment = "metric tons"),
+                             recruitment_units = "metric tons",
+                             spawning_biomass_units = "metric tons",
+                             scaled = FALSE,
+                             scale_amount = NULL,
                              show_warnings = FALSE,
+                             end_year = NULL,
                              return = "recruitment"){
   # check units
   # biomass
@@ -40,8 +46,122 @@ plot_recruitment <- function(dat,
     sbu <- "metric tons"
   }
 
+  if (model == "standard"){
+    output <- read.csv(dat)
+    if (scaled) {
+      rec <- output |>
+        dplyr::filter(label == "recruitment",
+                      module_name == "TIME_SERIES" | module_name == "",
+                      !is.na(year),
+                      is.na(fleet) | length(unique(fleet)) <= 1,
+                      is.na(sex) | length(unique(sex)) <= 1,
+                      is.na(area) | length(unique(area)) <= 1,
+                      is.na(growth_pattern) | length(unique(growth_pattern)) <= 1,
+                      year != "S/Rcurve" | year != "Init" | year != "Virg"
+        ) |> # SS3 and BAM target module names
+        dplyr::mutate(estimate = as.numeric(estimate),
+                      year = as.numeric(year)) |>
+        dplyr::rename(recruitment = estimate) |>
+        dplyr::select(-c(module_name, label))
+      sb <- output |>
+        dplyr::filter(label == "spawning_biomass",
+                      module_name == "TIME_SERIES" | module_name == "",
+                      !is.na(year),
+                      is.na(fleet) | length(unique(fleet)) <= 1,
+                      is.na(sex) | length(unique(sex)) <= 1,
+                      is.na(area) | length(unique(area)) <= 1,
+                      is.na(growth_pattern) | length(unique(growth_pattern)) <= 1,
+                      year != "S/Rcurve" | year != "Init" | year != "Virg"
+        ) |> # SS3 and BAM target module names
+        dplyr::mutate(estimate = as.numeric(estimate),
+                      year = as.numeric(year)) |>
+        dplyr::rename(spawning_biomass = estimate) |>
+        dplyr::select(-c(module_name, label))
+    } else {
+      rec <- output |>
+        dplyr::filter(label == "recruitment",
+                      module_name == "TIME_SERIES" | module_name == "",
+                      !is.na(year),
+                      is.na(fleet) | length(unique(fleet)) <= 1,
+                      is.na(sex) | length(unique(sex)) <= 1,
+                      is.na(area) | length(unique(area)) <= 1,
+                      is.na(growth_pattern) | length(unique(growth_pattern)) <= 1,
+                      year != "S/Rcurve" | year != "Init" | year != "Virg"
+        ) |> # SS3 and BAM target module names
+        dplyr::mutate(estimate = as.numeric(estimate),
+                      year = as.numeric(year)) |>
+        dplyr::rename(recruitment = estimate) |>
+        dplyr::select(-c(module_name, label))
+      sb <- output |>
+        dplyr::filter(label == "spawning_biomass",
+                      module_name == "TIME_SERIES" | module_name == "",
+                      !is.na(year),
+                      is.na(fleet) | length(unique(fleet)) <= 1,
+                      is.na(sex) | length(unique(sex)) <= 1,
+                      is.na(area) | length(unique(area)) <= 1,
+                      is.na(growth_pattern) | length(unique(growth_pattern)) <= 1,
+                      year != "S/Rcurve" | year != "Init" | year != "Virg"
+        ) |> # SS3 and BAM target module names
+        dplyr::mutate(estimate = as.numeric(estimate),
+                      year = as.numeric(year)) |>
+        dplyr::rename(spawning_biomass = estimate) |>
+        dplyr::select(-c(module_name, label))
+    }
 
-  if(model == "SS3"){
+    rec_devs <- output |>
+      dplyr::filter(label == "recruitment_deviations",
+                    # module_name == "TIME_SERIES" | module_name == "",
+                    !is.na(year),
+                    is.na(fleet) | length(unique(fleet)) <= 1,
+                    is.na(sex) | length(unique(sex)) <= 1,
+                    is.na(area) | length(unique(area)) <= 1,
+                    is.na(growth_pattern) | length(unique(growth_pattern)) <= 1,
+                    year != "S/Rcurve" | year != "Init" | year != "Virg"
+      ) |> # SS3 and BAM target module names
+      dplyr::mutate(estimate = as.numeric(estimate),
+                    year = as.numeric(year)) |>
+      dplyr::rename(recruitment_deviations = estimate) |>
+      dplyr::select(-c(module_name, label))
+    if (is.null(end_year)){
+      endyr <- max(rec$year)
+    }
+    stryr <- min(rec$year)
+
+    # merge DF
+    sr <- dplyr::full_join(sb, rec)
+
+    # Choose number of breaks for x-axis
+    x_n_breaks <- round(length(subset(sr, year<=endyr)$year)/10)
+    if (x_n_breaks <= 5) {
+      x_n_breaks <- round(length(subset(sr, year<=endyr)$year)/5)
+    }
+
+    if (return == "stock_recruitment"){
+      plt <- ggplot2::ggplot(data = sr) +
+        ggplot2::geom_line(ggplot2::aes(x = spawning_biomass/1000, y = recruitment/1000), linewidth = 1) +
+        ggplot2::labs(x = paste("Spawning Biomass (", sbu, ")", sep = ""),
+                      y = paste("Recruitment (", ru, ")", sep = "")) +
+        ggplot2::theme(legend.position = "none")
+      # sr_plt <- add_theme(sr_plt)
+    } else if (return == "recruitment") {
+      plt <- ggplot2::ggplot(data = sr) +
+        ggplot2::geom_point(ggplot2::aes(x = year, y = recruitment)) +
+        ggplot2::geom_line(ggplot2::aes(x = year, y = recruitment), linewidth = 1) +
+        ggplot2::labs(x = "Year",
+                      y = paste("Recruitment (", ru, ")", sep = "")) +
+        ggplot2::theme(legend.position = "none") +
+        ggplot2::scale_x_continuous(n.breaks = x_n_breaks,
+                                    guide = ggplot2::guide_axis(minor.ticks = TRUE))
+    } else if (return == "recruitment_deviations") {
+      plt <- ggplot2::ggplot(data = rec_devs) +
+        # ggplot2::geom_point(ggplot2::aes(x = year, y = log_rec_dev), shape = 1, size = 2.5) +
+        ggplot2::geom_pointrange(ggplot2::aes(x = year, y = estimate, ymax = Value, ymin = 0),  fatten = 1, size = 2, shape = 1) +
+        ggplot2::geom_hline(yintercept = 0, linetype = "dashed") +
+        ggplot2::labs(x = "Year",
+                      y = "Recruitment Deviations")
+    }
+    plt_fin <- add_theme(plt)
+  } else if(model == "SS3") {
     # Read rep file or rename
     if(grepl(".sso", dat)){
       get_ncol <- function(file, skip = 0) {
@@ -86,110 +206,60 @@ plot_recruitment <- function(dat,
     R0 <- sum(time_series[["recruit_0"]][time_series[["era"]] == "VIRG"], na.rm = TRUE)
     R1 <- sum(time_series[["recruit_0"]][time_series[["era"]] == "INIT"], na.rm = TRUE)
 
-    # extract sr_err
-    # sr_err <- sr_info[10:11,]
-    # colnames(sr_err) <- sr_info[9,]
-    # sr_err <- Filter(function(x)!all(is.na(x)), sr_err)
-
-    # sr fxn variables
-    # sr_vars <- sr_info[2:6,1:2]
-    # colnames(sr_vars) <- c("value", "variable")
-    # sr_fxn <- sr_info[1,3][[1]]
-
-    # if (isTRUE(params) & isTRUE(params_only)){
-    #   return(sr_vars)
-    #   stop("Only stock recruitment model parameters were exported and plots were not created.")
-    # }
-
-    # lnr0 <- sr_vars$value[sr_vars$variable=="Ln(R0)"]
-    # steep <- sr_vars$value[sr_vars$variable=="steep"]
-    # sigr <- sr_vars$value[sr_vars$variable=="sigmaR"]
-    # envlink <- sr_vars$value[sr_vars$variable=="env_link_"]
-    # ini_eq <- sr_vars$value[sr_vars$variable=="init_eq"]
-
-    # Export message
-    # message(cat("Stock Recrutiment Fxn: ", sr_fxn, "\n", # need to add conversion to what this number means to analyst
-    #             "    ", "    ", "   ", "ln(R0): ", lnr0, "\n",
-    #             "     ", "      ", "     ", "h: ", steep, "\n",
-    #             "    ", "    ", "   ", "sigmaR: ", sigr, "\n",
-    #             "    ", "    ", " ", "env_link: ", envlink, "\n",
-    #             "    ", "    ", "  ", "init_eq: ", ini_eq, "\n"
-    #             )
-    #         )
-
     # Units - change this statement to fit new convention
-    if(!is.null(units)){
-      if(length(units)>1){
-        sb_units <- units["sb"]
-        rec_units <- units["recruitment"]
-        message("Please check the units on your axes are correct. If they are flipped, change the order of names in the units argument.")
-      } else {
-        if(grepl("eggs", units)){
-          sb_units <- "1e10 eggs"
-          rec_units <- "metric tons"
-        } else if(grepl("number", units)){
-          rec_units <- "number of fish"
-          sb_units <- "metric tons"
-        } else {
-          warning("Unit type is not defined for this function. Please leave an issue at https://github.com/nmfs-ost/satf/issues")
-        }
-      }
-      message("Default units for both SB and R are metric tons.")
-    }
+    sb_units = spawning_biomass_units
+    rec_units = recruitment_units
+    message("Default units for both SB and R are metric tons.")
 
     # remove inital and virg recruitment
     sr <- sr |>
       dplyr::filter(year!="Init" & year!="Virg" & era != "Forecast") |>
       dplyr::mutate(year = as.numeric(year))
 
-    # need to rescale to 1000s rather than xe..
-    sr_plt <- ggplot2::ggplot(data = sr) +
-      ggplot2::geom_line(ggplot2::aes(x = spawnbio/1000, y = exp_recr/1000), linewidth = 1) + # exp. R
-      # add exp R after bias adjustment (dotted line)
-      ggplot2::geom_point(ggplot2::aes(x = spawnbio/1000, y = pred_recr/1000, color = year)) + # change colors
-      # ggplot2::geom_text() +
-      ggplot2::labs(x = paste("Spawning Biomass (", sb_units, ")", sep = ""),
-           y = paste("Recruitment (", rec_units, ")", sep = "")) +
-      ggplot2::theme(legend.position = "none")
-    # sr_plt <- add_theme(sr_plt)
+    if (return == "stock_recruitment") {
+      # need to rescale to 1000s rather than xe.
+      plt <- ggplot2::ggplot(data = sr) +
+        ggplot2::geom_line(ggplot2::aes(x = spawnbio/1000, y = exp_recr/1000), linewidth = 1) + # exp. R
+        # add exp R after bias adjustment (dotted line)
+        ggplot2::geom_point(ggplot2::aes(x = spawnbio/1000, y = pred_recr/1000, color = year)) + # change colors
+        # ggplot2::geom_text() +
+        ggplot2::labs(x = paste("Spawning Biomass (", sb_units, ")", sep = ""),
+             y = paste("Recruitment (", rec_units, ")", sep = "")) +
+        ggplot2::theme(legend.position = "none")
+    } else if (return == "recruitment") {
+      plt <- ggplot2::ggplot(data = sr) +
+        ggplot2::geom_point(ggplot2::aes(x = year, y = pred_recr)) +
+        ggplot2::geom_line(ggplot2::aes(x = year, y = pred_recr), linewidth = 1) +
+        ggplot2::labs(x = "Year",
+                      y = paste("Recruitment (", rec_units, ")", sep = "")) +
+        ggplot2::theme(legend.position = "none")
+    } else if (return == "recruitment_deviations") {
+      # recruitment deviations
+      params <- SS3_extract_df(output, "PARAMETERS")
+      colnames(params) <- params[2,]
+      params2 <- params[-c(1:2),] |>
+        dplyr::filter(grepl('RecrDev', Label)) |>
+        dplyr::select(Label, Value) |>
+        tidyr::separate_wider_delim(Label, delim = "_", names = c("Era", "Recr", "Year"))
+      params_proj <-  params[-c(1:2),] |>
+        dplyr::filter(grepl('ForeRecr', Label)) |>
+        dplyr::select(Label, Value) |>
+        tidyr::separate_wider_delim(Label, delim = "_", names = c("Recr", "Year")) |>
+        dplyr::mutate(Era = "Fore")
 
-    r_plt <- ggplot2::ggplot(data = sr) +
-      ggplot2::geom_point(ggplot2::aes(x = year, y = pred_recr)) +
-      ggplot2::geom_line(ggplot2::aes(x = year, y = pred_recr), linewidth = 1) +
-      ggplot2::labs(x = "Year",
-                    y = paste("Recruitment (", rec_units, ")", sep = "")) +
-      ggplot2::theme(legend.position = "none")
-    # r_plt <- add_theme(r_plt)
+      params_fin <- rbind(params2, params_proj)
 
-    # recruitment deviations
-    params <- SS3_extract_df(output, "PARAMETERS")
-    colnames(params) <- params[2,]
-    params2 <- params[-c(1:2),] |>
-      dplyr::filter(grepl('RecrDev', Label)) |>
-      dplyr::select(Label, Value) |>
-      tidyr::separate_wider_delim(Label, delim = "_", names = c("Era", "Recr", "Year"))
-    params_proj <-  params[-c(1:2),] |>
-      dplyr::filter(grepl('ForeRecr', Label)) |>
-      dplyr::select(Label, Value) |>
-      tidyr::separate_wider_delim(Label, delim = "_", names = c("Recr", "Year")) |>
-      dplyr::mutate(Era = "Fore")
+      sr2 <- dplyr::left_join(sr, params_fin, by = c("yr" = "Year")) |>
+        dplyr::mutate(Value = as.numeric(Value))
 
-    params_fin <- rbind(params2, params_proj)
-
-    sr2 <- dplyr::left_join(sr, params_fin, by = c("yr" = "Year")) |>
-      dplyr::mutate(Value = as.numeric(Value))
-
-    rdev_plt <- ggplot2::ggplot(data = sr2) +
-      # ggplot2::geom_point(ggplot2::aes(x = year, y = log_rec_dev), shape = 1, size = 2.5) +
-      ggplot2::geom_pointrange(ggplot2::aes(x = year, y = exp_recr, ymax = Value, ymin = 0),  fatten = 1, size = 2, shape = 1) +
-      ggplot2::geom_hline(yintercept = 0, linetype = "dashed") +
-      ggplot2::labs(x = "Year",
-                    y = "logR Deviations")
-
-    # params_sub = params[grep("Recr",params$Label),]
-    # Years = t(data.frame(strsplit(params_sub$Label,"_")))
-    # Years = as.data.frame(t(data.frame(strsplit(params_sub$Label,"_"))))
-
+      plt <- ggplot2::ggplot(data = sr2) +
+        # ggplot2::geom_point(ggplot2::aes(x = year, y = log_rec_dev), shape = 1, size = 2.5) +
+        ggplot2::geom_pointrange(ggplot2::aes(x = year, y = exp_recr, ymax = Value, ymin = 0),  fatten = 1, size = 2, shape = 1) +
+        ggplot2::geom_hline(yintercept = 0, linetype = "dashed") +
+        ggplot2::labs(x = "Year",
+                      y = "logR Deviations")
+    }
+    plt_fin <- add_theme(plt)
   } # close SS3 if statement
 
   if(model == "BAM"){
@@ -201,118 +271,46 @@ plot_recruitment <- function(dat,
     SSBmsy <- output$parms$SSBmsy
     SSB0 <- output$parms$SSB0
 
-    # lnr0 <- "Ln(R0)"
-    # steep <- "steep"
-    sigr <- output$parms$R.sigma.par
-    sigr_dev <- output$parms$R.sigma.logdevs
-    # envlink <- "env_link_" # is there an equivalent in BAM?
-    # ini_eq <- "init_eq" # what is this SR param?
-
-    # Export message
-    # message(cat("Stock Recrutiment Fxn: ", sr_fxn, "\n", # need to add conversion to what this number means to analyst
-    #             "    ", "    ", "   ", "ln(R0): ", lnr0, "\n",
-    #             "     ", "      ", "     ", "h: ", steep, "\n",
-    #             "    ", "    ", "   ", "sigmaR: ", sigr, "\n",
-    #             "    ", "    ", " ", "env_link: ", envlink, "\n",
-    #             "    ", "    ", "  ", "init_eq: ", ini_eq, "\n"
-    #   )
-    # )
-
     # SSB time series
     sr <- data.frame(year = output$t.series$year,
                      spawn_bio = output$t.series$SSB,
                      pred_recr = output$t.series$recruits,
-                     exp_recr = output$t.series,
+                     # exp_recr = output$t.series,
                      log_rec_dev = output$t.series$logR.dev)
 
     # Check if units were declared
-    if(!is.null(units)){
-      if(length(units)>1){
-        sb_units <- units[1]
-        rec_units <- units[2]
-        message("Please check the units on your axes are correct. If they are flipped, change the order of names in the units argument.")
-      } else {
-        if(grepl("eggs", units)){
-          sb_units <- "1e10 eggs"
-          rec_units <- "metric tons"
-        } else if(grepl("number", units)){
-          rec_units <- "number of fish"
-          sb_units <- "metric tons"
-        } else {
-          warning("Unit type is not defined for this function. Please leave an issue at https://github.com/nmfs-ost/satf/issues")
-        }
-      }
-    } else {
-      sb_units <- "metric tons"
-      rec_units <- "metric tons"
-      message("Default units for both SB and R are metric tons.")
+    sb_units = spawning_biomass_units
+    rec_units = recruitment_units
+    message("Default units for both SB and R are metric tons.")
+
+    if (return == "stock_recruitment") {
+      # plot stock recruitment in 1000
+      plt <- ggplot2::ggplot(data = sr) +
+        # ggplot2::geom_line(ggplot2::aes(x = spawn_bio, y = exp_recr), linewidth = 1) + # exp. R
+        # add exp R after bias adjustment (dotted line)
+        ggplot2::geom_point(ggplot2::aes(x = spawn_bio, y = pred_recr, color = year)) + # change colors
+        # ggplot2::geom_text() +
+        ggplot2::labs(x = paste("Spawning Biomass (", sb_units, ")", sep = ""),
+                      y = paste("Recruitment (", rec_units, ")", sep = "")) +
+        ggplot2::theme(legend.position = "none")
+    } else if (return == "recruitment") {
+      plt <- ggplot2::ggplot(data = sr) +
+        ggplot2::geom_line(ggplot2::aes(x = year, y = pred_recr), linewidth = 1) + # exp. R
+        ggplot2::geom_point(ggplot2::aes(x = year, y = pred_recr)) + # change colors
+        # ggplot2::geom_text() +
+        ggplot2::labs(x = "Year",
+                      y = paste("Recruitment (", rec_units, ")", sep = "")) +
+        ggplot2::theme(legend.position = "none")
+    } else if (return == "recruitment_deviations") {
+      plt <- ggplot2::ggplot(data = sr) +
+        # ggplot2::geom_point(ggplot2::aes(x = year, y = log_rec_dev), shape = 1, size = 2.5) +
+        ggplot2::geom_pointrange(ggplot2::aes(x = year, y = log_rec_dev, ymax = log_rec_dev, ymin = 0),  fatten = 1, size = 2, shape = 1) +
+        ggplot2::geom_hline(yintercept = 0, linetype = "dashed") +
+        ggplot2::labs(x = "Year",
+                      y = "logR Deviations")
     }
-    # plot stock recruitment in 1000
-    sr_plt <- ggplot2::ggplot(data = sr) +
-      ggplot2::geom_line(ggplot2::aes(x = spawn_bio, y = exp_recr), linewidth = 1) + # exp. R
-      # add exp R after bias adjustment (dotted line)
-      ggplot2::geom_point(ggplot2::aes(x = spawn_bio, y = pred_recr, color = year)) + # change colors
-      # ggplot2::geom_text() +
-      ggplot2::labs(x = paste("Spawning Biomass (", sb_units, ")", sep = ""),
-                    y = paste("Recruitment (", rec_units, ")", sep = "")) +
-      ggplot2::theme(legend.position = "none")
-
-    # sr_plt <- add_theme(sr_plt)
-
-    r_plt <- ggplot2::ggplot(data = sr) +
-      ggplot2::geom_line(ggplot2::aes(x = year, y = pred_recr), linewidth = 1) + # exp. R
-      ggplot2::geom_point(ggplot2::aes(x = year, y = pred_recr)) + # change colors
-      # ggplot2::geom_text() +
-      ggplot2::labs(x = "Year",
-                    y = paste("Recruitment (", rec_units, ")", sep = "")) +
-      ggplot2::theme(legend.position = "none")
-
-    # r_plt <- add_theme(r_plt)
-
-    rdev_plt <- ggplot2::ggplot(data = sr) +
-      # ggplot2::geom_point(ggplot2::aes(x = year, y = log_rec_dev), shape = 1, size = 2.5) +
-      ggplot2::geom_pointrange(ggplot2::aes(x = year, y = log_rec_dev, ymax = log_rec_dev, ymin = 0),  fatten = 1, size = 2, shape = 1) +
-      ggplot2::geom_hline(yintercept = 0, linetype = "dashed") +
-      ggplot2::labs(x = "Year",
-                    y = "logR Deviations")
-    # rdev_plt <- add_theme(rdev_plt)
-
+    plt_fin <- add_theme(plt)
   } # close BAM if statement
-  if(return == "recruitment"){
-    return(add_theme(r_plt))
-  } else if (return == "stock recruitment") {
-    return(add_theme(sr_plt))
-  } else if (return == "recruitment deviations"){
-    return(add_theme(rdev_plt))
-  }
-
-  if(model == "base"){
-    out <- readRDS(dat)
-    # Stock Recruitment
-    sr_plt <- ggplot2::ggplot(data = sr) +
-      ggplot2::geom_line(ggplot2::aes(x = spawn_bio/1000, y = exp_recr/1000), linewidth = 1) + # exp. R
-      # add exp R after bias adjustment (dotted line)
-      ggplot2::geom_point(ggplot2::aes(x = spawn_bio/1000, y = pred_recr/1000, color = year)) + # change colors
-      # ggplot2::geom_text() +
-      ggplot2::labs(x = paste("Spawning Biomass (", sb_units, ")", sep = ""),
-                    y = paste("Recruitment (", rec_units, ")", sep = "")) +
-      ggplot2::theme(legend.position = "none")
-
-    # Recruitment time series
-    r_plt <- ggplot2::ggplot(data = sr) +
-      ggplot2::geom_point(ggplot2::aes(x = year, y = pred_recr)) +
-      ggplot2::geom_line(ggplot2::aes(x = year, y = pred_recr), linewidth = 1) +
-      ggplot2::labs(x = "Year",
-                    y = paste("Recruitment (", rec_units, ")", sep = "")) +
-      ggplot2::theme(legend.position = "none")
-    # Recruitment deviations
-    rdev_plt <- ggplot2::ggplot(data = params) +
-      # ggplot2::geom_point(ggplot2::aes(x = year, y = log_rec_dev), shape = 1, size = 2.5) +
-      ggplot2::geom_pointrange(ggplot2::aes(x = Year, y = Value, ymax = log_rec_dev, ymin = 0),  fatten = 1, size = 2, shape = 1) +
-      ggplot2::geom_hline(yintercept = 0, linetype = "dashed") +
-      ggplot2::labs(x = "Year",
-                    y = "logR Deviations")
-  }
-
+  return(plt_fin)
 }
 

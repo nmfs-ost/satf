@@ -31,9 +31,13 @@ table_indices <- function(dat,
     }
 
     # Extract Fleet Names
-    fleet_info <- SS3_extract_df(output, "DEFINITIONS")
-    fleet_names <- as.character(fleet_info[fleet_info$X1=="fleet_names:",][,-1])
-    fleet_names <- gsub("_", " ", fleet_names)
+    fleet_info <- SS3_extract_df(output, "Fleet")[,1]
+    colnames(fleet_info) <- fleet_info[1,1]
+    fleet_info <- fleet_info[-1,]
+    fleet_names <- unlist(as.vector(fleet_info))
+    fleet_names <- paste("Fleet_", fleet_names, sep ="")
+    # fleet_names <- as.character(fleet_info[fleet_info$X1=="fleet_names:",][,-1])
+    # fleet_names <- gsub("_", " ", fleet_names)
 
     # Index 1
     index1 <- SS3_extract_df(output, "INDEX_1")
@@ -44,26 +48,30 @@ table_indices <- function(dat,
     index2 <- SS3_extract_df(output, "INDEX_2")
     colnames(index2) <- index2[2,]
     index2 <- index2[-c(1:2),] |>
-      dplyr::select(Fleet, Yr, Seas, Obs, SE) |>
+      dplyr::select(Fleet, Yr, Seas, Area, Subseas, Month, Obs, SE, Exp) |>
       dplyr::mutate(Obs = round(as.numeric(Obs), digits = 3),
-                    SE = round(as.numeric(SE), digits = 3))
+                    SE = round(as.numeric(SE), digits = 3),
+                    Exp = round(as.numeric(Exp), digits = 3))
     index2_obs <- index2 |>
-      tidyr::pivot_wider(id_cols = Yr,names_from = Fleet, values_from = Obs) |>
+      tidyr::pivot_wider(id_cols = Yr,
+                         names_from = Fleet,
+                         values_from = Obs) |>
       dplyr::rename_at(dplyr::vars(-1), ~ paste(., "obs", sep = "_"))
     index2_se <- index2 |>
       tidyr::pivot_wider(id_cols = Yr,names_from = Fleet, values_from = SE) |>
       dplyr::rename_at(dplyr::vars(-1), ~ paste(., "se", sep = "_"))
 
-    ind_fleets <- unique(index2$Fleet) |>
-      strsplit(split = "_")
+    # ind_fleets <- unique(index2$Fleet) |>
+    #   strsplit(split = "_")
+    ind_fleets <- paste("Fleet_", unique(index2$Fleet), sep = "")
 
     # Recombine fleet names - header name ready
-    select_one <- function(x){
-      a <- lapply(x, tail, -1)
-      sapply(a, paste, collapse = " ")
-    }
-
-    ind_fleets <- select_one(ind_fleets)
+    # select_one <- function(x){
+    #   a <- lapply(x, tail, -1)
+    #   sapply(a, paste, collapse = " ")
+    # }
+    #
+    # ind_fleets <- select_one(ind_fleets)
 
     indices <- merge(index2_obs, index2_se) |>
       dplyr::rename(year = Yr)

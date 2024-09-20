@@ -9,10 +9,33 @@
 #'
 
 table_indices <- function(dat,
-                          model){
-  if(model == "SS3"){
+                          model = "standard"){
+  if (model == "standard"){
+    output <- read.csv(dat)
+    output <- output |>
+      dplyr::filter(module_name == "INDEX_2" | module_name == "t.series")
+    if (any(unique(output$module_name=="INDEX_2"))) {
+      output <- output |>
+        dplyr::filter(grepl("obs", label))
+    } else if (any(unique(output$module_name=="t.series"))) {
+      output <- output |>
+        dplyr::filter(grepl("cpue", label))
+    }
+    fleet_names <- unique(output$fleet)
+    factors <- c("year", "fleet", "fleet_name", "age", "sex", "area", "seas", "season", "time", "era", "subseas", "subseason", "platoon", "platoo","growth_pattern", "gp")
+    # re-structure df for table
+    indices <- output |>
+      dplyr::rename(!!unique(output$label) := estimate,
+                    !!unique(output$uncertainty_label) := uncertainty) |>
+      tidyr::pivot_wider(
+        id_cols = -intersect(colnames(output), factors),
+        names_from = fleet,
+        values_from = c(unique(output$label), unique(output$uncertainty_label))
+      ) # stated internal error for tidyr and asks to report - try again monday
+
+  } else if (model == "SS3"){
     # Read report file
-    if(grepl("Report.sso", dat)){
+    if(grepl(".sso|.txt", dat)){
       get_ncol <- function(file, skip = 0) {
         nummax <- max(utils::count.fields(file,
                                           skip = skip, quote = "",
@@ -26,10 +49,7 @@ table_indices <- function(dat,
         colClasses = "character", nrows = -1, comment.char = "",
         blank.lines.skip = FALSE
       )
-    } else {
-      output <- dat
     }
-
     # Extract Fleet Names
     fleet_info <- SS3_extract_df(output, "Fleet")[,1]
     colnames(fleet_info) <- fleet_info[1,1]

@@ -26,6 +26,7 @@ Imports:
     flextable,
     ggplot2,
     naniar,
+    nmfspalette,
     stringr,
     tidyr,
     utils

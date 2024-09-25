@@ -30,3 +30,5 @@ Imports:
     stringr,
     tidyr,
     utils
+  Remotes:
+    nmfs-fish-tools/nmfspalette

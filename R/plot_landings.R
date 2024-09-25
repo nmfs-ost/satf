@@ -1,7 +1,18 @@
+#' Plot observed landings by fleet
+#'
+#' @template dat
+#' @template model
+#' @param units indicate the name of the units of landings as to label the axis
+#'
+#' @return Create a plot ready for a stock assessment report of cumulative landings
+#' over time by fleet.Includes options to plot by fleet, total observed landings
+#' with and without predicted landings. Indicate if fleet should be faceted or on one plot (default). Warning: i
+#' @export
+#'
 plot_landings <- function(dat,
                           model = "standard",
                           units = NULL){
-  land <- utils::read.csv(dat) |> 
+  land <- utils::read.csv(dat) |>
     dplyr::filter(module_name == "t.series" | module_name == "CATCH",
                   grepl("landings", label) | label == "obs") |>
     dplyr::mutate(estimate = as.numeric(estimate),
@@ -10,7 +21,7 @@ plot_landings <- function(dat,
   land_ts <- land |>
     dplyr::filter(!is.na(year),
                   !is.na(fleet),
-                  label == "landings_observed" | label == "obs") 
+                  label == "landings_observed" | label == "obs")
 
   narea <- length(unique(land_ts$area))
   nseas <- length(unique(land_ts$season))

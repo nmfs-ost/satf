@@ -6,11 +6,16 @@
 \usage{
 plot_recruitment(
   dat,
-  model,
+  model = "standard",
   params = FALSE,
   params_only = FALSE,
   units = c(sb = "metric tons", recruitment = "metric tons"),
+  recruitment_units = "metric tons",
+  spawning_biomass_units = "metric tons",
+  scaled = FALSE,
+  scale_amount = NULL,
   show_warnings = FALSE,
+  end_year = NULL,
   return = "recruitment"
 )
 }
@@ -30,9 +35,19 @@ are options for plotting spawning biomass.}
 or are different for SB and R, then report them here starting with SB units
 and following with R units.}
 
+\item{recruitment_units}{units for recruitment}
+
+\item{spawning_biomass_units}{units of spawning biomass if different from biomass}
+
+\item{scaled}{T/F; indicate whether the output values for biomass and recruitment are scaled}
+
+\item{scale_amount}{indicate the exact amount of scale (i.e. 1000)}
+
 \item{show_warnings}{Include warnings? Default FALSE}
 
-\item{return}{Default returns recruitment over time. Options to display stock recruitment curve/recruitment fit}
+\item{end_year}{last year of assessment}
+
+\item{return}{Default returns recruitment over time. Options to display recruitment time series, stock recruitment curve, or recruitment fit}
 }
 \value{
 A series of plots are exported including recruitment over time with R0

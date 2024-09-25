@@ -45,10 +45,3 @@ plot_landings <- function(dat,
 
 }
 
-# Std framework examples
-# SS3
-dat <- "C:/Users/samantha.schiano/Documents/Stock Assessment Workflow/test_ASAR/billfish_output.csv"
-# BAM
-#dat <- utils::read.csv("C:/Users/samantha.schiano/Documents/Stock Assessment Workflow/test_ASAR/blk_sea_bass_output.csv")[,-1]
-dat <- "C:/Users/samantha.schiano/Documents/Stock Assessment Workflow/test_ASAR/black_sea_bass_output.csv"
-

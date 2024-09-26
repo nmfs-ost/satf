@@ -60,7 +60,7 @@ plot_spawning_biomass <- function(dat,
     output <- read.csv(dat)
     sb <- output |>
       dplyr::filter(label == "spawning_biomass",
-                    module_name == "DERIVED_QUANTITIES" | module_name == "") |> # SS3 and BAM target module names
+                    module_name == "DERIVED_QUANTITIES" | module_name == "t.series") |> # SS3 and BAM target module names
       dplyr::mutate(estimate = as.numeric(estimate),
                     year = as.numeric(year))
     if (is.null(end_year)){

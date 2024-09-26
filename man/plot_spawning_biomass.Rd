@@ -6,12 +6,16 @@
 \usage{
 plot_spawning_biomass(
   dat,
-  model = c("SS3", "BAM", "ASAP", "AMAK", "WHAM"),
-  refpts = FALSE,
+  model = c("SS3", "BAM", "ASAP", "AMAK", "WHAM", "standard"),
   show_warnings = FALSE,
   units = NULL,
+  biomass_units = NULL,
+  spawning_biomass_units = NULL,
+  scaled = FALSE,
+  scale_amount = 1000,
   ref_line = c("target", "MSY", "msy", "unfished"),
-  endyr = NULL
+  end_year = NULL,
+  relative = FALSE
 )
 }
 \arguments{
@@ -22,25 +26,32 @@ other associated metrics.}
 Currently, only stock synthesis (SS3) and Beaufort Assessment Model (BAM)
 are options for plotting spawning biomass.}
 
-\item{refpts}{Output a dataframe of reference points for spawning biomass
-rather than plot. Default is FALSE.}
-
 \item{show_warnings}{Option to suppress warnings}
 
 \item{units}{If units are not available in the output file or are not the
 default of metric tons, then state the units of spawning biomass applicable
 to the stock. For plotting purposes, spawning biomass is divided by 1000.}
 
+\item{biomass_units}{units for biomass}
+
+\item{spawning_biomass_units}{units of spawning biomass if different from biomass}
+
+\item{scaled}{TRUE/FALSE; indicate whether the output values for biomass and recruitment are scaled}
+
+\item{scale_amount}{indicate the exact amount of scale (i.e. 1000)}
+
 \item{ref_line}{choose with reference point to plot a reference line and use
 in relative sb calculations}
 
-\item{endyr}{input the end year of the stock assessment data (not including
-projections). This parameter will be depricated once the output converter is fully developed.}
+\item{end_year}{input the end year of the stock assessment data (not including
+projections). This parameter will be deprecated once the output converter is fully developed.}
+
+\item{relative}{Plot relative spawning biomass. Ref line indicates which reference point to use}
 }
 \value{
 Plot spawning biomass from a stock assessment model as found in a NOAA
 stock assessment report. Units of spawning biomass can either be manually added
-or will be extracted from the provided file if possible.
+or will be extracted from the provided file if possible. In later releases, model will not
 }
 \description{
 Plot Spawning Biomass

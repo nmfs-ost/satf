@@ -1,6 +1,6 @@
 #' Plot Total Biomass
 #'
-#' @template dat
+#' @inheritParamsplot_recruitment
 #' @template model
 #' @param show_warnings Option to suppress warnings
 #' @param units units for biomass

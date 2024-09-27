@@ -1,7 +1,6 @@
 #' Create Indices of Abundance Table
 #'
 #' @inheritParams plot_recruitment
-#'
 #' @return Create table of observed annual indices of abundance plus error
 #' stratified by fleet.
 #' @export

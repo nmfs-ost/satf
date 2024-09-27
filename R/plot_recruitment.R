@@ -1,6 +1,7 @@
 #' Plot Recruitment
 #'
-#' @inheritParams plot_recruitment
+#' @param dat .csv file and path where the data is located of standard stock assessment output
+#' @param model the model in which the output came from (standard, SS3, BAM, ect)
 #' @param params Print/export the parameters of the stock recruitment function?
 #' @param params_only Only export the stock recruitment function or both the parameters and the plot(s)?
 #' @param units If units are not available in the output file, in metric tons,

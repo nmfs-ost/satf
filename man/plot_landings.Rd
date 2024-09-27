@@ -7,12 +7,9 @@
 plot_landings(dat, model = "standard", units = NULL)
 }
 \arguments{
-\item{dat}{Stock assessment output file containing estimates parameters and
-other associated metrics.}
+\item{dat}{.csv file and path where the data is located of standard stock assessment output}
 
-\item{model}{Acryonym of the stock assessment model that produced the output file.
-Currently, only stock synthesis (SS3) and Beaufort Assessment Model (BAM)
-are options for plotting spawning biomass.}
+\item{model}{the model in which the output came from (standard, SS3, BAM, ect)}
 
 \item{units}{indicate the name of the units of landings as to label the axis}
 }

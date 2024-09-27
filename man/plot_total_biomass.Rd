@@ -17,6 +17,10 @@ plot_total_biomass(
 )
 }
 \arguments{
+\item{dat}{.csv file and path where the data is located of standard stock assessment output}
+
+\item{model}{the model in which the output came from (standard, SS3, BAM, ect)}
+
 \item{show_warnings}{Option to suppress warnings}
 
 \item{units}{units for biomass}

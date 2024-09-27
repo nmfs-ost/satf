@@ -42,7 +42,8 @@ projections). This parameter will be deprecated once the output converter is ful
 
 \item{relative}{Plot relative spawning biomass. Ref line indicates which reference point to use}
 
-\item{biomass_units}{units for biomass}
+\item{biomass_units}{A string, specifying the units for spawning biomass to
+be used in the y-axis label of the figure. The default is "metric ton".}
 }
 \value{
 Plot spawning biomass from a stock assessment model as found in a NOAA

@@ -2,7 +2,8 @@
 #'
 #' @inheritParams plot_recruitment
 #' @param show_warnings Option to suppress warnings
-#' @param biomass_units units for biomass
+#' @param biomass_units A string, specifying the units for spawning biomass to
+#'   be used in the y-axis label of the figure. The default is "metric ton".
 #' @param ref_line choose with reference point to plot a reference line and use
 #' in relative sb calculations
 #' @param end_year input the end year of the stock assessment data (not including
@@ -19,7 +20,7 @@ plot_spawning_biomass <- function(dat,
                          show_warnings = FALSE,
                          units = NULL,
                          # biomass_units = NULL,
-                         spawning_biomass_units = NULL,
+                         spawning_biomass_units = "metric ton",
                          scaled = FALSE,
                          scale_amount = 1000,
                          ref_line = c("target", "MSY", "msy", "unfished"),
@@ -32,14 +33,10 @@ plot_spawning_biomass <- function(dat,
   } else {
     ref_line <- match.arg(ref_line, several.ok = FALSE)
   }
-
-  # check units
-  # spawning biomass
-  if(!is.null(spawning_biomass_units)){
-    sbu <- spawning_biomass_units
-  } else {
-    sbu <- "metric tons"
-  }
+  ref_line <- match.arg(ref_line)
+  spawning_biomass_label <- glue::glue(
+    "Spawning biomass ({spawning_biomass_units})"
+  )
 
   if(model == "standard"){
     output <- utils::read.csv(dat)
@@ -91,7 +88,7 @@ plot_spawning_biomass <- function(dat,
         # ggplot2::geom_ribbon(ggplot2::aes(x = year, ymin = (value/ref_line_val - stddev/ref_line_val), ymax = (value/ref_line_val + stddev/ref_line_val)), colour = "grey", alpha = 0.3) +
         ggplot2::geom_hline(yintercept = ref_line_val/ref_line_val, linetype = 2) +
         ggplot2::labs(x = "Year",
-                      y = paste("Spawning Biomass (", sbu, ")", sep = "")) +
+                      y = spawning_biomass_label) +
         ggplot2::scale_x_continuous(n.breaks = x_n_breaks,
                                     guide = ggplot2::guide_axis(minor.ticks = TRUE))
     } else {
@@ -100,7 +97,7 @@ plot_spawning_biomass <- function(dat,
           ggplot2::geom_line(ggplot2::aes(x = year, y = estimate), linewidth = 1) +
           ggplot2::geom_hline(yintercept = ref_line_val, linetype = 2) +
           ggplot2::labs(x = "Year",
-                        y = paste("Spawning Biomass (", sbu, ")", sep = "")) +
+                        y = spawning_biomass_label) +
           ggplot2::scale_x_continuous(n.breaks = x_n_breaks,
                                       guide = ggplot2::guide_axis(minor.ticks = TRUE))
         plt <- plt + ann_add
@@ -110,7 +107,7 @@ plot_spawning_biomass <- function(dat,
           # ggplot2::geom_ribbon(ggplot2::aes(x = year, ymin = (value/1000 - stddev/1000), ymax = (value/1000 + stddev/1000)), colour = "grey", alpha = 0.3) +
           ggplot2::geom_hline(yintercept = ref_line_val/1000, linetype = 2) +
           ggplot2::labs(x = "Year",
-                        y = paste("Spawning Biomass (", sbu, ")", sep = "")) +
+                        y = spawning_biomass_label) +
           ggplot2::scale_x_continuous(n.breaks = x_n_breaks,
                                       guide = ggplot2::guide_axis(minor.ticks = TRUE))
         plt <- plt + ann_add

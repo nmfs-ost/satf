@@ -46,11 +46,11 @@ plot_recruitment <- function(dat,
   }
 
   if (model == "standard"){
-    output <- read.csv(dat)
+    output <- utils::read.csv(dat)
     if (scaled) {
       rec <- output |>
         dplyr::filter(label == "recruitment",
-                      module_name == "TIME_SERIES" | module_name == "",
+                      module_name == "TIME_SERIES" | module_name == "t.series",
                       !is.na(year),
                       is.na(fleet) | length(unique(fleet)) <= 1,
                       is.na(sex) | length(unique(sex)) <= 1,
@@ -64,7 +64,7 @@ plot_recruitment <- function(dat,
         dplyr::select(-c(module_name, label))
       sb <- output |>
         dplyr::filter(label == "spawning_biomass",
-                      module_name == "TIME_SERIES" | module_name == "",
+                      module_name == "TIME_SERIES" | module_name == "t.series",
                       !is.na(year),
                       is.na(fleet) | length(unique(fleet)) <= 1,
                       is.na(sex) | length(unique(sex)) <= 1,
@@ -79,7 +79,7 @@ plot_recruitment <- function(dat,
     } else {
       rec <- output |>
         dplyr::filter(label == "recruitment",
-                      module_name == "TIME_SERIES" | module_name == "",
+                      module_name == "TIME_SERIES" | module_name == "t.series",
                       !is.na(year),
                       is.na(fleet) | length(unique(fleet)) <= 1,
                       is.na(sex) | length(unique(sex)) <= 1,
@@ -93,7 +93,7 @@ plot_recruitment <- function(dat,
         dplyr::select(-c(module_name, label))
       sb <- output |>
         dplyr::filter(label == "spawning_biomass",
-                      module_name == "TIME_SERIES" | module_name == "",
+                      module_name == "TIME_SERIES" | module_name == "t.series",
                       !is.na(year),
                       is.na(fleet) | length(unique(fleet)) <= 1,
                       is.na(sex) | length(unique(sex)) <= 1,
@@ -108,8 +108,8 @@ plot_recruitment <- function(dat,
     }
 
     rec_devs <- output |>
-      dplyr::filter(label == "recruitment_deviations",
-                    # module_name == "TIME_SERIES" | module_name == "",
+      dplyr::filter(label == "recruitment_deviations" | label == "log_recruitment_deviations",
+                    module_name == "TIME_SERIES" | module_name == "t.series",
                     !is.na(year),
                     is.na(fleet) | length(unique(fleet)) <= 1,
                     is.na(sex) | length(unique(sex)) <= 1,
@@ -121,8 +121,14 @@ plot_recruitment <- function(dat,
                     year = as.numeric(year)) |>
       dplyr::rename(recruitment_deviations = estimate) |>
       dplyr::select(-c(module_name, label))
+    if(return == "recruitment_deviations" & nrow(rec_devs)==0){
+      stop("No recruitment deviations found in data.")
+    }
+
     if (is.null(end_year)){
       endyr <- max(rec$year)
+    } else {
+      endyr <- end_year
     }
     stryr <- min(rec$year)
 
@@ -137,7 +143,7 @@ plot_recruitment <- function(dat,
 
     if (return == "stock_recruitment"){
       plt <- ggplot2::ggplot(data = sr) +
-        ggplot2::geom_line(ggplot2::aes(x = spawning_biomass/1000, y = recruitment/1000), linewidth = 1) +
+        ggplot2::geom_line(ggplot2::aes(x = spawning_biomass, y = recruitment/1000), linewidth = 1) +
         ggplot2::labs(x = paste("Spawning Biomass (", sbu, ")", sep = ""),
                       y = paste("Recruitment (", ru, ")", sep = "")) +
         ggplot2::theme(legend.position = "none")

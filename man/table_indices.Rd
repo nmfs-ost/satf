@@ -4,7 +4,7 @@
 \alias{table_indices}
 \title{Create Indices of Abundance Table}
 \usage{
-table_indices(dat, model)
+table_indices(dat, model = "standard")
 }
 \arguments{
 \item{dat}{Stock assessment output file containing estimates parameters and

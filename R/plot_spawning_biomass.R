@@ -2,13 +2,7 @@
 #'
 #' @inheritParams plot_recruitment
 #' @param show_warnings Option to suppress warnings
-#' @param units If units are not available in the output file or are not the
-#' default of metric tons, then state the units of spawning biomass applicable
-#' to the stock. For plotting purposes, spawning biomass is divided by 1000.
 #' @param biomass_units units for biomass
-#' @param spawning_biomass_units units of spawning biomass if different from biomass
-#' @param scaled TRUE/FALSE; indicate whether the output values for biomass and recruitment are scaled
-#' @param scale_amount indicate the exact amount of scale (i.e. 1000)
 #' @param ref_line choose with reference point to plot a reference line and use
 #' in relative sb calculations
 #' @param end_year input the end year of the stock assessment data (not including
@@ -21,10 +15,10 @@
 #' @export
 #'
 plot_spawning_biomass <- function(dat,
-                         model = c('SS3','BAM', 'ASAP', 'AMAK', 'WHAM', "standard"),
+                         model = "standard",
                          show_warnings = FALSE,
                          units = NULL,
-                         biomass_units = NULL,
+                         # biomass_units = NULL,
                          spawning_biomass_units = NULL,
                          scaled = FALSE,
                          scale_amount = 1000,
@@ -33,8 +27,6 @@ plot_spawning_biomass <- function(dat,
                          relative = FALSE
                          ){
 
-  model <- match.arg(model, several.ok = FALSE)
-
   if(length(ref_line)>1){
     ref_line = "target"
   } else {
@@ -42,12 +34,6 @@ plot_spawning_biomass <- function(dat,
   }
 
   # check units
-  # biomass
-  if(!is.null(biomass_units)){
-    bu <- biomass_units
-  } else {
-    bu <- "metric tons"
-  }
   # spawning biomass
   if(!is.null(spawning_biomass_units)){
     sbu <- spawning_biomass_units
@@ -56,7 +42,7 @@ plot_spawning_biomass <- function(dat,
   }
 
   if(model == "standard"){
-    output <- read.csv(dat)
+    output <- utils::read.csv(dat)
     sb <- output |>
       dplyr::filter(label == "spawning_biomass",
                     module_name == "DERIVED_QUANTITIES" | module_name == "t.series") |> # SS3 and BAM target module names
@@ -64,6 +50,8 @@ plot_spawning_biomass <- function(dat,
                     year = as.numeric(year))
     if (is.null(end_year)){
       endyr <- max(sb$year)
+    } else {
+      endyr <- end_year
     }
     # Select value for reference line and label
     if (any(grepl("target", output$label))) {
@@ -83,7 +71,7 @@ plot_spawning_biomass <- function(dat,
         ann_add <- ggplot2::annotate("text", x = endyr + 0.05, y=ref_line_val/1000, label = bquote(SB[MSY]))
       }
     } else if (ref_line == "unfished") {
-      ref_line_val <- as.numeric(output[grep("(?=.*spawning_biomass)(?=.*target)", output$label, perl = TRUE),]$estimate)
+      ref_line_val <- as.numeric(output[grep("(?=.*spawning_biomass)(?=.*unfished)", output$label, perl = TRUE),]$estimate)
       ref_line_label <- "unfished"
       if (scaled) {
         ann_add <- ggplot2::annotate("text", x = endyr + 0.05, y=ref_line_val, label = bquote(SB[unfished]))

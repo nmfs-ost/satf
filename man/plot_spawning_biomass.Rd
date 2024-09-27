@@ -6,10 +6,9 @@
 \usage{
 plot_spawning_biomass(
   dat,
-  model = c("SS3", "BAM", "ASAP", "AMAK", "WHAM", "standard"),
+  model = "standard",
   show_warnings = FALSE,
   units = NULL,
-  biomass_units = NULL,
   spawning_biomass_units = NULL,
   scaled = FALSE,
   scale_amount = 1000,
@@ -28,15 +27,13 @@ are options for plotting spawning biomass.}
 
 \item{show_warnings}{Option to suppress warnings}
 
-\item{units}{If units are not available in the output file or are not the
-default of metric tons, then state the units of spawning biomass applicable
-to the stock. For plotting purposes, spawning biomass is divided by 1000.}
-
-\item{biomass_units}{units for biomass}
+\item{units}{If units are not available in the output file, in metric tons,
+or are different for SB and R, then report them here starting with SB units
+and following with R units.}
 
 \item{spawning_biomass_units}{units of spawning biomass if different from biomass}
 
-\item{scaled}{TRUE/FALSE; indicate whether the output values for biomass and recruitment are scaled}
+\item{scaled}{T/F; indicate whether the output values for biomass and recruitment are scaled}
 
 \item{scale_amount}{indicate the exact amount of scale (i.e. 1000)}
 
@@ -47,6 +44,8 @@ in relative sb calculations}
 projections). This parameter will be deprecated once the output converter is fully developed.}
 
 \item{relative}{Plot relative spawning biomass. Ref line indicates which reference point to use}
+
+\item{biomass_units}{units for biomass}
 }
 \value{
 Plot spawning biomass from a stock assessment model as found in a NOAA

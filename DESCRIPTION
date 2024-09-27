@@ -22,10 +22,12 @@ LazyData: true
 RoxygenNote: 7.3.2
 Imports: 
     dplyr,
-    extrafont,
     flextable,
     ggplot2,
     naniar,
+    nmfspalette,
     stringr,
     tidyr,
     utils
+  Remotes:
+    nmfs-fish-tools/nmfspalette

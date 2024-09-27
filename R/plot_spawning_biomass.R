@@ -27,12 +27,6 @@ plot_spawning_biomass <- function(dat,
                          end_year = NULL,
                          relative = FALSE
                          ){
-
-  if(length(ref_line)>1){
-    ref_line = "target"
-  } else {
-    ref_line <- match.arg(ref_line, several.ok = FALSE)
-  }
   ref_line <- match.arg(ref_line)
   spawning_biomass_label <- glue::glue(
     "Spawning biomass ({spawning_biomass_units})"

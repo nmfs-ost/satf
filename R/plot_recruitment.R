@@ -1,7 +1,6 @@
 #' Plot Recruitment
 #'
-#' @template dat
-#' @template model
+#' @inheritParams plot_recruitment
 #' @param params Print/export the parameters of the stock recruitment function?
 #' @param params_only Only export the stock recruitment function or both the parameters and the plot(s)?
 #' @param units If units are not available in the output file, in metric tons,

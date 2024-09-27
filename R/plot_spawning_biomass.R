@@ -1,7 +1,6 @@
 #' Plot Spawning Biomass
 #'
-#' @template dat
-#' @template model
+#' @inheritParams plot_recruitment
 #' @param show_warnings Option to suppress warnings
 #' @param units If units are not available in the output file or are not the
 #' default of metric tons, then state the units of spawning biomass applicable

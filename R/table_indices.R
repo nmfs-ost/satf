@@ -10,7 +10,7 @@
 table_indices <- function(dat,
                           model = "standard"){
   if (model == "standard"){
-    output <- read.csv(dat)
+    output <- utils::read.csv(dat)
     output <- output |>
       dplyr::filter(module_name == "INDEX_2" | module_name == "t.series")
     if (any(unique(output$module_name=="INDEX_2"))) {

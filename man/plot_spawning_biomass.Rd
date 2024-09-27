@@ -27,13 +27,13 @@ are options for plotting spawning biomass.}
 
 \item{show_warnings}{Option to suppress warnings}
 
-\item{units}{If units are not available in the output file or are not the
-default of metric tons, then state the units of spawning biomass applicable
-to the stock. For plotting purposes, spawning biomass is divided by 1000.}
+\item{units}{If units are not available in the output file, in metric tons,
+or are different for SB and R, then report them here starting with SB units
+and following with R units.}
 
 \item{spawning_biomass_units}{units of spawning biomass if different from biomass}
 
-\item{scaled}{TRUE/FALSE; indicate whether the output values for biomass and recruitment are scaled}
+\item{scaled}{T/F; indicate whether the output values for biomass and recruitment are scaled}
 
 \item{scale_amount}{indicate the exact amount of scale (i.e. 1000)}
 

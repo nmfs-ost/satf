@@ -42,7 +42,7 @@ plot_spawning_biomass <- function(dat,
   }
 
   if(model == "standard"){
-    output <- read.csv(dat)
+    output <- utils::read.csv(dat)
     sb <- output |>
       dplyr::filter(label == "spawning_biomass",
                     module_name == "DERIVED_QUANTITIES" | module_name == "t.series") |> # SS3 and BAM target module names

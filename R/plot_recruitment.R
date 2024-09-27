@@ -50,7 +50,7 @@ plot_recruitment <- function(dat,
   }
 
   if (model == "standard"){
-    output <- read.csv(dat)
+    output <- utils::read.csv(dat)
     if (scaled) {
       rec <- output |>
         dplyr::filter(label == "recruitment",

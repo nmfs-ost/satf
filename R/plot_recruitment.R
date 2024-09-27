@@ -1,7 +1,10 @@
 #' Plot Recruitment
 #'
-#' @template dat
-#' @template model
+#' @param dat Stock assessment output file containing estimates parameters and
+#' other associated metrics.
+#' @param model Acryonym of the stock assessment model that produced the output file.
+#' Currently, only stock synthesis (SS3) and Beaufort Assessment Model (BAM)
+#' are options for plotting spawning biomass.
 #' @param params Print/export the parameters of the stock recruitment function?
 #' @param params_only Only export the stock recruitment function or both the parameters and the plot(s)?
 #' @param units If units are not available in the output file, in metric tons,

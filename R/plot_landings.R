@@ -1,7 +1,6 @@
 #' Plot observed landings by fleet
 #'
-#' @template dat
-#' @template model
+#' @inheritParams plot_recruitment
 #' @param units indicate the name of the units of landings as to label the axis
 #'
 #' @return Create a plot ready for a stock assessment report of cumulative landings

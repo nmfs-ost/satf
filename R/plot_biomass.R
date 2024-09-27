@@ -1,7 +1,6 @@
 #' Plot Total Biomass
 #'
 #' @inheritParamsplot_recruitment
-#' @template model
 #' @param show_warnings Option to suppress warnings
 #' @param units units for biomass
 #' @param scaled TRUE/FALSE; indicate whether the output values for biomass and recruitment are scaled

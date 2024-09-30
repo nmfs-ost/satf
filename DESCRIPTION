@@ -29,5 +29,7 @@ Imports:
     stringr,
     tidyr,
     utils
+Suggests:
+    usethis
 Remotes:
     nmfs-fish-tools/nmfspalette

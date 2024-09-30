@@ -1,7 +1,14 @@
 #' Plot Recruitment
 #'
-#' @param dat .csv file and path where the data is located of standard stock assessment output
-#' @param model the model in which the output came from (standard, SS3, BAM, ect)
+
+#' @param dat A standardized data object. For example, see `hake`, which is
+#'   available within this package.
+#' @param model The type or name of the assessment framework that was used to
+#'   fit the model. For example, the `hake` example data set is the default
+#'   `"standard"` type of data that was converted to a standard format. Where,
+#'   a model fit using Stock Synthesis would have `model = "SS3"`. Eventually,
+#'   all types will be converted to the standard format and this argument will
+#'   be deprecated.
 #' @param params Print/export the parameters of the stock recruitment function?
 #' @param params_only Only export the stock recruitment function or both the parameters and the plot(s)?
 #' @param units If units are not available in the output file, in metric tons,

@@ -22,12 +22,13 @@
 #' @export
 #'
 plot_spawning_biomass <- function(
-    dat,
-    unit_label = "metric ton",
-    scale_amount = 1,
-    ref_line = c("target", "unfished"),
-    end_year = NULL,
-    relative = FALSE) {
+  dat,
+  unit_label = "metric ton",
+  scale_amount = 1,
+  ref_line = c("target", "unfished"),
+  end_year = NULL,
+  relative = FALSE
+) {
   ref_line <- match.arg(ref_line)
   # TODO: Fix the unit label if scaling. Maybe this is up to the user to do if
   #       they want something scaled then they have to supply a better unit name
@@ -38,7 +39,7 @@ plot_spawning_biomass <- function(
     no = glue::glue("Spawning biomass ({unit_label})")
   )
 
-  output <- utils::read.csv(dat)
+  output <- dat
   # Determine the end year
   all_years <- output[["year"]][grepl("^[0-9\\.]+$", output[["year"]])]
   if (is.null(end_year)) {

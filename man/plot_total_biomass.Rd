@@ -6,7 +6,6 @@
 \usage{
 plot_total_biomass(
   dat,
-  model = "standard",
   show_warnings = FALSE,
   units = NULL,
   scaled = FALSE,
@@ -17,9 +16,7 @@ plot_total_biomass(
 )
 }
 \arguments{
-\item{dat}{.csv file and path where the data is located of standard stock assessment output}
-
-\item{model}{the model in which the output came from (standard, SS3, BAM, ect)}
+\item{dat}{A data frame returned from `asar::convert_output()`.}
 
 \item{show_warnings}{Option to suppress warnings}
 

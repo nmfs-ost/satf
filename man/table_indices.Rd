@@ -4,12 +4,10 @@
 \alias{table_indices}
 \title{Create Indices of Abundance Table}
 \usage{
-table_indices(dat, model = "standard")
+table_indices(dat)
 }
 \arguments{
-\item{dat}{.csv file and path where the data is located of standard stock assessment output}
-
-\item{model}{the model in which the output came from (standard, SS3, BAM, ect)}
+\item{dat}{A data frame returned from `asar::convert_output()`.}
 }
 \value{
 Create table of observed annual indices of abundance plus error

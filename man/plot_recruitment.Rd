@@ -6,7 +6,6 @@
 \usage{
 plot_recruitment(
   dat,
-  model = "standard",
   params = FALSE,
   params_only = FALSE,
   units = c(sb = "metric tons", recruitment = "metric tons"),
@@ -21,9 +20,7 @@ plot_recruitment(
 }
 \arguments{
 
-\item{dat}{A path to a file name where the data are stored.}
-
-\item{model}{The model type, to be deprecated.}
+\item{dat}{A data frame returned from `asar::convert_output()`.}
 
 \item{params}{Print/export the parameters of the stock recruitment function?}
 

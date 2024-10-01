@@ -15,7 +15,7 @@ plot_spawning_biomass(
 }
 \arguments{
 
-\item{dat}{A path to a file name where the data are stored.}
+\item{dat}{A data frame returned from `asar::convert_output()`.}
 
 \item{scale_amount}{indicate the exact amount of scale (i.e. 1000)}
 

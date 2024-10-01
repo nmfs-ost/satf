@@ -2,53 +2,42 @@
 % Please edit documentation in R/plot_spawning_biomass.R
 \name{plot_spawning_biomass}
 \alias{plot_spawning_biomass}
-\title{Plot Spawning Biomass}
+\title{Plot spawning biomass (SB)}
 \usage{
 plot_spawning_biomass(
   dat,
-  model = "standard",
-  show_warnings = FALSE,
-  units = NULL,
-  spawning_biomass_units = NULL,
-  scaled = FALSE,
-  scale_amount = 1000,
-  ref_line = c("target", "MSY", "msy", "unfished"),
+  unit_label = "metric ton",
+  scale_amount = 1,
+  ref_line = c("target", "unfished"),
   end_year = NULL,
   relative = FALSE
 )
 }
 \arguments{
-\item{dat}{.csv file and path where the data is located of standard stock assessment output}
-
-\item{model}{the model in which the output came from (standard, SS3, BAM, ect)}
-
-\item{show_warnings}{Option to suppress warnings}
-
-\item{units}{If units are not available in the output file, in metric tons,
-or are different for SB and R, then report them here starting with SB units
-and following with R units.}
-
-\item{spawning_biomass_units}{units of spawning biomass if different from biomass}
-
-\item{scaled}{T/F; indicate whether the output values for biomass and recruitment are scaled}
+\item{dat}{A data frame returned from `asar::convert_output()`.}
 
 \item{scale_amount}{indicate the exact amount of scale (i.e. 1000)}
 
-\item{ref_line}{choose with reference point to plot a reference line and use
-in relative sb calculations}
+\item{ref_line}{A string specifying the type of reference you want to
+compare spawning biomass to. The default is `"target"`, which looks for
+`"spawning_biomass_target"` in the `"label"` column of `dat`. The actual
+searching in `dat` is case agnostic and will work with either upper- or
+lower-case letters but you must use one of the options specified in the
+default list to ensure that the label on the figure looks correct
+regardless of how it is specified in `dat`.}
 
-\item{end_year}{input the end year of the stock assessment data (not including
-projections). This parameter will be deprecated once the output converter is fully developed.}
+\item{end_year}{last year of assessment}
 
-\item{relative}{Plot relative spawning biomass. Ref line indicates which reference point to use}
-
-\item{biomass_units}{units for biomass}
+\item{relative}{A logical value specifying if the resulting figures should
+be relative spawning biomass. The default is `FALSE`. `ref_line` indicates
+which reference point to use.}
 }
 \value{
-Plot spawning biomass from a stock assessment model as found in a NOAA
-stock assessment report. Units of spawning biomass can either be manually added
-or will be extracted from the provided file if possible. In later releases, model will not
+Plot spawning biomass from the results of an assessment model translated to
+the standard output. The {ggplot2} object is returned for further
+modifications if needed.
 }
 \description{
-Plot Spawning Biomass
+Plot spawning biomass with a reference line as a dashed line. The figure can
+also be made relative to this reference line rather than in absolute units.
 }

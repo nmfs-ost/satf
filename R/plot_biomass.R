@@ -17,7 +17,6 @@
 #' @export
 #'
 plot_total_biomass <- function(dat,
-                                  model = "standard",
                                   show_warnings = FALSE,
                                   units = NULL,
                                   scaled = FALSE,
@@ -40,81 +39,79 @@ plot_total_biomass <- function(dat,
     bu <- "metric tons"
   }
 
-  if(model == "standard"){
-    output <- read.csv(dat)
-    totb <- output |>
-      dplyr::filter(label == "biomass",
-                    module_name == "DERIVED_QUANTITIES" | module_name == "t.series") |> # SS3 and BAM target module names
-      dplyr::mutate(estimate = as.numeric(estimate),
-                    year = as.numeric(year))
-    if (is.null(end_year)){
-      endyr <- max(totb$year)
+  output <- dat
+  totb <- output |>
+    dplyr::filter(label == "biomass",
+                  module_name == "DERIVED_QUANTITIES" | module_name == "t.series") |> # SS3 and BAM target module names
+    dplyr::mutate(estimate = as.numeric(estimate),
+                  year = as.numeric(year))
+  if (is.null(end_year)){
+    endyr <- max(totb$year)
+  }
+  # Select value for reference line and label
+  # update the target option later
+  if (any(grepl("target", output$label))) {
+    ref_line_val <- as.numeric(output[grep("(?=.*biomass)(?=.*target)", output$label, perl = TRUE),]$estimate)
+    ref_line_label <- "target"
+    if (scaled) {
+      ann_add <- ggplot2::annotate("text", x = endyr + 0.05, y=ref_line_val, label = bquote(B[target])) # this might need to change
+    } else {
+      ann_add <- ggplot2::annotate("text", x = endyr + 0.05, y=ref_line_val/1000, label = bquote(B[target]))
     }
-    # Select value for reference line and label
-    # update the target option later
-    if (any(grepl("target", output$label))) {
-      ref_line_val <- as.numeric(output[grep("(?=.*biomass)(?=.*target)", output$label, perl = TRUE),]$estimate)
-      ref_line_label <- "target"
-      if (scaled) {
-        ann_add <- ggplot2::annotate("text", x = endyr + 0.05, y=ref_line_val, label = bquote(B[target])) # this might need to change
-      } else {
-        ann_add <- ggplot2::annotate("text", x = endyr + 0.05, y=ref_line_val/1000, label = bquote(B[target]))
-      }
-    } else if (ref_line == "MSY" | ref_line == "msy") {
-      ref_line_val <- as.numeric(output[grep("(^biomass_msy)", output$label, perl = TRUE),]$estimate)
-      ref_line_label <- "MSY"
-      if (scaled) {
-        ann_add <- ggplot2::annotate("text", x = endyr + 0.05, y=ref_line_val, label = bquote(B[ref_line]))
-      } else {
-        ann_add <- ggplot2::annotate("text", x = endyr + 0.05, y=ref_line_val/1000, label = bquote(B[MSY]))
-      }
-    } else if (ref_line == "unfished") {
-      ref_line_val <- as.numeric(output[grep("(^biomass_unfished)", output$label, perl = TRUE),]$estimate)
-      ref_line_label <- "unfished"
-      if (scaled) {
-        ann_add <- ggplot2::annotate("text", x = endyr + 0.05, y=ref_line_val, label = bquote(B[unfished]))
-      } else {
-        ann_add <- ggplot2::annotate("text", x = endyr + 0.05, y=ref_line_val/1000, label = bquote(B[unfished]))
-      }
+  } else if (ref_line == "MSY" | ref_line == "msy") {
+    ref_line_val <- as.numeric(output[grep("(^biomass_msy)", output$label, perl = TRUE),]$estimate)
+    ref_line_label <- "MSY"
+    if (scaled) {
+      ann_add <- ggplot2::annotate("text", x = endyr + 0.05, y=ref_line_val, label = bquote(B[ref_line]))
+    } else {
+      ann_add <- ggplot2::annotate("text", x = endyr + 0.05, y=ref_line_val/1000, label = bquote(B[MSY]))
     }
-    # Choose number of breaks for x-axis
-    x_n_breaks <- round(length(subset(totb, year<=endyr)$year)/10)
-    if (x_n_breaks <= 5) {
-      x_n_breaks <- round(length(subset(totb, year<=endyr)$year)/5)
+  } else if (ref_line == "unfished") {
+    ref_line_val <- as.numeric(output[grep("(^biomass_unfished)", output$label, perl = TRUE),]$estimate)
+    ref_line_label <- "unfished"
+    if (scaled) {
+      ann_add <- ggplot2::annotate("text", x = endyr + 0.05, y=ref_line_val, label = bquote(B[unfished]))
+    } else {
+      ann_add <- ggplot2::annotate("text", x = endyr + 0.05, y=ref_line_val/1000, label = bquote(B[unfished]))
     }
-    if (relative) {
-      # plot relative TOTB
-      plt <- ggplot2::ggplot(data = subset(totb, year<=endyr)) +
-        ggplot2::geom_line(ggplot2::aes(x = year, y = estimate/ref_line_val), linewidth = 1) +
-        # ggplot2::geom_ribbon(ggplot2::aes(x = year, ymin = (value/ref_line_val - stddev/ref_line_val), ymax = (value/ref_line_val + stddev/ref_line_val)), colour = "grey", alpha = 0.3) +
-        ggplot2::geom_hline(yintercept = ref_line_val/ref_line_val, linetype = 2) +
+  }
+  # Choose number of breaks for x-axis
+  x_n_breaks <- round(length(subset(totb, year<=endyr)$year)/10)
+  if (x_n_breaks <= 5) {
+    x_n_breaks <- round(length(subset(totb, year<=endyr)$year)/5)
+  }
+  if (relative) {
+    # plot relative TOTB
+    plt <- ggplot2::ggplot(data = subset(totb, year<=endyr)) +
+      ggplot2::geom_line(ggplot2::aes(x = year, y = estimate/ref_line_val), linewidth = 1) +
+      # ggplot2::geom_ribbon(ggplot2::aes(x = year, ymin = (value/ref_line_val - stddev/ref_line_val), ymax = (value/ref_line_val + stddev/ref_line_val)), colour = "grey", alpha = 0.3) +
+      ggplot2::geom_hline(yintercept = ref_line_val/ref_line_val, linetype = 2) +
+      ggplot2::labs(x = "Year",
+                    y = paste("Biomass (", bu, ")", sep = "")) +
+      ggplot2::scale_x_continuous(n.breaks = x_n_breaks,
+                                  guide = ggplot2::guide_axis(minor.ticks = TRUE))
+  } else {
+    if(scaled){
+      plt <- ggplot2::ggplot(data = totb) +
+        ggplot2::geom_line(ggplot2::aes(x = year, y = estimate), linewidth = 1) +
+        ggplot2::geom_hline(yintercept = ref_line_val, linetype = 2) +
         ggplot2::labs(x = "Year",
                       y = paste("Biomass (", bu, ")", sep = "")) +
         ggplot2::scale_x_continuous(n.breaks = x_n_breaks,
                                     guide = ggplot2::guide_axis(minor.ticks = TRUE))
+      plt <- plt + ann_add
     } else {
-      if(scaled){
-        plt <- ggplot2::ggplot(data = totb) +
-          ggplot2::geom_line(ggplot2::aes(x = year, y = estimate), linewidth = 1) +
-          ggplot2::geom_hline(yintercept = ref_line_val, linetype = 2) +
-          ggplot2::labs(x = "Year",
-                        y = paste("Biomass (", bu, ")", sep = "")) +
-          ggplot2::scale_x_continuous(n.breaks = x_n_breaks,
-                                      guide = ggplot2::guide_axis(minor.ticks = TRUE))
-        plt <- plt + ann_add
-      } else {
-        plt <- ggplot2::ggplot(data = totb) +
-          ggplot2::geom_line(ggplot2::aes(x = year, y = estimate/1000), linewidth = 1) +
-          # ggplot2::geom_ribbon(ggplot2::aes(x = year, ymin = (value/1000 - stddev/1000), ymax = (value/1000 + stddev/1000)), colour = "grey", alpha = 0.3) +
-          ggplot2::geom_hline(yintercept = ref_line_val/1000, linetype = 2) +
-          ggplot2::labs(x = "Year",
-                        y = paste("Biomass (", bu, ")", sep = "")) +
-          ggplot2::scale_x_continuous(n.breaks = x_n_breaks,
-                                      guide = ggplot2::guide_axis(minor.ticks = TRUE))
-        plt <- plt + ann_add
-      }
+      plt <- ggplot2::ggplot(data = totb) +
+        ggplot2::geom_line(ggplot2::aes(x = year, y = estimate/1000), linewidth = 1) +
+        # ggplot2::geom_ribbon(ggplot2::aes(x = year, ymin = (value/1000 - stddev/1000), ymax = (value/1000 + stddev/1000)), colour = "grey", alpha = 0.3) +
+        ggplot2::geom_hline(yintercept = ref_line_val/1000, linetype = 2) +
+        ggplot2::labs(x = "Year",
+                      y = paste("Biomass (", bu, ")", sep = "")) +
+        ggplot2::scale_x_continuous(n.breaks = x_n_breaks,
+                                    guide = ggplot2::guide_axis(minor.ticks = TRUE))
+      plt <- plt + ann_add
     }
-    plt_fin <- add_theme(plt)
   }
+  plt_fin <- add_theme(plt)
   return(plt_fin)
 }

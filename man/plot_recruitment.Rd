@@ -6,7 +6,6 @@
 \usage{
 plot_recruitment(
   dat,
-  model = "standard",
   params = FALSE,
   params_only = FALSE,
   units = c(sb = "metric tons", recruitment = "metric tons"),
@@ -20,9 +19,7 @@ plot_recruitment(
 )
 }
 \arguments{
-\item{dat}{.csv file and path where the data is located of standard stock assessment output}
-
-\item{model}{the model in which the output came from (standard, SS3, BAM, ect)}
+\item{dat}{A data frame returned from `asar::convert_output()`.}
 
 \item{params}{Print/export the parameters of the stock recruitment function?}
 

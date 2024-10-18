@@ -14,7 +14,7 @@
 #' Default is "cm".
 
 #' @return A folder containing exported plots and associated
-#'  alternative text as .jpg and .csv objects, respectively.
+#'  alternative text as .png and .csv objects, respectively.
 #'
 #' @export
 #'
@@ -48,8 +48,8 @@ exp_fig_accessible <- function(figure,
   new_path <- paste0(path, "/", "exported")
   dir.create(path = new_path)
 
-  # export figure to jpg
-  ggplot2::ggsave(filename = paste0(fig_name_deparsed, ".jpg"),
+  # export figure to png
+  ggplot2::ggsave(filename = paste0(fig_name_deparsed, ".png"),
                   plot = figure,
                   path = new_path,
                   width = width,

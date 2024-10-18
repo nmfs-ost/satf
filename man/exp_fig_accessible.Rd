@@ -24,7 +24,7 @@ Default is "cm".}
 }
 \value{
 A folder containing exported plots and associated
- alternative text as .jpg and .csv objects, respectively.
+ alternative text as .png and .csv objects, respectively.
 }
 \description{
 Function to export a specified plot object, and its alternative

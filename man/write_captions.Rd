@@ -4,10 +4,14 @@
 \alias{write_captions}
 \title{Write captions and alternative text}
 \usage{
-write_captions(dat)
+write_captions(dat, dir = NULL, year = NULL)
 }
 \arguments{
 \item{dat}{A data frame returned from `asar::convert_output()`.}
+
+\item{dir}{Directory where the output captions and alt text file should be saved}
+
+\item{year}{the last year of the data or the current year this function is being performed}
 }
 \value{
 Exports .csv with captions and alt text for figures and tables

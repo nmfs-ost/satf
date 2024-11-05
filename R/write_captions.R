@@ -3,7 +3,9 @@
 #' Function to create captions and alternative text that contain
 #' key quantities from the model results file.
 #'
-#' @inheritParams plot_recruitment
+#' @inheritParams plot_spawning_biomass
+#' @param dir Directory where the output captions and alt text file should be saved
+#' @param year the last year of the data or the current year this function is being performed
 #'
 #' @return Exports .csv with captions and alt text for figures and tables
 #' that contain key quantities (e.g., an assessment's start year) that
@@ -11,8 +13,9 @@
 #'
 #' @export
 
-write_captions <- function(dat # converted model output object
-                           ){
+write_captions <- function(dat, # converted model output object
+                           dir = NULL,
+                           year = NULL){
 
   # import pre-written captions and alt text that include placeholders
   # for key quantities (e.g., 'start_year' is the placeholder for the
@@ -22,8 +25,12 @@ write_captions <- function(dat # converted model output object
   )
 
   # extract key quantities (these are examples and are not accurate)
-  start_year <- as.numeric(dat[3,3])
-  Fend <- as.numeric(dat$estimate[2])
+  start_year <- min(as.numeric(dat$year[dat$year!="S/Rcurve" | dat$year!="Virg" | dat$year!="Init"]), na.rm = TRUE)
+                # as.numeric(dat[3,3])
+  Fend_df <- dat |>
+    dplyr::filter(label == "fishing_mortality" & year == year | label == "F_terminal")
+  Fend <- as.numeric(Fend_df$estimate)
+          # as.numeric(dat$estimate[2])
   # add in more quantities here, and update the quantities above
 
   # substitute quantity placeholders in the captions/alt text with
@@ -41,7 +48,7 @@ write_captions <- function(dat # converted model output object
 
   # export df with substituted captions and alt text to csv
   write.csv(x = caps_alttext_subbed,
-            file = file.path(here::here(),
+            file = file.path(dir,
                              "captions_alt_text.csv"),
             row.names=FALSE)
 

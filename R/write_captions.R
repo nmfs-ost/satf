@@ -23,18 +23,20 @@ write_captions <- function(dat # converted model output object
 
   # extract key quantities (these are examples and are not accurate)
   start_year <- as.numeric(dat[3,3])
-  Fend <- as.numeric(dat[2,2])
+  Fend <- as.numeric(dat$estimate[2])
   # add in more quantities here, and update the quantities above
 
   # substitute quantity placeholders in the captions/alt text with
   # the real values, extracted above
   caps_alttext_subbed <- caps_alttext |>
-    dplyr::mutate_all( ~ stringr::str_replace_all(
-                           .,
-                           c('Fend' = as.character(Fend),
-                             'start_year' = as.character(start_year)
-                           )
-                         ))
+    dplyr::mutate_if(is.character,
+                   stringr::str_replace_all,
+                   pattern = c("Fend"),
+                   replacement = c(as.character(Fend)))|>
+    dplyr::mutate_if(is.character,
+                     stringr::str_replace_all,
+                     pattern = c("start_year"),
+                     replacement = c(as.character(start_year)))
 
 
   # export df with substituted captions and alt text to csv

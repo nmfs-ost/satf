@@ -13,6 +13,12 @@
 #' @param show_warnings Include warnings? Default FALSE
 #' @param end_year last year of assessment
 #' @param return Default returns recruitment over time. Options to display recruitment time series, stock recruitment curve, or recruitment fit
+#' @param export_rda TRUE/FALSE; indcate whether to produce an .rda file containing
+#' a list with the figure/table, caption, and alternative text (if figure). If TRUE,
+#' the .rda will be exported to the folder indicated in the argument "rda_folder".
+#' Default is FALSE.
+#' @param rda_folder The location of the folder containing .rda files ("rda_files")
+#' that will be exported if the argument `export_rda` = TRUE. Default is the working directory.
 #'
 #' @return A series of plots are exported including recruitment over time with R0
 #' reference line, stock recruitment curve, and other related figures.
@@ -28,7 +34,11 @@ plot_recruitment <- function(dat,
                              scale_amount = NULL,
                              show_warnings = FALSE,
                              end_year = NULL,
-                             return = "recruitment"){
+                             return = "recruitment",
+                             export_rda = FALSE,
+                             rda_folder = getwd()
+                             ){
+
   # check units
   # biomass
   if(!is.null(recruitment_units)){

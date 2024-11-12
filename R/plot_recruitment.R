@@ -200,9 +200,9 @@ plot_recruitment <- function(dat,
 
   # export figure to rda if argument = T
   if (export_rda == TRUE){
-    rda_recruitment <- list(plt_fin,
-                            alt_text,
-                            cap)
+    rda_recruitment <- list("recruitment_figure" = plt_fin,
+                            "recruitment_alt_text" = alt_text,
+                            "recruitment_cap" = cap)
 
     # check if an rda_files folder already exists; if not, make one
     if (!dir.exists(file.path(rda_folder, "rda_files"))) {

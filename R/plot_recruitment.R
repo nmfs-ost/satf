@@ -20,7 +20,7 @@
 #' @param rda_dir The location of the folder containing the generated .rda files
 #' ("rda_files") that will be created if the argument `export_rda` = TRUE.
 #' Default is the working directory.
-
+#'
 #' @return A series of plots are exported including recruitment over time with R0
 #' reference line, stock recruitment curve, and other related figures.
 #' @export

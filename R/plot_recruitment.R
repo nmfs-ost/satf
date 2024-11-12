@@ -17,8 +17,9 @@
 #' a list with the figure/table, caption, and alternative text (if figure). If TRUE,
 #' the .rda will be exported to the folder indicated in the argument "rda_folder".
 #' Default is FALSE.
-#' @param rda_folder The location of the folder containing .rda files ("rda_files")
-#' that will be exported if the argument `export_rda` = TRUE. Default is the working directory.
+#' @param rda_folder The location of the folder containing the generated .rda files
+#' ("rda_files") that will be created if the argument `export_rda` = TRUE.
+#' Default is the working directory.
 #'
 #' @return A series of plots are exported including recruitment over time with R0
 #' reference line, stock recruitment curve, and other related figures.
@@ -38,6 +39,24 @@ plot_recruitment <- function(dat,
                              export_rda = FALSE,
                              rda_folder = getwd()
                              ){
+
+  # import csv with captions and alt text
+  captions_alttext <- read.csv(
+    fs::path(getwd(), "captions_alt_text.csv")
+  )
+
+  # extract this plot's caption and alt text
+  cap <- captions_alttext |>
+    dplyr::filter(label == "recruitment") |>
+    dplyr::filter(type == "figure") |>
+    dplyr::select(caption) |>
+    as.character()
+
+  alt_text <- captions_alttext |>
+    dplyr::filter(label == "recruitment") |>
+    dplyr::filter(type == "figure") |>
+    dplyr::select(alt_text) |>
+    as.character()
 
   # check units
   # biomass
@@ -173,5 +192,29 @@ plot_recruitment <- function(dat,
                     y = "Recruitment Deviations")
   }
   plt_fin <- add_theme(plt)
+
+  # add alt text and caption
+  plt_fin <- plt_fin +
+    ggplot2::labs(alt = alt_text,
+                  caption = cap)
+
+  # export figure to rda if argument = T
+  if (export_rda == TRUE){
+    rda_recruitment <- list(plt_fin,
+                            alt_text,
+                            cap)
+
+    # check if an rda_files folder already exists; if not, make one
+    if (!dir.exists(file.path(rda_folder, "rda_files"))) {
+      dir.create(file.path(rda_folder, "rda_files"))
+    }
+
+    save(rda_recruitment,
+         file = file.path(rda_folder,
+                          "rda_files",
+                          "recruitment_rda.rda"))
+
+  }
+
   return(plt_fin)
 }

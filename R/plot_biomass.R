@@ -17,14 +17,22 @@
 #' @export
 #'
 plot_total_biomass <- function(dat,
-                                  show_warnings = FALSE,
-                                  units = NULL,
-                                  scaled = FALSE,
-                                  scale_amount = 1000,
-                                  ref_line = c("target", "MSY", "msy", "unfished"),
-                                  end_year = NULL,
-                                  relative = FALSE
+                               show_warnings = FALSE,
+                               units = NULL,
+                               scaled = FALSE,
+                               scale_amount = 1000,
+                               ref_line = c("target", "MSY", "msy", "unfished"),
+                               end_year = NULL,
+                               relative = FALSE,
+                               export_rda = FALSE,
+                               rda_folder = getwd()
 ){
+
+  # create plot-specific variable to use throughout fxn for naming
+  topic_label <- "biomass"
+
+  # extract this plot's caption and alt text
+  caps_alttext <- extract_caps_alttext(topic_label = topic_label)
 
   if(length(ref_line)>1){
     ref_line = "target"
@@ -113,5 +121,22 @@ plot_total_biomass <- function(dat,
     }
   }
   plt_fin <- add_theme(plt)
+
+  # add alt text and caption
+  plt_fin <- plt_fin +
+    ggplot2::labs(caption = caps_alttext[[1]],
+                  alt = caps_alttext[[2]]
+    )
+
+  # export figure to rda if argument = T
+  if (export_rda == TRUE){
+
+    export_rda(plt_fin = plt_fin,
+               caps_alttext = caps_alttext,
+               rda_folder = rda_folder,
+               topic_label = topic_label)
+
+  }
+
   return(plt_fin)
 }

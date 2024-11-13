@@ -40,8 +40,11 @@ plot_recruitment <- function(dat,
                              rda_folder = getwd()
                              ){
 
+  # create plot-specific variable to use throughout fxn for naming
+  topic_label <- "recruitment"
+
   # extract this plot's caption and alt text
-  caps_alttext <- extract_caps_alttext(topic_label = "recruitment")
+  caps_alttext <- extract_caps_alttext(topic_label = topic_label)
 
   # check units
   # biomass
@@ -186,19 +189,11 @@ plot_recruitment <- function(dat,
 
   # export figure to rda if argument = T
   if (export_rda == TRUE){
-    rda_recruitment <- list("recruitment_figure" = plt_fin,
-                            "recruitment_cap" = caps_alttext[[1]],
-                            "recruitment_alt_text" = caps_alttext[[2]])
 
-    # check if an rda_files folder already exists; if not, make one
-    if (!dir.exists(file.path(rda_folder, "rda_files"))) {
-      dir.create(file.path(rda_folder, "rda_files"))
-    }
-
-    save(rda_recruitment,
-         file = file.path(rda_folder,
-                          "rda_files",
-                          "recruitment_rda.rda"))
+    export_rda(plt_fin = plt_fin,
+               caps_alttext = caps_alttext,
+               rda_folder = rda_folder,
+               topic_label = topic_label)
 
   }
 

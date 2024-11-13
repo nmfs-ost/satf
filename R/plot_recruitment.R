@@ -40,7 +40,7 @@ plot_recruitment <- function(dat,
                              rda_folder = getwd()
                              ){
 
-  # # extract this plot's caption and alt text
+  # extract this plot's caption and alt text
   caps_alttext <- extract_caps_alttext(topic_label = "recruitment")
 
   # check units

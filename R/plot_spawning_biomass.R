@@ -32,11 +32,13 @@ plot_spawning_biomass <- function(
   rda_folder = getwd()
 ) {
 
-  # create plot-specific variable to use throughout fxn for naming
+  # create plot-specific variables to use throughout fxn for naming and IDing
   topic_label <- "spawning_biomass"
+  fig_or_table <- "figure"
 
   # extract this plot's caption and alt text
-  caps_alttext <- extract_caps_alttext(topic_label = topic_label)
+  caps_alttext <- extract_caps_alttext(topic_label = topic_label,
+                                       fig_or_table = fig_or_table)
 
   ref_line <- match.arg(ref_line)
   # TODO: Fix the unit label if scaling. Maybe this is up to the user to do if
@@ -149,9 +151,7 @@ plot_spawning_biomass <- function(
                caps_alttext = caps_alttext,
                rda_folder = rda_folder,
                topic_label = topic_label)
-
   }
-
 
   return(plt_fin)
 }

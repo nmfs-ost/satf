@@ -15,7 +15,9 @@ plot_recruitment(
   scale_amount = NULL,
   show_warnings = FALSE,
   end_year = NULL,
-  return = "recruitment"
+  return = "recruitment",
+  make_rda = FALSE,
+  rda_folder = getwd()
 )
 }
 \arguments{
@@ -42,6 +44,15 @@ and following with R units.}
 \item{end_year}{last year of assessment}
 
 \item{return}{Default returns recruitment over time. Options to display recruitment time series, stock recruitment curve, or recruitment fit}
+
+\item{rda_folder}{The location of the folder containing the generated .rda files
+("rda_files") that will be created if the argument `export_rda` = TRUE.
+Default is the working directory.}
+
+\item{export_rda}{TRUE/FALSE; indcate whether to produce an .rda file containing
+a list with the figure/table, caption, and alternative text (if figure). If TRUE,
+the .rda will be exported to the folder indicated in the argument "rda_folder".
+Default is FALSE.}
 }
 \value{
 A series of plots are exported including recruitment over time with R0

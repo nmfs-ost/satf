@@ -195,7 +195,8 @@ plot_recruitment <- function(dat,
     export_rda(plt_fin = plt_fin,
                caps_alttext = caps_alttext,
                rda_folder = rda_folder,
-               topic_label = topic_label)
+               topic_label = topic_label,
+               fig_or_table = fig_or_table)
 
   }
 

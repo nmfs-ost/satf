@@ -12,7 +12,9 @@ plot_total_biomass(
   scale_amount = 1000,
   ref_line = c("target", "MSY", "msy", "unfished"),
   end_year = NULL,
-  relative = FALSE
+  relative = FALSE,
+  make_rda = FALSE,
+  rda_folder = getwd()
 )
 }
 \arguments{
@@ -33,6 +35,10 @@ in relative totb calculations}
 projections). This parameter will be deprecated once the output converter is fully developed.}
 
 \item{relative}{Plot relative total biomass. Ref line indicates which reference point to use}
+
+\item{rda_folder}{The location of the folder containing the generated .rda files
+("rda_files") that will be created if the argument `export_rda` = TRUE.
+Default is the working directory.}
 }
 \value{
 Plot total biomass from a stock assessment model as found in a NOAA

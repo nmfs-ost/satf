@@ -28,7 +28,7 @@ plot_spawning_biomass <- function(
   ref_line = c("target", "unfished"),
   end_year = NULL,
   relative = FALSE,
-  export_rda = FALSE,
+  make_rda = FALSE,
   rda_folder = getwd()
 ) {
 
@@ -145,12 +145,13 @@ plot_spawning_biomass <- function(
     )
 
   # export figure to rda if argument = T
-  if (export_rda == TRUE){
+  if (make_rda == TRUE){
 
     export_rda(plt_fin = plt_fin,
                caps_alttext = caps_alttext,
                rda_folder = rda_folder,
-               topic_label = topic_label)
+               topic_label = topic_label,
+               fig_or_table = fig_or_table)
   }
 
   return(plt_fin)

@@ -17,7 +17,11 @@ plot_recruitment(
   end_year = NULL,
   return = "recruitment",
   make_rda = FALSE,
+<<<<<<< HEAD
   rda_dir = getwd()
+=======
+  rda_folder = getwd()
+>>>>>>> 8fd15da (fix: minor fixes to get plot_recruitment and plot_spawning_biomass to work; used devtools::check, which updated .Rd files)
 )
 }
 \arguments{
@@ -45,13 +49,21 @@ and following with R units.}
 
 \item{return}{Default returns recruitment over time. Options to display recruitment time series, stock recruitment curve, or recruitment fit}
 
+<<<<<<< HEAD
 \item{rda_dir}{The location of the folder containing the generated .rda files
+=======
+\item{rda_folder}{The location of the folder containing the generated .rda files
+>>>>>>> 8fd15da (fix: minor fixes to get plot_recruitment and plot_spawning_biomass to work; used devtools::check, which updated .Rd files)
 ("rda_files") that will be created if the argument `export_rda` = TRUE.
 Default is the working directory.}
 
 \item{export_rda}{TRUE/FALSE; indcate whether to produce an .rda file containing
 a list with the figure/table, caption, and alternative text (if figure). If TRUE,
+<<<<<<< HEAD
 the .rda will be exported to the folder indicated in the argument "rda_dir".
+=======
+the .rda will be exported to the folder indicated in the argument "rda_folder".
+>>>>>>> 8fd15da (fix: minor fixes to get plot_recruitment and plot_spawning_biomass to work; used devtools::check, which updated .Rd files)
 Default is FALSE.}
 }
 \value{

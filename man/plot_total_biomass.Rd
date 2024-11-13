@@ -14,7 +14,11 @@ plot_total_biomass(
   end_year = NULL,
   relative = FALSE,
   make_rda = FALSE,
+<<<<<<< HEAD
   rda_dir = getwd()
+=======
+  rda_folder = getwd()
+>>>>>>> 8fd15da (fix: minor fixes to get plot_recruitment and plot_spawning_biomass to work; used devtools::check, which updated .Rd files)
 )
 }
 \arguments{
@@ -36,7 +40,11 @@ projections). This parameter will be deprecated once the output converter is ful
 
 \item{relative}{Plot relative total biomass. Ref line indicates which reference point to use}
 
+<<<<<<< HEAD
 \item{rda_dir}{The location of the folder containing the generated .rda files
+=======
+\item{rda_folder}{The location of the folder containing the generated .rda files
+>>>>>>> 8fd15da (fix: minor fixes to get plot_recruitment and plot_spawning_biomass to work; used devtools::check, which updated .Rd files)
 ("rda_files") that will be created if the argument `export_rda` = TRUE.
 Default is the working directory.}
 }

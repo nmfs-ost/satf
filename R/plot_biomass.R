@@ -24,15 +24,17 @@ plot_total_biomass <- function(dat,
                                ref_line = c("target", "MSY", "msy", "unfished"),
                                end_year = NULL,
                                relative = FALSE,
-                               export_rda = FALSE,
+                               make_rda = FALSE,
                                rda_folder = getwd()
 ){
 
-  # create plot-specific variable to use throughout fxn for naming
+  # create plot-specific variables to use throughout fxn for naming and IDing
   topic_label <- "biomass"
+  fig_or_table <- "figure"
 
   # extract this plot's caption and alt text
-  caps_alttext <- extract_caps_alttext(topic_label = topic_label)
+  caps_alttext <- extract_caps_alttext(topic_label = topic_label,
+                                       fig_or_table = fig_or_table)
 
   if(length(ref_line)>1){
     ref_line = "target"
@@ -129,7 +131,7 @@ plot_total_biomass <- function(dat,
     )
 
   # export figure to rda if argument = T
-  if (export_rda == TRUE){
+  if (make_rda == TRUE){
 
     export_rda(plt_fin = plt_fin,
                caps_alttext = caps_alttext,

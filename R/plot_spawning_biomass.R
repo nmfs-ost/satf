@@ -14,6 +14,8 @@
 #' @param relative A logical value specifying if the resulting figures should
 #'   be relative spawning biomass. The default is `FALSE`. `ref_line` indicates
 #'   which reference point to use.
+#' @param unit_label units for spawning biomass that will be added as a label to
+#' the y-axis in the plot. Default units are metric tons.
 #'
 #' @return
 #' Plot spawning biomass from the results of an assessment model translated to

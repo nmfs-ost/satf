@@ -1,5 +1,13 @@
 # AFSC Tier Table
 afsc_tier_table <- function() {
+
+  # REMINDERS: add in code that
+  # -adds make_rda and rda_folder as arguments
+  # -defines topic_label, fig_or_table, caps_alttext; and
+  # -makes an rda if make_rda = TRUE
+  # (see table_indices.R for reference)
+  # for the rda-related fxns to work, the final table has to be called tab
+
   level <- c(
     "Level 1: Normal",
     "Level 2: Substantially Increased Concerns",

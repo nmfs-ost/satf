@@ -11,12 +11,6 @@
 #'   lower-case letters but you must use one of the options specified in the
 #'   default list to ensure that the label on the figure looks correct
 #'   regardless of how it is specified in `dat`.
-#' @param relative A logical value specifying if the resulting figures should
-#'   be relative spawning biomass. The default is `FALSE`. `ref_line` indicates
-#'   which reference point to use.
-#' @param unit_label units for spawning biomass that will be added as a label to
-#' the y-axis in the plot. Default units are metric tons.
-#'
 #' @return
 #' Plot spawning biomass from the results of an assessment model translated to
 #' the standard output. The {ggplot2} object is returned for further
@@ -29,7 +23,8 @@ plot_spawning_biomass <- function(
   scale_amount = 1,
   ref_line = c("target", "unfished"),
   end_year = NULL,
-  relative = FALSE
+  relative = FALSE,
+  n_projected_years = 10
 ) {
   ref_line <- match.arg(ref_line)
   # TODO: Fix the unit label if scaling. Maybe this is up to the user to do if
@@ -41,19 +36,19 @@ plot_spawning_biomass <- function(
     no = glue::glue("Spawning biomass ({unit_label})")
   )
 
-  output <- dat
+  # output <- dat
   # Determine the end year
-  all_years <- output[["year"]][grepl("^[0-9\\.]+$", output[["year"]])]
+  all_years <- dat[["year"]][grepl("^[0-9\\.]+$", dat[["year"]])]
   if (is.null(end_year)) {
-    end_year <- as.numeric(max(all_years, na.rm = TRUE))
+    end_year <- as.numeric(max(all_years, na.rm = TRUE)) - n_projected_years
   }
   stopifnot(any(end_year >= all_years))
 
   # Select value for reference line and label
-  ref_line_val <- as.numeric(output[
+  ref_line_val <- as.numeric(dat[
     grep(
       pattern = glue::glue("^spawning_biomass.*{tolower(ref_line)}"),
-      x = output[["label"]]
+      x = dat[["label"]]
     ),
     "estimate"
   ])
@@ -63,7 +58,7 @@ plot_spawning_biomass <- function(
       not found in `dat[[\"label\"]]`."
     ))
   }
-  sb <- output |>
+  sb <- dat |>
     dplyr::filter(
       label == "spawning_biomass",
       module_name %in% c("DERIVED_QUANTITIES", "t.series"),
@@ -127,6 +122,7 @@ plot_spawning_biomass <- function(
       parse = TRUE
     )
 
-  plt_fin <- suppressWarnings(add_theme(plt))
-  return(plt_fin)
+  # plt_fin <-
+  suppressWarnings(add_theme(plt))
+  # return(plt_fin)
 }

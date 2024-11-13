@@ -14,15 +14,15 @@ extract_caps_alttext <- function(topic_label,
 
   # extract plot or table's caption and alt text
   cap <- captions_alttext_df |>
-    dplyr::filter(label == topic_label) |>
-    dplyr::filter(type == fig_or_table) |>
+    dplyr::filter(label == topic_label,
+                  type == fig_or_table) |>
     dplyr::select(caption) |>
     as.character()
 
   if (fig_or_table == "figure"){
     alt_text <- captions_alttext_df |>
-      dplyr::filter(label == topic_label) |>
-      dplyr::filter(type == "figure") |>
+      dplyr::filter(label == topic_label,
+                    type == "figure") |>
       dplyr::select(alt_text) |>
       as.character()
 

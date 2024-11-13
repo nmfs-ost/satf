@@ -74,7 +74,6 @@ plot_landings <- function(dat,
                fig_or_table = fig_or_table)
   }
 
-
   return(plt_fin)
 }
 

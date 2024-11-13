@@ -8,7 +8,6 @@
 #' and following with R units.
 #' @param spawning_biomass_units units of spawning biomass if different from biomass
 #' @param recruitment_units units for recruitment
-#' @param scaled T/F; indicate whether the output values for biomass and recruitment are scaled
 #' @param scale_amount indicate the exact amount of scale (i.e. 1000)
 #' @param show_warnings Include warnings? Default FALSE
 #' @param end_year last year of assessment
@@ -20,30 +19,13 @@
 #'
 plot_recruitment <- function(dat,
                              params = FALSE,
-                             params_only = FALSE,
                              units = c(sb = "metric tons", recruitment = "metric tons"),
                              recruitment_units = "metric tons",
                              spawning_biomass_units = "metric tons",
-                             scaled = FALSE,
-                             scale_amount = NULL,
-                             show_warnings = FALSE,
+                             # scale_amount = NULL,
                              end_year = NULL,
                              return = "recruitment"){
-  # check units
-  # biomass
-  if(!is.null(recruitment_units)){
-    ru <- recruitment_units
-  } else {
-    ru <- "metric tons"
-  }
-  # spawning biomass
-  if(!is.null(spawning_biomass_units)){
-    sbu <- spawning_biomass_units
-  } else {
-    sbu <- "metric tons"
-  }
 
-  output <- dat
   if (scaled) {
     rec <- output |>
       dplyr::filter(label == "recruitment",

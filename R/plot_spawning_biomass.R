@@ -27,8 +27,14 @@ plot_spawning_biomass <- function(
   scale_amount = 1,
   ref_line = c("target", "unfished"),
   end_year = NULL,
-  relative = FALSE
+  relative = FALSE,
+  export_rda = FALSE,
+  rda_folder = getwd()
 ) {
+
+  # extract this plot's caption and alt text
+  caps_alttext <- extract_caps_alttext(topic_label = "spawning_biomass")
+
   ref_line <- match.arg(ref_line)
   # TODO: Fix the unit label if scaling. Maybe this is up to the user to do if
   #       they want something scaled then they have to supply a better unit name
@@ -126,5 +132,31 @@ plot_spawning_biomass <- function(
     )
 
   plt_fin <- suppressWarnings(add_theme(plt))
+
+  # add alt text and caption
+  plt_fin <- plt_fin +
+    ggplot2::labs(caption = caps_alttext[[1]],
+                  alt = caps_alttext[[2]]
+    )
+
+  # export figure to rda if argument = T
+  if (export_rda == TRUE){
+    rda_recruitment <- list("spawning_biomass_figure" = plt_fin,
+                            "spawning_biomass_cap" = caps_alttext[[1]],
+                            "spawning_biomass_alt_text" = caps_alttext[[2]])
+
+    # check if an rda_files folder already exists; if not, make one
+    if (!dir.exists(file.path(rda_folder, "rda_files"))) {
+      dir.create(file.path(rda_folder, "rda_files"))
+    }
+
+    save(rda_recruitment,
+         file = file.path(rda_folder,
+                          "rda_files",
+                          "spawning_biomass_rda.rda"))
+
+  }
+
+
   return(plt_fin)
 }

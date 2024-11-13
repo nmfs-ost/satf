@@ -40,23 +40,8 @@ plot_recruitment <- function(dat,
                              rda_folder = getwd()
                              ){
 
-  # import csv with captions and alt text
-  captions_alttext <- read.csv(
-    fs::path(getwd(), "captions_alt_text.csv")
-  )
-
-  # extract this plot's caption and alt text
-  cap <- captions_alttext |>
-    dplyr::filter(label == "recruitment") |>
-    dplyr::filter(type == "figure") |>
-    dplyr::select(caption) |>
-    as.character()
-
-  alt_text <- captions_alttext |>
-    dplyr::filter(label == "recruitment") |>
-    dplyr::filter(type == "figure") |>
-    dplyr::select(alt_text) |>
-    as.character()
+  # # extract this plot's caption and alt text
+  caps_alttext <- extract_caps_alttext(topic_label = "recruitment")
 
   # check units
   # biomass
@@ -195,14 +180,15 @@ plot_recruitment <- function(dat,
 
   # add alt text and caption
   plt_fin <- plt_fin +
-    ggplot2::labs(alt = alt_text,
-                  caption = cap)
+    ggplot2::labs(caption = caps_alttext[[1]],
+                  alt = caps_alttext[[2]]
+                  )
 
   # export figure to rda if argument = T
   if (export_rda == TRUE){
     rda_recruitment <- list("recruitment_figure" = plt_fin,
-                            "recruitment_alt_text" = alt_text,
-                            "recruitment_cap" = cap)
+                            "recruitment_cap" = caps_alttext[[1]],
+                            "recruitment_alt_text" = caps_alttext[[2]])
 
     # check if an rda_files folder already exists; if not, make one
     if (!dir.exists(file.path(rda_folder, "rda_files"))) {

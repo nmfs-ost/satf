@@ -6,7 +6,18 @@
 #' @export
 #'
 
-table_indices <- function(dat) {
+table_indices <- function(dat,
+                          make_rda = FALSE,
+                          rda_folder = getwd()) {
+
+  # create plot-specific variables to use throughout fxn for naming and IDing
+  topic_label <- "indices"
+  fig_or_table <- "table"
+
+  # extract this plot's caption and alt text
+  caps_alttext <- extract_caps_alttext(topic_label = topic_label,
+                                       fig_or_table = fig_or_table)
+
   output <- dat
   output <- output |>
     dplyr::filter(module_name == "INDEX_2" | module_name == "t.series")
@@ -28,6 +39,25 @@ table_indices <- function(dat) {
       names_from = fleet,
       values_from = c(unique(output$label), unique(output$uncertainty_label))
     ) # stated internal error for tidyr and asks to report - try again monday
+
+  # ADDING THIS PLACEHOLDER HERE 11/13/24
+  # because of adding in the following alt text/caption lines,
+  # which require an object (i.e., tab) to connect from the
+  # existing code, above, to the return(tab), below
+
+  # make df into flextable and add caption
+  tab <- flextable::flextable(indices) |>
+    flextable::set_caption(caption = caps_alttext[[1]])
+
+  # export figure to rda if argument = T
+  if (make_rda == TRUE){
+
+    export_rda(plt_fin = plt_fin,
+               caps_alttext = caps_alttext,
+               rda_folder = rda_folder,
+               topic_label = topic_label)
+
+  }
 
   return(tab)
 }

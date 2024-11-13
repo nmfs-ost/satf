@@ -48,7 +48,6 @@ plot_recruitment <- function(dat,
   caps_alttext <- extract_caps_alttext(topic_label = topic_label,
                                        fig_or_table = fig_or_table)
 
-
   # check units
   # biomass
   if(!is.null(recruitment_units)){

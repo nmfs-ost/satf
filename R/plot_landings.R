@@ -9,7 +9,17 @@
 #' @export
 #'
 plot_landings <- function(dat,
-                          units = NULL){
+                          units = NULL,
+                          export_rda = FALSE,
+                          rda_folder = getwd()
+                          ){
+
+  # create plot-specific variable to use throughout fxn for naming
+  topic_label <- "landings"
+
+  # extract this plot's caption and alt text
+  caps_alttext <- extract_caps_alttext(topic_label = topic_label)
+
   # read standard data file and extract target quantity
   land <- dat |>
     dplyr::filter(module_name == "t.series" | module_name == "CATCH", # t.series is associated with a conversion from BAM output and CATCH with SS3 converted output
@@ -43,5 +53,25 @@ plot_landings <- function(dat,
     ggplot2::geom_area(ggplot2::aes(x = year, y = estimate, fill = fleet))
   # Apply std NOAA theme
   add_theme(plt)
+
+  plt_fin <- suppressWarnings(add_theme(plt))
+
+  # add alt text and caption
+  plt_fin <- plt_fin +
+    ggplot2::labs(caption = caps_alttext[[1]],
+                  alt = caps_alttext[[2]]
+    )
+
+  # export figure to rda if argument = T
+  if (export_rda == TRUE){
+
+    export_rda(plt_fin = plt_fin,
+               caps_alttext = caps_alttext,
+               rda_folder = rda_folder,
+               topic_label = topic_label)
+  }
+
+
+  return(plt_fin)
 }
 

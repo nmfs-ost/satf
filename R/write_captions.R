@@ -65,11 +65,23 @@ write_captions <- function(dat, # converted model output object
   Fend_df <- dat |>
     dplyr::filter(label == "fishing_mortality" & year == year | label == "F_terminal")
   Fend <- as.numeric(Fend_df$estimate)
-
   # Ftarg <-
   # F_Ftarg <-
 
+  ## landings plot
+  # landings_start_year <- # start year of landings plot
+  # landings_end_year <- # end year of landings plot
+  # landings_units <- # units of landings (plural)
+  # landings_min <- # minimum landings
+  # landings_max <- # maximum landings
 
+  ## length type conversion plot
+  # total_length_units <- # total length units (plural)
+  # total_length_min <- # minimum total length
+  # total_length_max <- # maximum total length
+  # fork_length_units <- # fork length units (plural)
+  # fork_length_min <- # minimum fork length
+  # fork_length_max <- # maximum fork length
 
   ## SB
   # SBmsy <-

@@ -26,14 +26,11 @@ write_captions <- function(dat, # converted model output object
 
   # extract key quantities (these are examples and are not accurate)
   # REMINDER: the variable names must exactly match those in the captions/alt text csv.
-  ## quantities applicable to multiple plots
-  start_year <- min(as.numeric(dat$year[dat$year!="S/Rcurve" | dat$year!="Virg" | dat$year!="Init"]), na.rm = TRUE)
+  #
+  # This start_year was written previously. Is it usable for any plots, below?
+  # start_year <- min(as.numeric(dat$year[dat$year!="S/Rcurve" | dat$year!="Virg" | dat$year!="Init"]), na.rm = TRUE)
 
-  # end_year
-
-
-  ## quantities for individual plots
-  ### kobe plot
+  ## kobe plot
   # B_div_BMSY_min <- # (= minimum value of B/B(MSY))
   # B_div_BMSY_max <- # (= maximum value of B/B(MSY))
   # F_div_FMSY_min <- # (= minimum value of F/F(MSY))
@@ -42,8 +39,29 @@ write_captions <- function(dat, # converted model output object
   # F_div_FMSY_end_yr <- # (= value of F/F(MSY) at the end year)
   # overfished_status_is_isnot <- # object that should be "is" or "is not" and answers the question, "the stock overfishing status ___ overfished"
   # overfishing_status_is_isnot <- # object that should be "is" or "is not" and answers the question, "the stock ___ experiencing overfishing"
+  # start_year_kobe <- # start year of kobe plot
+  # end_year_kobe <- # end year of kobe plot
 
-  ### F
+  ## Biomass plot
+  # B_ref_pt <- # biomass reference point
+  # B_ref_pt_unit <- # biomass reference point unit
+  # B_start_year_ <- # start year of biomass plot
+  # B_end_year <- # start year of biomass plot
+  # B_units <- # units of B (plural)
+  # B_min <- # minimum B
+  # B_max <- # maximum B
+  # Bend <-
+  # Btarg <-
+  # Bmsy <-
+
+  ## mortality (F) plot
+  # F_ref_pt <- # F reference point
+  # F_ref_pt_unit <- # F reference point unit
+  # F_start_year_ <- # start year of F plot
+  # F_end_year <- # start year of F plot
+  # F_units <- # units of F (plural)
+  # F_min <- # minimum F
+  # F_max <- # maximum F
   Fend_df <- dat |>
     dplyr::filter(label == "fishing_mortality" & year == year | label == "F_terminal")
   Fend <- as.numeric(Fend_df$estimate)
@@ -51,18 +69,14 @@ write_captions <- function(dat, # converted model output object
   # Ftarg <-
   # F_Ftarg <-
 
-  ### B
-  # Bend <-
-  # Btarg <-
-  # Bmsy <-
 
 
-  ### SB
+  ## SB
   # SBmsy <-
   # fSB <-
   # sbtarg <-
 
-  ### Other
+  ## Other
   # tot_catch <-
   # M <-
   # steep <-

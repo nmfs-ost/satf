@@ -10,11 +10,14 @@ plot_spawning_biomass(
   scale_amount = 1,
   ref_line = c("target", "unfished"),
   end_year = NULL,
-  relative = FALSE
+  relative = FALSE,
+  n_projected_years = 10
 )
 }
 \arguments{
 \item{dat}{A data frame returned from `asar::convert_output()`.}
+
+\item{unit_label}{units for recruitment}
 
 \item{scale_amount}{indicate the exact amount of scale (i.e. 1000)}
 
@@ -31,6 +34,9 @@ regardless of how it is specified in `dat`.}
 \item{relative}{A logical value specifying if the resulting figures should
 be relative spawning biomass. The default is `FALSE`. `ref_line` indicates
 which reference point to use.}
+
+\item{n_projected_years}{Number of years spawning biomass is projected for.
+By default this number is set to 10}
 }
 \value{
 Plot spawning biomass from the results of an assessment model translated to

@@ -2,18 +2,16 @@
 #'
 #'  @inheritParams plot_recruitment
 #'
-#' @returnPlot Plot recruitment deviations relative to one over time from an assessment model output file
-#' translated to a standardized output. There are options to return a {ggplot2}
-#' object or export an .rda object containing associated caption and alternative
-#' text for the figure.
+#' @return Plot recruitment deviations relative to one over time from an
+#' assessment model output file translated to a standardized output. There are
+#' options to return a {ggplot2} object or export an .rda object containing
+#' associated caption and alternative text for the figure.
 #' @export
 #'
-#' @examples
-plot_recruitment_deviations <- function(
+plot_recruitment_deviations <- function (
     dat = NULL,
     end_year = NULL,
-    n_projected_years = 10,
-
+    n_projected_years = 10
 ) {
   if (is.null(end_year)) {
     end_year <- max(as.numeric(dat$year), na.rm = TRUE) - n_projected_years

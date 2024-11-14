@@ -4,10 +4,9 @@
 #'  @param spawning_biomass_label Units for spawning biomass
 #'  @param recruitment_label units for recruitment
 #'
-#' @return
+#' @return Plot spawning recruitment relationship from a standardized output file originating from asar::convert_output()
 #' @export
 #'
-#' @examples
 plot_spawn_recruitment <- function(
     dat = NULL,
     spawning_biomass_label = "metric tons",
@@ -62,5 +61,5 @@ plot_spawn_recruitment <- function(
     ggplot2::labs(x = glue::glue("Spawning Biomass ({spawning_biomass_label})"),
                   y = glue::glue("Recruitment ({recruitment_label})")) +
     ggplot2::theme(legend.position = "none")
-  # sr_plt <- add_theme(sr_plt)
+  suppressWarnings(add_theme(sr_plt))
 }

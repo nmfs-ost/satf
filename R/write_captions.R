@@ -75,6 +75,13 @@ write_captions <- function(dat, # converted model output object
   # landings_min <- # minimum landings
   # landings_max <- # maximum landings
 
+  ## natural mortality (M)
+  # M_age_min <- # minimum age of M
+  # M_age_max <- # maximum age of M
+  # M_units <- # units of M (plural)
+  # M_rate_min <- # minimum M rate
+  # M_rate_max <- # maximum M rate
+
   ## length-type conversion plot
   # total_length_units <- # total length units (plural)
   # total_length_min <- # minimum total length

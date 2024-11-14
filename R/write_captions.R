@@ -75,13 +75,28 @@ write_captions <- function(dat, # converted model output object
   # landings_min <- # minimum landings
   # landings_max <- # maximum landings
 
-  ## length type conversion plot
+  ## length-type conversion plot
   # total_length_units <- # total length units (plural)
   # total_length_min <- # minimum total length
   # total_length_max <- # maximum total length
   # fork_length_units <- # fork length units (plural)
   # fork_length_min <- # minimum fork length
   # fork_length_max <- # maximum fork length
+
+  ## weight-length conversion plot
+  # wl_length_units <- # length units (plural)
+  # wl_length_min <- # minimum length
+  # wl_length_max <- # maximum length
+  # wl_weight_units, <- # weight units (plural)
+  # wl_weight_min <- # minimum weight
+  # wl_weight_max <- # maximum weight
+
+  ## CPUE indices plot
+  # cpue_start_year <- # start year of CPUE indices plot
+  # cpue_end_year <- # end year of CPUE indices plot
+  # cpue_units <- # CPUE units (plural)
+  # cpue_min <- # minimum CPUE
+  # cpue_max <- # maximum CPUE
 
   ## SB
   # SBmsy <-

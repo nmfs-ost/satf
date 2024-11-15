@@ -3,7 +3,9 @@
 #' Function to create captions and alternative text that contain
 #' key quantities from the model results file.
 #'
-#' @inheritParams plot_recruitment
+#' @inheritParams plot_spawning_biomass
+#' @param dir Directory where the output captions and alt text file should be saved
+#' @param year the last year of the data or the current year this function is being performed
 #'
 #' @return Exports .csv with captions and alt text for figures and tables
 #' that contain key quantities (e.g., an assessment's start year) that
@@ -11,8 +13,9 @@
 #'
 #' @export
 
-write_captions <- function(dat # converted model output object
-                           ){
+write_captions <- function(dat, # converted model output object
+                           dir = NULL,
+                           year = NULL){
 
   # import pre-written captions and alt text that include placeholders
   # for key quantities (e.g., 'start_year' is the placeholder for the
@@ -22,8 +25,100 @@ write_captions <- function(dat # converted model output object
   )
 
   # extract key quantities (these are examples and are not accurate)
-  start_year <- as.numeric(dat[3,3])
-  Fend <- as.numeric(dat$estimate[2])
+  # REMINDER: the variable names must exactly match those in the captions/alt text csv.
+  #
+  # This start_year was written previously. Is it usable for any plots, below?
+  # start_year <- min(as.numeric(dat$year[dat$year!="S/Rcurve" | dat$year!="Virg" | dat$year!="Init"]), na.rm = TRUE)
+
+  ## kobe plot
+  # B_div_BMSY_min <- # (= minimum value of B/B(MSY))
+  # B_div_BMSY_max <- # (= maximum value of B/B(MSY))
+  # F_div_FMSY_min <- # (= minimum value of F/F(MSY))
+  # F_div_FMSY_max <- # (= maximum value of F/F(MSY))
+  # B_div_BMSY_end_yr <- # (= value of B/B(MSY) at the end year)
+  # F_div_FMSY_end_yr <- # (= value of F/F(MSY) at the end year)
+  # overfished_status_is_isnot <- # object that should be "is" or "is not" and answers the question, "the stock overfishing status ___ overfished"
+  # overfishing_status_is_isnot <- # object that should be "is" or "is not" and answers the question, "the stock ___ experiencing overfishing"
+  # start_year_kobe <- # start year of kobe plot
+  # end_year_kobe <- # end year of kobe plot
+
+  ## Biomass plot
+  # B_ref_pt <- # biomass reference point
+  # B_ref_pt_unit <- # biomass reference point unit
+  # B_start_year_ <- # start year of biomass plot
+  # B_end_year <- # start year of biomass plot
+  # B_units <- # units of B (plural)
+  # B_min <- # minimum B
+  # B_max <- # maximum B
+  # Bend <-
+  # Btarg <-
+  # Bmsy <-
+
+  ## mortality (F) plot
+  # F_ref_pt <- # F reference point
+  # F_ref_pt_unit <- # F reference point unit
+  # F_start_year_ <- # start year of F plot
+  # F_end_year <- # start year of F plot
+  # F_units <- # units of F (plural)
+  # F_min <- # minimum F
+  # F_max <- # maximum F
+  Fend_df <- dat |>
+    dplyr::filter(label == "fishing_mortality" & year == year | label == "F_terminal")
+  Fend <- as.numeric(Fend_df$estimate)
+  # Ftarg <-
+  # F_Ftarg <-
+
+  ## landings plot
+  # landings_start_year <- # start year of landings plot
+  # landings_end_year <- # end year of landings plot
+  # landings_units <- # units of landings (plural)
+  # landings_min <- # minimum landings
+  # landings_max <- # maximum landings
+
+  ## natural mortality (M)
+  # M_age_min <- # minimum age of M
+  # M_age_max <- # maximum age of M
+  # M_units <- # units of M (plural)
+  # M_rate_min <- # minimum M rate
+  # M_rate_max <- # maximum M rate
+
+  ## length-type conversion plot
+  # total_length_units <- # total length units (plural)
+  # total_length_min <- # minimum total length
+  # total_length_max <- # maximum total length
+  # fork_length_units <- # fork length units (plural)
+  # fork_length_min <- # minimum fork length
+  # fork_length_max <- # maximum fork length
+
+  ## weight-length conversion plot
+  # wl_length_units <- # length units (plural)
+  # wl_length_min <- # minimum length
+  # wl_length_max <- # maximum length
+  # wl_weight_units, <- # weight units (plural)
+  # wl_weight_min <- # minimum weight
+  # wl_weight_max <- # maximum weight
+
+  ## CPUE indices plot
+  # cpue_start_year <- # start year of CPUE indices plot
+  # cpue_end_year <- # end year of CPUE indices plot
+  # cpue_units <- # CPUE units (plural)
+  # cpue_min <- # minimum CPUE
+  # cpue_max <- # maximum CPUE
+
+  ## SB
+  # SBmsy <-
+  # fSB <-
+  # sbtarg <-
+
+  ## Other
+  # tot_catch <-
+  # M <-
+  # steep <-
+  # R0 <-
+
+
+
+
   # add in more quantities here, and update the quantities above
 
   # substitute quantity placeholders in the captions/alt text with
@@ -41,7 +136,7 @@ write_captions <- function(dat # converted model output object
 
   # export df with substituted captions and alt text to csv
   write.csv(x = caps_alttext_subbed,
-            file = file.path(here::here(),
+            file = file.path(dir,
                              "captions_alt_text.csv"),
             row.names=FALSE)
 

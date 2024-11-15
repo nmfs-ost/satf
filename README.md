@@ -21,6 +21,13 @@ install.packages("remotes")
 remotes::install_github("nmfs-ost/satf")
 ```
 
+Occassionally, the package can not be installed using the `remotes` package. If this is the case for you and the other two installation options don't work please try:
+
+```r
+install.packages("pak")
+pak::pak("nmfs-ost/satf")
+```
+
 ## Example
 
 This is a basic example which shows you how to solve a common problem:

@@ -31,12 +31,12 @@ write_captions <- function(dat, # converted model output object
   # start_year <- min(as.numeric(dat$year[dat$year!="S/Rcurve" | dat$year!="Virg" | dat$year!="Init"]), na.rm = TRUE)
 
   ## kobe plot
-  # B_div_BMSY_min <- # (= minimum value of B/B(MSY))
-  # B_div_BMSY_max <- # (= maximum value of B/B(MSY))
-  # F_div_FMSY_min <- # (= minimum value of F/F(MSY))
-  # F_div_FMSY_max <- # (= maximum value of F/F(MSY))
-  # B_div_BMSY_end_yr <- # (= value of B/B(MSY) at the end year)
-  # F_div_FMSY_end_yr <- # (= value of F/F(MSY) at the end year)
+  # B_div_BMSY_min <- # minimum value of B/B(MSY)
+  # B_div_BMSY_max <- # maximum value of B/B(MSY)
+  # F_div_FMSY_min <- # minimum value of F/F(MSY)
+  # F_div_FMSY_max <- # maximum value of F/F(MSY)
+  # B_div_BMSY_end_yr <- # value of B/B(MSY) at the end year
+  # F_div_FMSY_end_yr <- # value of F/F(MSY) at the end year
   # overfished_status_is_isnot <- # object that should be "is" or "is not" and answers the question, "the stock overfishing status ___ overfished"
   # overfishing_status_is_isnot <- # object that should be "is" or "is not" and answers the question, "the stock ___ experiencing overfishing"
   # kobe_start_year <- # start year of kobe plot
@@ -136,46 +136,63 @@ write_captions <- function(dat, # converted model output object
   # cpue_max <- # maximum CPUE (SHARED with mod_fit_abun, below)
 
   ## NAA (numbers at age)
-  # bubble_year_min <- # start year of NAA plot
-  # bubble_year_max <- # end year of NAA plot
+  # bubble_start_year_min <- # start year of NAA plot
+  # bubble_end_year_max <- # end year of NAA plot
   # bubble_age_units <- # age units (plural)
   # bubble_age_min <- # minimum age
   # bubble_age_max <- # maximum age
 
   ## mod_fit_catch (model fit to catch ts)
-  # mod_fit_catch_yr_min <- # start year of model fit to catch ts plot
-  # mod_fit_catch_yr_max <- # end year of model fit to catch ts plot
+  # mod_fit_catch_start_year <- # start year of model fit to catch ts plot
+  # mod_fit_catch_end_year <- # end year of model fit to catch ts plot
   # mod_fit_catch_units <- # catch units (plural)
   # mod_fit_catch_min <- # minimum catch
   # mod_fit_catch_max <- # maximum catch
 
   ## mod_fit_abun (model fit to abundance indices plot)
-  # mod_fit_abun_yr_min <- # start year of model fit to abundance indices plot
-  # mod_fit_abun_yr_max <- # end year of model fit to abundance indices plot
+  # mod_fit_abun_start_year <- # start year of model fit to abundance indices plot
+  # mod_fit_abun_end_year <- # end year of model fit to abundance indices plot
 
   ## catchability
   #
 
   ## mod_fit_discards
-  #
+  # mod_fit_discards_start_year <- # start year of model fit to discards plot
+  # mod_fit_discards_end_year <- # end year of model fit to discards plot
+  # mod_fit_discards_units <- # discards units (plural)
+  # mod_fit_discards_min <- # minimum discards
+  # mod_fit_discards_max <- # maximum discards
 
   ## selectivity
-  #
+  # selectivity_start_year <- # start year of selectivity plot
+  # selectivity_end_year <- # end year of selectivity plot
+  # selectivity_length_units <- # length units (plural)
+  # selectivity_length_min <- # minimum length
+  # selectivity_length_max <- # maximum length
 
   ## recruitment
   #
 
-  ## recruitment_deviations
-  #
+  ## recruitment deviations
+  # recruit_dev_start_year <- # start year of recruitment deviations plot
+  # recruit_dev_end_year <- # end year of recruitment deviations plot
+  # recruit_dev_min <- # minimum recruitment deviation
+  # recruit_dev_max <- # maximum recruitment deviation
 
   ## tot_b
   #
 
   ## spawning_biomass
   #
+  # SBmsy
+  # fSB
+  # sbtarg
 
-  ## spr
-  #
+  ## spr (spawning potential ratio)
+  # spr_start_year <- # start year of spr plot
+  # spr_end_year <- # end year of spr plot
+  # spr_min <- # minimum spr
+  # spr_max  <- # maximum spr
 
   ## pop_naa_baa
   #
@@ -185,12 +202,6 @@ write_captions <- function(dat, # converted model output object
 
   ## proj_biomass
   #
-
-
-  ## SB
-  # SBmsy <-
-  # fSB <-
-  # sbtarg <-
 
   ## Other
   # tot_catch <-

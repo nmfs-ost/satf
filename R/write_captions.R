@@ -82,6 +82,14 @@ write_captions <- function(dat, # converted model output object
   # M_rate_min <- # minimum M rate
   # M_rate_max <- # maximum M rate
 
+  ## vonB LAA (von Bertalanffy growth function + length at age)
+  # vonb_age_units <- # vonB age units (plural)
+  # vonb_age_min <- # minimum vonB age
+  # vonb_age_max <- # maximum vonB age
+  # vonb_length_units <- # vonB length units (plural)
+  # vonb_length_min <- # minimum vonB length
+  # vonb_length_max <- # minimum vonB length
+
   ## length-type conversion plot
   # total_length_units <- # total length units (plural)
   # total_length_min <- # minimum total length
@@ -94,9 +102,14 @@ write_captions <- function(dat, # converted model output object
   # wl_length_units <- # length units (plural)
   # wl_length_min <- # minimum length
   # wl_length_max <- # maximum length
-  # wl_weight_units, <- # weight units (plural)
+  # wl_weight_units <- # weight units (plural)
   # wl_weight_min <- # minimum weight
   # wl_weight_max <- # maximum weight
+
+  ## proportion mature
+  # prop_mat_length_units <- # length units (plural)
+  # prop_mat_length_min <- # minimum length
+  # prop_mat_length_max <- # maximum length
 
   ## CPUE indices plot
   # cpue_start_year <- # start year of CPUE indices plot

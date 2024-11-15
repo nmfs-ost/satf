@@ -106,10 +106,23 @@ write_captions <- function(dat, # converted model output object
   # wl_weight_min <- # minimum weight
   # wl_weight_max <- # maximum weight
 
-  ## proportion mature
+  ## maturity schedule (proportion mature)
   # prop_mat_length_units <- # length units (plural)
   # prop_mat_length_min <- # minimum length
   # prop_mat_length_max <- # maximum length
+
+  ## fecundity at length
+  # fecundity_length_units <- # length units (plural)
+  # fecundity_length_min <- # minimum length
+  # fecundity_length_max <- # maximum length
+  # fecundity_units <- # fecundity units (plural)
+  # fecundity_min <- # minimum fecundity
+  # fecundity_max <- # maximum fecundity
+
+  ## CAA (catch at age)
+  # fleet_or_survey_name <- # fleet or survey name
+  # caa_age_min <- # minimum age group
+  # caa_age_max <- # maximum age group
 
   ## CPUE indices plot
   # cpue_start_year <- # start year of CPUE indices plot

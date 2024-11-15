@@ -39,8 +39,8 @@ write_captions <- function(dat, # converted model output object
   # F_div_FMSY_end_yr <- # (= value of F/F(MSY) at the end year)
   # overfished_status_is_isnot <- # object that should be "is" or "is not" and answers the question, "the stock overfishing status ___ overfished"
   # overfishing_status_is_isnot <- # object that should be "is" or "is not" and answers the question, "the stock ___ experiencing overfishing"
-  # start_year_kobe <- # start year of kobe plot
-  # end_year_kobe <- # end year of kobe plot
+  # kobe_start_year <- # start year of kobe plot
+  # kobe_end_year <- # end year of kobe plot
 
   ## Biomass plot
   # B_ref_pt <- # biomass reference point
@@ -120,16 +120,72 @@ write_captions <- function(dat, # converted model output object
   # fecundity_max <- # maximum fecundity
 
   ## CAA (catch at age)
-  # fleet_or_survey_name <- # fleet or survey name
+  # fleet_or_survey_name <- # fleet or survey name (SHARED with CAL, below)
   # caa_age_min <- # minimum age group
   # caa_age_max <- # maximum age group
+
+  ## CAL (catch at length)
+  # cal_age_min <- # minimum age group
+  # cal_age_max <- # maximum age group
 
   ## CPUE indices plot
   # cpue_start_year <- # start year of CPUE indices plot
   # cpue_end_year <- # end year of CPUE indices plot
-  # cpue_units <- # CPUE units (plural)
-  # cpue_min <- # minimum CPUE
-  # cpue_max <- # maximum CPUE
+  # cpue_units <- # CPUE units (plural) (SHARED with mod_fit_abun, below)
+  # cpue_min <- # minimum CPUE (SHARED with mod_fit_abun, below)
+  # cpue_max <- # maximum CPUE (SHARED with mod_fit_abun, below)
+
+  ## NAA (numbers at age)
+  # bubble_year_min <- # start year of NAA plot
+  # bubble_year_max <- # end year of NAA plot
+  # bubble_age_units <- # age units (plural)
+  # bubble_age_min <- # minimum age
+  # bubble_age_max <- # maximum age
+
+  ## mod_fit_catch (model fit to catch ts)
+  # mod_fit_catch_yr_min <- # start year of model fit to catch ts plot
+  # mod_fit_catch_yr_max <- # end year of model fit to catch ts plot
+  # mod_fit_catch_units <- # catch units (plural)
+  # mod_fit_catch_min <- # minimum catch
+  # mod_fit_catch_max <- # maximum catch
+
+  ## mod_fit_abun (model fit to abundance indices plot)
+  # mod_fit_abun_yr_min <- # start year of model fit to abundance indices plot
+  # mod_fit_abun_yr_max <- # end year of model fit to abundance indices plot
+
+  ## catchability
+  #
+
+  ## mod_fit_discards
+  #
+
+  ## selectivity
+  #
+
+  ## recruitment
+  #
+
+  ## recruitment_deviations
+  #
+
+  ## tot_b
+  #
+
+  ## spawning_biomass
+  #
+
+  ## spr
+  #
+
+  ## pop_naa_baa
+  #
+
+  ## proj_catch
+  #
+
+  ## proj_biomass
+  #
+
 
   ## SB
   # SBmsy <-

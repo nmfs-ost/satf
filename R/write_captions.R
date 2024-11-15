@@ -194,14 +194,25 @@ write_captions <- function(dat, # converted model output object
   # spr_min <- # minimum spr
   # spr_max  <- # maximum spr
 
-  ## pop_naa_baa
-  #
+  ## pop_naa_baa (population numbers at age and population biomass at age)
+  # pop_naa_baa_start_year <- # start year of spr plot
+  # pop_naa_baa_end_year <- # end year of spr plot
+  # pop_naa_baa_fish_min <- # minimum number of fish
+  # pop_naa_baa_fish_max <- # maximum number of fish
 
-  ## proj_catch
-  #
+  ## proj_catch (projected catch)
+  # proj_catch_units <- # projected catch units (plural)
+  # proj_catch_start_year <- # start year of projected catch plot
+  # proj_catch_end_year <- # end year of projected catch plot
+  # proj_catch_min <- # minimum projected catch
+  # proj_catch_max <- # maximum projected catch
 
-  ## proj_biomass
-  #
+  ## proj_biomass (projected biomass)
+  # proj_biomass_units <- # projected biomass units (plural)
+  # proj_biomass_start_year <- # start year of projected biomass plot
+  # proj_biomass_end_year <- # end year of projected biomass plot
+  # proj_biomass_min <- # minimum projected biomass
+  # proj_biomass_max <- # maximum projected biomass
 
   ## Other
   # tot_catch <-

@@ -23,9 +23,9 @@ recruitment_deviations,figure,Annual deviations (on natural log scale) in the nu
 tot_b,figure,,
 spawning_biomass,figure,spawning biomass figure caption here. ,spawning biomass alt text here. The F(end) = Fend
 spr,figure,Model-estimated spawning potential ratio (SPR) (SSBcurrent/SSBtarget) time series. The horizontal dashed line represents the spawning potential ratio of the limit reference point.  ,"Line graph showing model-estimated spawning potential ratio over time. The horizontal dashed line represents the spawning potential ratio of the limit reference point. The x axis, showing the year, spans from spr_start_year to spr_end_year and the y axis, showing model-estimated spawning potential ratio in SSBcurrent/SSBtarget, spans from spr_min to spr_max."
-pop_naa_baa,figure,,
-proj_catch,figure,,
-proj_biomass,figure,,
+pop_naa_baa,figure,Model-estimated population numbers at age and population biomass at age over time. The relative size of each bubble for a given year and age indicates the relative abundance or biomass in that category compared with others. ,"Bubble plot showing model-estimated population numbers at age and population biomass at age. The x axis, showing the year, spans from pop_naa_baa_start_year to pop_naa_baa_end_year, and the y axis, showing numbers of fish, spans from pop_naa_baa_fish_min to pop_naa_baa_fish_max."
+proj_catch,figure,Forecasted catch in proj_catch_units over future years for different fishing mortality scenarios as indicated in the legend.,"Time series line graph showing forecasted catch over future years for different fishing mortality scenarios. The x axis, showing the year, spans from proj_catch_start_year to proj_catch_end_year, and the y axis, showing catch in proj_catch_units, spans from proj_catch_min to proj_catch_max."
+proj_biomass,figure,Forecasted biomass in proj_biomass_units over future years for different fishing mortality scenarios as indicated in the legend. The horizontal dashed line represents the biomass limit reference point. ,"Time series line graph showing forecasted biomass over future years for different fishing mortality scenarios. The horizontal dashed line represents the biomass limit reference point. The x axis, showing the year, spans from proj_biomass_start_year to proj_biomass_end_year, and the y axis, showing biomass in proj_biomass_units, spans from proj_biomass_min to proj_biomass_max."
 recruitment,table,recruitment table caption here,
 spawning_biomass,table,spawning biomass table caption here,
 indices,table,indices table caption here,

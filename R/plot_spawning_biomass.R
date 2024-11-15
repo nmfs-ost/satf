@@ -21,7 +21,7 @@ plot_spawning_biomass <- function(
   dat,
   unit_label = "metric ton",
   scale_amount = 1,
-  ref_line = c("target", "unfished"),
+  ref_line = c("target", "unfished", "msy"),
   end_year = NULL,
   relative = FALSE,
   n_projected_years = 10
@@ -45,6 +45,8 @@ plot_spawning_biomass <- function(
   stopifnot(any(end_year >= all_years))
 
   # Select value for reference line and label
+  # TODO: add case if ref_line not indicated or hard to find - find one of the
+  # options and set as ref_line
   ref_line_val <- as.numeric(dat[
     grep(
       pattern = glue::glue("^spawning_biomass.*{tolower(ref_line)}"),
@@ -56,6 +58,11 @@ plot_spawning_biomass <- function(
     stop(glue::glue(
       "The resulting reference value of `spawning_biomass_{ref_line}` was
       not found in `dat[[\"label\"]]`."
+    ))
+  } else if (length(ref_line_val > 1)) {
+    warning(glue::glue(
+      "More than one of the resulting reference value of `spawning_biomass_{ref_line}` was
+      not in `dat[[\"label\"]]`."
     ))
   }
   sb <- dat |>

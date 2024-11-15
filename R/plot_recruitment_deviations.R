@@ -18,7 +18,7 @@ plot_recruitment_deviations <- function (
   } else {
     end_year <- end_year
   }
-  stryr <- min(as.numeric(dat$year), na.rm = TRUE)
+  start_year <- min(as.numeric(dat$year), na.rm = TRUE)
 
   rec_devs <- dat |>
     dplyr::filter(label == "recruitment_deviations" | label == "log_recruitment_deviations",
@@ -39,9 +39,22 @@ plot_recruitment_deviations <- function (
     stop("No recruitment deviations found in data.")
   }
 
+  # change plot breaks
+  x_n_breaks <- round(length(rec_devs[["year"]]) / 10)
+  if (x_n_breaks <= 5) {
+    x_n_breaks <- round(length(rec_devs[["year"]]) / 5)
+  } else if (x_n_breaks > 10) {
+   x_n_breaks <-  round(length(rec_devs[["year"]]) / 15)
+  }
+
   # Plot
   plt <- ggplot2::ggplot(data = rec_devs) +
-    ggplot2::geom_point(ggplot2::aes(x = year, y = estimate), shape = 1, size = 2.5) +
+    ggplot2::geom_point(
+      ggplot2::aes(
+        x = year,
+        y = estimate),
+      shape = 1,
+      size = 2.5) +
     # ggplot2::geom_pointrange(
     #   ggplot2::aes(
     #     x = year,
@@ -59,6 +72,12 @@ plot_recruitment_deviations <- function (
     ggplot2::labs(
       x = "Year",
       y = "Recruitment Deviations"
+      ) +
+    ggplot2::scale_x_continuous(
+      n.breaks = x_n_breaks,
+      guide = ggplot2::guide_axis(
+        minor.ticks = TRUE
       )
+    )
   suppressWarnings(add_theme(plt))
 }

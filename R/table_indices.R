@@ -56,7 +56,7 @@ table_indices <- function(dat,
                caps_alttext = caps_alttext,
                rda_dir = rda_dir,
               topic_label = topic_label,
-               fig_or_table = fig_or_table)
+          fig_or_table = fig_or_table)
 
   }
 

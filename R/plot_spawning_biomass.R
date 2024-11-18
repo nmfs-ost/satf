@@ -150,7 +150,7 @@ plot_spawning_biomass <- function(
                caps_alttext = caps_alttext,
                rda_dir = rda_dir,
               topic_label = topic_label,
-               fig_or_table = fig_or_table)
+              fig_or_table = fig_or_table)
   }
 
   return(plt_fin)

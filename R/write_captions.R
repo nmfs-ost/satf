@@ -31,16 +31,16 @@ write_captions <- function(dat, # converted model output object
   # start_year <- min(as.numeric(dat$year[dat$year!="S/Rcurve" | dat$year!="Virg" | dat$year!="Init"]), na.rm = TRUE)
 
   ## kobe plot
-  # B_div_BMSY_min <- # (= minimum value of B/B(MSY))
-  # B_div_BMSY_max <- # (= maximum value of B/B(MSY))
-  # F_div_FMSY_min <- # (= minimum value of F/F(MSY))
-  # F_div_FMSY_max <- # (= maximum value of F/F(MSY))
-  # B_div_BMSY_end_yr <- # (= value of B/B(MSY) at the end year)
-  # F_div_FMSY_end_yr <- # (= value of F/F(MSY) at the end year)
+  # B_div_BMSY_min <- # minimum value of B/B(MSY)
+  # B_div_BMSY_max <- # maximum value of B/B(MSY)
+  # F_div_FMSY_min <- # minimum value of F/F(MSY)
+  # F_div_FMSY_max <- # maximum value of F/F(MSY)
+  # B_div_BMSY_end_yr <- # value of B/B(MSY) at the end year
+  # F_div_FMSY_end_yr <- # value of F/F(MSY) at the end year
   # overfished_status_is_isnot <- # object that should be "is" or "is not" and answers the question, "the stock overfishing status ___ overfished"
   # overfishing_status_is_isnot <- # object that should be "is" or "is not" and answers the question, "the stock ___ experiencing overfishing"
-  # start_year_kobe <- # start year of kobe plot
-  # end_year_kobe <- # end year of kobe plot
+  # kobe_start_year <- # start year of kobe plot
+  # kobe_end_year <- # end year of kobe plot
 
   ## Biomass plot
   # B_ref_pt <- # biomass reference point
@@ -82,6 +82,14 @@ write_captions <- function(dat, # converted model output object
   # M_rate_min <- # minimum M rate
   # M_rate_max <- # maximum M rate
 
+  ## vonB LAA (von Bertalanffy growth function + length at age)
+  # vonb_age_units <- # vonB age units (plural)
+  # vonb_age_min <- # minimum vonB age
+  # vonb_age_max <- # maximum vonB age
+  # vonb_length_units <- # vonB length units (plural)
+  # vonb_length_min <- # minimum vonB length
+  # vonb_length_max <- # minimum vonB length
+
   ## length-type conversion plot
   # total_length_units <- # total length units (plural)
   # total_length_min <- # minimum total length
@@ -94,21 +102,117 @@ write_captions <- function(dat, # converted model output object
   # wl_length_units <- # length units (plural)
   # wl_length_min <- # minimum length
   # wl_length_max <- # maximum length
-  # wl_weight_units, <- # weight units (plural)
+  # wl_weight_units <- # weight units (plural)
   # wl_weight_min <- # minimum weight
   # wl_weight_max <- # maximum weight
+
+  ## maturity schedule (proportion mature)
+  # prop_mat_length_units <- # length units (plural)
+  # prop_mat_length_min <- # minimum length
+  # prop_mat_length_max <- # maximum length
+
+  ## fecundity at length
+  # fecundity_length_units <- # length units (plural)
+  # fecundity_length_min <- # minimum length
+  # fecundity_length_max <- # maximum length
+  # fecundity_units <- # fecundity units (plural)
+  # fecundity_min <- # minimum fecundity
+  # fecundity_max <- # maximum fecundity
+
+  ## CAA (catch at age)
+  # fleet_or_survey_name <- # fleet or survey name (SHARED with CAL, below)
+  # caa_age_min <- # minimum age group
+  # caa_age_max <- # maximum age group
+
+  ## CAL (catch at length)
+  # cal_age_min <- # minimum age group
+  # cal_age_max <- # maximum age group
 
   ## CPUE indices plot
   # cpue_start_year <- # start year of CPUE indices plot
   # cpue_end_year <- # end year of CPUE indices plot
-  # cpue_units <- # CPUE units (plural)
-  # cpue_min <- # minimum CPUE
-  # cpue_max <- # maximum CPUE
+  # cpue_units <- # CPUE units (plural) (SHARED with mod_fit_abun, below)
+  # cpue_min <- # minimum CPUE (SHARED with mod_fit_abun, below)
+  # cpue_max <- # maximum CPUE (SHARED with mod_fit_abun, below)
 
-  ## SB
-  # SBmsy <-
-  # fSB <-
-  # sbtarg <-
+  ## NAA (numbers at age)
+  # bubble_start_year_min <- # start year of NAA plot
+  # bubble_end_year_max <- # end year of NAA plot
+  # bubble_age_units <- # age units (plural)
+  # bubble_age_min <- # minimum age
+  # bubble_age_max <- # maximum age
+
+  ## mod_fit_catch (model fit to catch ts)
+  # mod_fit_catch_start_year <- # start year of model fit to catch ts plot
+  # mod_fit_catch_end_year <- # end year of model fit to catch ts plot
+  # mod_fit_catch_units <- # catch units (plural)
+  # mod_fit_catch_min <- # minimum catch
+  # mod_fit_catch_max <- # maximum catch
+
+  ## mod_fit_abun (model fit to abundance indices plot)
+  # mod_fit_abun_start_year <- # start year of model fit to abundance indices plot
+  # mod_fit_abun_end_year <- # end year of model fit to abundance indices plot
+
+  ## catchability
+  #
+
+  ## mod_fit_discards
+  # mod_fit_discards_start_year <- # start year of model fit to discards plot
+  # mod_fit_discards_end_year <- # end year of model fit to discards plot
+  # mod_fit_discards_units <- # discards units (plural)
+  # mod_fit_discards_min <- # minimum discards
+  # mod_fit_discards_max <- # maximum discards
+
+  ## selectivity
+  # selectivity_start_year <- # start year of selectivity plot
+  # selectivity_end_year <- # end year of selectivity plot
+  # selectivity_length_units <- # length units (plural)
+  # selectivity_length_min <- # minimum length
+  # selectivity_length_max <- # maximum length
+
+  ## recruitment
+  #
+
+  ## recruitment deviations
+  # recruit_dev_start_year <- # start year of recruitment deviations plot
+  # recruit_dev_end_year <- # end year of recruitment deviations plot
+  # recruit_dev_min <- # minimum recruitment deviation
+  # recruit_dev_max <- # maximum recruitment deviation
+
+  ## tot_b
+  #
+
+  ## spawning_biomass
+  #
+  # SBmsy
+  # fSB
+  # sbtarg
+
+  ## spr (spawning potential ratio)
+  # spr_start_year <- # start year of spr plot
+  # spr_end_year <- # end year of spr plot
+  # spr_min <- # minimum spr
+  # spr_max  <- # maximum spr
+
+  ## pop_naa_baa (population numbers at age and population biomass at age)
+  # pop_naa_baa_start_year <- # start year of spr plot
+  # pop_naa_baa_end_year <- # end year of spr plot
+  # pop_naa_baa_fish_min <- # minimum number of fish
+  # pop_naa_baa_fish_max <- # maximum number of fish
+
+  ## proj_catch (projected catch)
+  # proj_catch_units <- # projected catch units (plural)
+  # proj_catch_start_year <- # start year of projected catch plot
+  # proj_catch_end_year <- # end year of projected catch plot
+  # proj_catch_min <- # minimum projected catch
+  # proj_catch_max <- # maximum projected catch
+
+  ## proj_biomass (projected biomass)
+  # proj_biomass_units <- # projected biomass units (plural)
+  # proj_biomass_start_year <- # start year of projected biomass plot
+  # proj_biomass_end_year <- # end year of projected biomass plot
+  # proj_biomass_min <- # minimum projected biomass
+  # proj_biomass_max <- # maximum projected biomass
 
   ## Other
   # tot_catch <-

@@ -37,9 +37,7 @@ exp_all_figs_tables <- function(
     scale_amount = 1000,
     ref_line = c("target", "MSY", "msy", "unfished"), # ALSO IN SB
     end_year = NULL,
-    relative = FALSE, # ALSO IN SB
-    # arguments specific to table_bnc
-    model = "ss3"
+    relative = FALSE # ALSO IN SB
 ) {
 
 

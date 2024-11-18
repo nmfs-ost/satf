@@ -13,10 +13,14 @@ plot_spawning_biomass(
   relative = FALSE,
   make_rda = FALSE,
 <<<<<<< HEAD
+<<<<<<< HEAD
   rda_dir = getwd()
 =======
   rda_folder = getwd()
 >>>>>>> 8fd15da (fix: minor fixes to get plot_recruitment and plot_spawning_biomass to work; used devtools::check, which updated .Rd files)
+=======
+  rda_dir = getwd()
+>>>>>>> d7b90be (adding tests; also added libraries before read and write.csv fxns; updated documentation)
 )
 }
 \arguments{
@@ -39,10 +43,14 @@ be relative spawning biomass. The default is `FALSE`. `ref_line` indicates
 which reference point to use.}
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 \item{rda_dir}{The location of the folder containing the generated .rda files
 =======
 \item{rda_folder}{The location of the folder containing the generated .rda files
 >>>>>>> 8fd15da (fix: minor fixes to get plot_recruitment and plot_spawning_biomass to work; used devtools::check, which updated .Rd files)
+=======
+\item{rda_dir}{The location of the folder containing the generated .rda files
+>>>>>>> d7b90be (adding tests; also added libraries before read and write.csv fxns; updated documentation)
 ("rda_files") that will be created if the argument `export_rda` = TRUE.
 Default is the working directory.}
 }

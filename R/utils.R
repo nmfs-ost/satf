@@ -8,7 +8,7 @@ extract_caps_alttext <- function(topic_label,
                                  fig_or_table){
 
   # import csv with captions and alt text
-  captions_alttext_df <- read.csv(
+  captions_alttext_df <- utils::read.csv(
     fs::path(getwd(), "captions_alt_text.csv")
   )
 

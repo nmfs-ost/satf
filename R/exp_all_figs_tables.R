@@ -29,7 +29,7 @@ exp_all_figs_tables <- function(
     end_year = NULL,
     return = "recruitment",
     make_rda = FALSE,
-    rda_folder = getwd(),
+    rda_dir = getwd(),
     # arguments specific to plot_biomass
     show_warnings = FALSE,
     units = NULL,

@@ -38,7 +38,7 @@ extract_caps_alttext <- function(topic_label,
 # export ggplot, alt text, and caption to rda if indicated in arguments
 export_rda <- function(plt_fin = plt_fin,
                        caps_alttext = caps_alttext,
-                       rda_folder = rda_folder,
+                       rda_dir = rda_dir,
                        topic_label = topic_label,
                        fig_or_table = fig_or_table){
 
@@ -54,12 +54,12 @@ export_rda <- function(plt_fin = plt_fin,
   }
 
   # check if an rda_files folder already exists; if not, make one
-  if (!dir.exists(file.path(rda_folder, "rda_files"))) {
-    dir.create(file.path(rda_folder, "rda_files"))
+  if (!dir.exists(file.path(rda_dir, "rda_files"))) {
+    dir.create(file.path(rda_dir, "rda_files"))
   }
 
   save(rda,
-       file = file.path(rda_folder,
+       file = file.path(rda_dir,
                         "rda_files",
                         paste0(topic_label, "_rda.rda")))
 }

@@ -11,7 +11,7 @@
 plot_landings <- function(dat,
                           units = NULL,
                           make_rda = FALSE,
-                          rda_folder = getwd()
+                          rda_dir = getwd()
                           ){
 
   # create plot-specific variables to use throughout fxn for naming and IDing
@@ -69,7 +69,7 @@ plot_landings <- function(dat,
 
     export_rda(plt_fin = plt_fin,
                caps_alttext = caps_alttext,
-               rda_folder = rda_folder,
+               rda_dir = rda_dir,
                topic_label = topic_label,
                fig_or_table = fig_or_table)
   }

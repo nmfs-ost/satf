@@ -132,12 +132,6 @@ plot_total_biomass <- function(dat,
   }
   plt_fin <- add_theme(plt)
 
-  # add alt text and caption
-  plt_fin <- plt_fin +
-    ggplot2::labs(caption = caps_alttext[[1]],
-                  alt = caps_alttext[[2]]
-    )
-
   # export figure to rda if argument = T
   if (make_rda == TRUE){
 

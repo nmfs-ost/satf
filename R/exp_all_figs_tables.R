@@ -3,7 +3,7 @@
 #' #' Export all figures in tables within one function.
 #' #'
 #' #' @inheritParams plot_recruitment
-#' #' @inheritParams plot_biomass
+#' #' @inheritParams plot_total_biomass
 #' #' @inheritParams plot_landings
 #' #' @inheritParams plot_spawning_biomass
 #' #' @inheritParams table_bnc

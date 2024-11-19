@@ -39,6 +39,15 @@ plot_total_biomass <- function(dat,
                          "figure",
                          "table")
 
+  # run write_captions.R if its output doesn't exist
+  if (!file.exists(
+    fs::path(getwd(), "captions_alt_text.csv"))
+  ) {
+    satf::write_captions(dat = dat,
+                         dir = getwd(),
+                         year = end_year)
+  }
+
   # extract this plot's caption and alt text
   caps_alttext <- extract_caps_alttext(topic_label = topic_label,
                                        fig_or_table = fig_or_table)

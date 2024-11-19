@@ -17,6 +17,16 @@ afsc_tier_table <- function() {
                          "figure",
                          "table")
 
+  # run write_captions.R if its output doesn't exist
+  if (!file.exists(
+    fs::path(getwd(), "captions_alt_text.csv"))
+  ) {
+    satf::write_captions(dat = dat,
+                         dir = getwd(),
+                         year = NULL)
+  }
+
+
   level <- c(
     "Level 1: Normal",
     "Level 2: Substantially Increased Concerns",

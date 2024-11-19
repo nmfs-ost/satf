@@ -8,11 +8,21 @@ table_harvest_projection <- function() {
   # (see table_indices.R for reference)
   # for the rda-related fxns to work, the final table has to be called tab
 
+
+  # run write_captions.R if its output doesn't exist
+  if (!file.exists(
+    fs::path(getwd(), "captions_alt_text.csv"))
+  ) {
+    satf::write_captions(dat = dat,
+                         dir = getwd(),
+                         year = NULL)
+  }
+
   level <- c(
     "Level 1: Normal",
     "Level 2: Substantially Increased Concerns",
     "Level 3: Major Concern",
-    "Level 4: Extreme COncern"
+    "Level 4: Extreme Concern"
   )
   ass_considerations <- c(
     "Typical to moderately increased uncertainty/minor unresolved issues in assessment.",

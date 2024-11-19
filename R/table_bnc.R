@@ -17,6 +17,15 @@ table_bnc <- function(dat,
                          "figure",
                          "table")
 
+  # run write_captions.R if its output doesn't exist
+  if (!file.exists(
+    fs::path(getwd(), "captions_alt_text.csv"))
+  ) {
+    satf::write_captions(dat = dat,
+                         dir = getwd(),
+                         year = NULL)
+  }
+
   # REMINDERS: add in code that
   # -adds make_rda and rda_dir as arguments
   # -defines topic_label, caps_alttext; and

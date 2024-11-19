@@ -13,6 +13,16 @@ table_indices <- function(dat,
   # create plot-specific variables to use throughout fxn for naming and IDing
   topic_label <- "indices"
 
+
+  # run write_captions.R if its output doesn't exist
+  if (!file.exists(
+    fs::path(getwd(), "captions_alt_text.csv"))
+  ) {
+    satf::write_captions(dat = dat,
+                         dir = getwd(),
+                         year = NULL)
+  }
+
   # identify whether function generates a figure or table
   # extract name of function housing id_fxn_output
   fxn_name <- as.character(match.call()[[1]])

@@ -53,9 +53,8 @@ table_indices <- function(dat,
   # which require an object (i.e., tab) to connect from the
   # existing code, above, to the return(tab), below
 
-  # make df into flextable and add caption
-  tab <- flextable::flextable(indices) |>
-    flextable::set_caption(caption = caps_alttext[[1]])
+  # make df into flextable
+  tab <- flextable::flextable(indices)
 
   # export figure to rda if argument = T
   if (make_rda == TRUE){

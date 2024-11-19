@@ -30,6 +30,8 @@ write_captions <- function(dat, # converted model output object
   # This start_year was written previously. Is it usable for any plots, below?
   # start_year <- min(as.numeric(dat$year[dat$year!="S/Rcurve" | dat$year!="Virg" | dat$year!="Init"]), na.rm = TRUE)
 
+  # FIGURES-----
+
   ## kobe plot
   # B_div_BMSY_min <- # minimum value of B/B(MSY)
   # B_div_BMSY_max <- # maximum value of B/B(MSY)
@@ -153,9 +155,6 @@ write_captions <- function(dat, # converted model output object
   # mod_fit_abun_start_year <- # start year of model fit to abundance indices plot
   # mod_fit_abun_end_year <- # end year of model fit to abundance indices plot
 
-  ## catchability
-  #
-
   ## mod_fit_discards
   # mod_fit_discards_start_year <- # start year of model fit to discards plot
   # mod_fit_discards_end_year <- # end year of model fit to discards plot
@@ -170,8 +169,21 @@ write_captions <- function(dat, # converted model output object
   # selectivity_length_min <- # minimum length
   # selectivity_length_max <- # maximum length
 
-  ## recruitment
-  #
+  ## estimated stock recruitment
+  # est_stock_recruitment_age_min <- # youngest-age recruited fish (instead of age-0)
+  # est_stock_recruitment_ssb_units <- # ssb units (plural)
+  # est_stock_recruitment_ssb_min <- # minimum ssb
+  # est_stock_recruitment_ssb_max <- # maximum ssb
+  # est_stock_recruitment_units <- # recruitment units (plural)
+  # est_stock_recruitment_min <- # minimum recruitment
+  # est_stock_recruitment_max <- # maximum recruitment
+
+  ## recruitment ts
+  # recruitment_units <- # recruitment units (plural) - numbers of fish, in thousands
+  # recruitment_start_year <- # start year of recruitment ts plot
+  # recruitment_end_year <- # end year of recruitment ts plot
+  # recruitment_min <- # minimum recruitment
+  # recruitment_max <- # maximum recruitment
 
   ## recruitment deviations
   # recruit_dev_start_year <- # start year of recruitment deviations plot
@@ -179,14 +191,23 @@ write_captions <- function(dat, # converted model output object
   # recruit_dev_min <- # minimum recruitment deviation
   # recruit_dev_max <- # maximum recruitment deviation
 
-  ## tot_b
-  #
+  ## tot_b (total biomass)
+  # biomass_start_year <- # start year of biomass plot
+  # biomass_end_year <- # end year of biomass plot
+  # biomass_units <- # biomass units (plural)
+  # biomass_min <- # minimum biomass
+  # biomass_max <- # maximum biomass
+  # biomass_ref_pt <- # biomass reference point
+  # biomass_ref_pt_units <- # biomass reference point units
 
-  ## spawning_biomass
-  #
-  # SBmsy
-  # fSB
-  # sbtarg
+  ## spawning_biomass (ssb)
+  # ssb_start_year <- # start year of ssb plot
+  # ssb_end_year <- # end year of ssb plot
+  # ssb_units <- # ssb units (plural)
+  # ssb_min <- # minimum ssb
+  # ssb_max <- # maximum ssb
+  # ssb_ref_pt <- # ssb reference point units
+  # ssb_ref_pt_units <- # ssb reference point units
 
   ## spr (spawning potential ratio)
   # spr_start_year <- # start year of spr plot
@@ -219,9 +240,15 @@ write_captions <- function(dat, # converted model output object
   # M <-
   # steep <-
   # R0 <-
+  # SBmsy <-
+  # fSB <-
+  # sbtarg <-
+
+  # TABLES-----
 
 
-
+  ## catchability
+  #
 
   # add in more quantities here, and update the quantities above
 

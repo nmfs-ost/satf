@@ -3,13 +3,13 @@
 #' #' Export all figures in tables within one function.
 #' #'
 #' #' @inheritParams plot_recruitment
-#' #' @inheritParams afsc_tier_table
 #' #' @inheritParams plot_biomass
 #' #' @inheritParams plot_landings
 #' #' @inheritParams plot_spawning_biomass
 #' #' @inheritParams table_bnc
 #' #' @inheritParams table_indices
-#' #' @inheritParams harvest_projection_table
+#' #' @inheritParams table_harvest_projection
+#' #' @inheritParams table_afsc_tier
 #' #'
 #' #' @return
 #' #' Rda files for each figure/table.

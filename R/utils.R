@@ -2,7 +2,6 @@
 # General utility functions
 #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
-
 # extract captions and alt text from csv in wd
 extract_caps_alttext <- function(topic_label,
                                  fig_or_table){

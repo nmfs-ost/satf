@@ -246,9 +246,18 @@ write_captions <- function(dat, # converted model output object
 
   # TABLES-----
 
+  ## catch
+  # catch_fleet <- # fleet
+
+  ## landings
+  # landings_tbl_units <- # landings units; remove if units already in table
+
+  ## discards
+  # discards_tbl_units <- # discards units
 
   ## catchability
-  #
+  # catchability_fleet <- # fleet
+
 
   # add in more quantities here, and update the quantities above
 

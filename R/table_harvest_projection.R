@@ -1,5 +1,5 @@
-# AFSC Tier Table
-afsc_tier_table <- function() {
+# Harvest projection Table
+table_harvest_projection <- function() {
 
   # REMINDERS: add in code that
   # -adds make_rda and rda_dir as arguments

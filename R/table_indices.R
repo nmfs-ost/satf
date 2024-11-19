@@ -11,7 +11,7 @@ table_indices <- function(dat,
                           rda_dir = getwd()) {
 
   # create plot-specific variables to use throughout fxn for naming and IDing
-  topic_label <- "indices"
+  topic_label <- "indices_abun"
 
 
   # run write_captions.R if its output doesn't exist

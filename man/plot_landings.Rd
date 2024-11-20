@@ -4,30 +4,14 @@
 \alias{plot_landings}
 \title{Plot observed landings by fleet}
 \usage{
-<<<<<<< HEAD
-<<<<<<< HEAD
 plot_landings(dat, units = NULL, make_rda = FALSE, rda_dir = getwd())
-=======
-plot_landings(dat, units = NULL, make_rda = FALSE, rda_folder = getwd())
->>>>>>> 8fd15da (fix: minor fixes to get plot_recruitment and plot_spawning_biomass to work; used devtools::check, which updated .Rd files)
-=======
-plot_landings(dat, units = NULL, make_rda = FALSE, rda_dir = getwd())
->>>>>>> d7b90be (adding tests; also added libraries before read and write.csv fxns; updated documentation)
 }
 \arguments{
 \item{dat}{A data frame returned from `asar::convert_output()`.}
 
 \item{units}{indicate the name of the units of landings as to label the axis}
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 \item{rda_dir}{The location of the folder containing the generated .rda files
-=======
-\item{rda_folder}{The location of the folder containing the generated .rda files
->>>>>>> 8fd15da (fix: minor fixes to get plot_recruitment and plot_spawning_biomass to work; used devtools::check, which updated .Rd files)
-=======
-\item{rda_dir}{The location of the folder containing the generated .rda files
->>>>>>> d7b90be (adding tests; also added libraries before read and write.csv fxns; updated documentation)
 ("rda_files") that will be created if the argument `export_rda` = TRUE.
 Default is the working directory.}
 }

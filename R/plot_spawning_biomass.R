@@ -29,7 +29,8 @@ plot_spawning_biomass <- function(
   end_year = NULL,
   relative = FALSE,
   make_rda = FALSE,
-  rda_dir = getwd()) {
+  rda_dir = getwd()
+) {
 
   # create plot-specific variables to use throughout fxn for naming and IDing
   topic_label <- "spawning_biomass"

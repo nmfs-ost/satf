@@ -4,7 +4,6 @@
 \alias{table_indices}
 \title{Create Indices of Abundance Table}
 \usage{
-
 table_indices(dat, make_rda = FALSE, rda_dir = getwd())
 }
 \arguments{

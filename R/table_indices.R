@@ -5,14 +5,14 @@
 #' stratified by fleet.
 #' @export
 #'
-
 table_indices <- function(dat) {
-  output <- dat
-  output <- output |>
-    dplyr::filter(module_name == "INDEX_2" | module_name == "t.series")
+  output <- dat |>
+    dplyr::filter(
+      module_name == "INDEX_2" | module_name == "t.series"
+      )
   if (any(unique(output$module_name=="INDEX_2"))) {
-    output <- output |>
-      dplyr::filter(grepl("obs", label))
+    output2 <- output |>
+      dplyr::filter(grepl("input_indices", label))
   } else if (any(unique(output$module_name=="t.series"))) {
     output <- output |>
       dplyr::filter(grepl("cpue", label))
@@ -21,8 +21,13 @@ table_indices <- function(dat) {
   factors <- c("year", "fleet", "fleet_name", "age", "sex", "area", "seas", "season", "time", "era", "subseas", "subseason", "platoon", "platoo","growth_pattern", "gp")
   # re-structure df for table
   indices <- output |>
-    dplyr::rename(!!unique(output$label) := estimate,
-                  !!unique(output$uncertainty_label) := uncertainty) |>
+    tidyr::pivot_wider(
+      id_cols = unique(output$label),
+      names_from = fleet,
+      values_from = estimate
+    )
+    # dplyr::rename(!!unique(output$label) := estimate,
+    #               !!unique(output$uncertainty_label) := uncertainty) |>
     tidyr::pivot_wider(
       id_cols = -intersect(colnames(output), factors),
       names_from = fleet,

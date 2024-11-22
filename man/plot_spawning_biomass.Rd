@@ -8,7 +8,7 @@ plot_spawning_biomass(
   dat,
   unit_label = "metric ton",
   scale_amount = 1,
-  ref_line = c("target", "unfished"),
+  ref_line = c("target", "unfished", "msy"),
   end_year = NULL,
   relative = FALSE,
   n_projected_years = 10

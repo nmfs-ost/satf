@@ -44,15 +44,14 @@ export_rda <- function(plt_fin = plt_fin,
                        fig_or_table = fig_or_table){
 
   # make rda for figures
-  if (fig_or_table == "figure") {
+  ifelse (fig_or_table == "figure",
     rda <- list("figure" = plt_fin,
                 "cap" = caps_alttext[[1]],
-                "alt_text" = caps_alttext[[2]])
+                "alt_text" = caps_alttext[[2]]),
   # make rda for tables
-  } else if (fig_or_table == "table"){
     rda <- list("table" = tab,
                 "cap" = caps_alttext[[1]])
-  }
+  )
 
   # check if an rda_files folder already exists; if not, make one
   if (!dir.exists(file.path(rda_dir, "rda_files"))) {

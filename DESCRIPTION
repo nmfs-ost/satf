@@ -25,6 +25,8 @@ Imports:
     flextable,
     ggplot2,
     glue,
+    gt,
+    kableExtra,
     naniar,
     nmfspalette,
     stringr,

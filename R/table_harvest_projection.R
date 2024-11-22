@@ -8,6 +8,8 @@ table_harvest_projection <- function() {
   # (see table_indices.R for reference)
   # for the rda-related fxns to work, the final table has to be called tab
 
+  # identify output
+  fig_or_table <- "table"
 
   # run write_captions.R if its output doesn't exist
   if (!file.exists(

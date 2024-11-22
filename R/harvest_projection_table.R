@@ -1,28 +1,10 @@
-# Harvest projection Table
-table_harvest_projection <- function() {
-
-  # REMINDERS: add in code that
-  # -adds make_rda and rda_dir as arguments
-  # -defines topic_label, caps_alttext; and
-  # -makes an rda if make_rda = TRUE
-  # (see table_indices.R for reference)
-  # for the rda-related fxns to work, the final table has to be called tab
-
-
-  # run write_captions.R if its output doesn't exist
-  if (!file.exists(
-    fs::path(getwd(), "captions_alt_text.csv"))
-  ) {
-    satf::write_captions(dat = dat,
-                         dir = getwd(),
-                         year = NULL)
-  }
-
+# AFSC Tier Table
+afsc_tier_table <- function() {
   level <- c(
     "Level 1: Normal",
     "Level 2: Substantially Increased Concerns",
     "Level 3: Major Concern",
-    "Level 4: Extreme Concern"
+    "Level 4: Extreme COncern"
   )
   ass_considerations <- c(
     "Typical to moderately increased uncertainty/minor unresolved issues in assessment.",

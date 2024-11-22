@@ -6,36 +6,7 @@
 #' @export
 #'
 
-table_indices <- function(dat,
-                          make_rda = FALSE,
-                          rda_dir = getwd()) {
-
-  # create plot-specific variables to use throughout fxn for naming and IDing
-  topic_label <- "indices_abun"
-
-
-  # run write_captions.R if its output doesn't exist
-  if (!file.exists(
-    fs::path(getwd(), "captions_alt_text.csv"))
-  ) {
-    satf::write_captions(dat = dat,
-                         dir = getwd(),
-                         year = NULL)
-  }
-
-  # identify whether function generates a figure or table
-  # extract name of function housing id_fxn_output
-  fxn_name <- as.character(match.call()[[1]])
-
-  # if housing fxn's name starts with "plot", return "figure"; else, return "table"
-  fig_or_table <- ifelse(startsWith(fxn_name, "plot"),
-                         "figure",
-                         "table")
-
-  # extract this plot's caption and alt text
-  caps_alttext <- extract_caps_alttext(topic_label = topic_label,
-                                       fig_or_table = fig_or_table)
-
+table_indices <- function(dat) {
   output <- dat
   output <- output |>
     dplyr::filter(module_name == "INDEX_2" | module_name == "t.series")
@@ -57,25 +28,6 @@ table_indices <- function(dat,
       names_from = fleet,
       values_from = c(unique(output$label), unique(output$uncertainty_label))
     ) # stated internal error for tidyr and asks to report - try again monday
-
-  # ADDING THIS PLACEHOLDER HERE 11/13/24
-  # because of adding in the following alt text/caption lines,
-  # which require an object (i.e., tab) to connect from the
-  # existing code, above, to the return(tab), below
-
-  # make df into flextable
-  tab <- flextable::flextable(indices)
-
-  # export figure to rda if argument = T
-  if (make_rda == TRUE){
-
-    export_rda(plt_fin = plt_fin,
-               caps_alttext = caps_alttext,
-               rda_dir = rda_dir,
-              topic_label = topic_label,
-          fig_or_table = fig_or_table)
-
-  }
 
   return(tab)
 }

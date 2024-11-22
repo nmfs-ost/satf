@@ -32,7 +32,7 @@ text, from the R environment.
 }
 \examples{
 \dontrun{
-model_data <- utils::read.csv(here::here("data/Petrale_sole_std_res_2023.csv"))
+model_data <- read.csv(here::here("data/Petrale_sole_std_res_2023.csv"))
 
 fig1 <- satf::plot_spawning_biomass(model_data)
 

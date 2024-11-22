@@ -62,7 +62,7 @@ exp_fig_accessible <- function(figure,
                             "Alt_text" = as.character(alt_text))
 
   # export alt text csv
-  write.csv(x = alt_text_df,
+  utils::write.csv(x = alt_text_df,
             file = paste0(new_path, "/", fig_name_deparsed, "_alt_text.csv"),
             row.names=FALSE)
 

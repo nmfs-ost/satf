@@ -23,14 +23,8 @@ table_indices <- function(dat,
                          year = NULL)
   }
 
-  # identify whether function generates a figure or table
-  # extract name of function housing id_fxn_output
-  fxn_name <- as.character(match.call()[[1]])
-
-  # if housing fxn's name starts with "plot", return "figure"; else, return "table"
-  fig_or_table <- ifelse(startsWith(fxn_name, "plot"),
-                         "figure",
-                         "table")
+  # identify output
+  fig_or_table <- "table"
 
   # extract this plot's caption and alt text
   caps_alttext <- extract_caps_alttext(topic_label = topic_label,

@@ -133,14 +133,8 @@ plot_spawning_biomass <- function(
   # create plot-specific variables to use throughout fxn for naming and IDing
   topic_label <- "spawning_biomass"
 
-  # identify whether function generates a figure or table
-  # extract name of function housing id_fxn_output
-  fxn_name <- as.character(match.call()[[1]])
-
-  # if housing fxn's name starts with "plot", return "figure"; else, return "table"
-  fig_or_table <- ifelse(startsWith(fxn_name, "plot"),
-                         "figure",
-                         "table")
+  # identify output
+  fig_or_table <- "figure"
 
   # run write_captions.R if its output doesn't exist
   if (!file.exists(

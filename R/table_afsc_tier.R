@@ -8,8 +8,14 @@ afsc_tier_table <- function() {
   # (see table_indices.R for reference)
   # for the rda-related fxns to work, the final table has to be called tab
 
-  # identify output
-  fig_or_table <- "table"
+  # identify whether function generates a figure or table
+  # extract name of function housing id_fxn_output
+  fxn_name <- as.character(match.call()[[1]])
+
+  # if housing fxn's name starts with "plot", return "figure"; else, return "table"
+  fig_or_table <- ifelse(startsWith(fxn_name, "plot"),
+                         "figure",
+                         "table")
 
   # run write_captions.R if its output doesn't exist
   if (!file.exists(

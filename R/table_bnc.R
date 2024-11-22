@@ -8,9 +8,14 @@ table_bnc <- function(dat,
 
     }
 
+  # identify whether function generates a figure or table
+  # extract name of function housing id_fxn_output
+  fxn_name <- as.character(match.call()[[1]])
 
-  # identify output
-  fig_or_table <- "table"
+  # if housing fxn's name starts with "plot", return "figure"; else, return "table"
+  fig_or_table <- ifelse(startsWith(fxn_name, "plot"),
+                         "figure",
+                         "table")
 
   # run write_captions.R if its output doesn't exist
   if (!file.exists(

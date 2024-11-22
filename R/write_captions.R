@@ -21,7 +21,7 @@ write_captions <- function(dat, # converted model output object
   # for key quantities (e.g., 'start_year' is the placeholder for the
   # assessment's start year)
   caps_alttext <- utils::read.csv(
-    system.file("resources", "captions_alttext.csv", package = "satf")
+    system.file("resources", "captions_alt_text_template.csv", package = "satf")
   )
 
   # extract key quantities (these are examples and are not accurate)
@@ -66,7 +66,10 @@ write_captions <- function(dat, # converted model output object
   # F_max <- # maximum F
   Fend_df <- dat |>
     dplyr::filter(label == "fishing_mortality" & year == year | label == "F_terminal")
-  Fend <- as.numeric(Fend_df$estimate)
+
+  # NOTE: SB added the [1] so one number would be assigned to Fend; otherwise,
+  # this breaks because Fend = hundreds of numbers
+  Fend <- as.numeric(Fend_df$estimate)[1]
   # Ftarg <-
   # F_Ftarg <-
 
@@ -127,8 +130,8 @@ write_captions <- function(dat, # converted model output object
   # caa_age_max <- # maximum age group
 
   ## CAL (catch at length)
-  # cal_age_min <- # minimum age group
-  # cal_age_max <- # maximum age group
+  # cal_length_min <- # minimum length group
+  # cal_length_max <- # maximum length group
 
   ## CPUE indices plot
   # cpue_start_year <- # start year of CPUE indices plot
@@ -206,7 +209,7 @@ write_captions <- function(dat, # converted model output object
   # ssb_units <- # ssb units (plural)
   # ssb_min <- # minimum ssb
   # ssb_max <- # maximum ssb
-  # ssb_ref_pt <- # ssb reference point units
+  # ssb_ref_pt <- # ssb reference point
   # ssb_ref_pt_units <- # ssb reference point units
 
   ## spr (spawning potential ratio)
@@ -214,6 +217,8 @@ write_captions <- function(dat, # converted model output object
   # spr_end_year <- # end year of spr plot
   # spr_min <- # minimum spr
   # spr_max  <- # maximum spr
+  # spr_ref_pt <- # spr reference point
+  # spr_ref_pt_units <- # spr reference point units
 
   ## pop_naa_baa (population numbers at age and population biomass at age)
   # pop_naa_baa_start_year <- # start year of spr plot
@@ -234,6 +239,8 @@ write_captions <- function(dat, # converted model output object
   # proj_biomass_end_year <- # end year of projected biomass plot
   # proj_biomass_min <- # minimum projected biomass
   # proj_biomass_max <- # maximum projected biomass
+  # proj_biomass_ref_pt <- # projected biomass reference point
+  # proj_biomass_ref_pt_units <- # projected biomass reference point units
 
   ## Other
   # tot_catch <-
@@ -267,15 +274,15 @@ write_captions <- function(dat, # converted model output object
     dplyr::mutate_if(is.character,
                    stringr::str_replace_all,
                    pattern = c("Fend"),
-                   replacement = c(as.character(Fend)))|>
-    dplyr::mutate_if(is.character,
-                     stringr::str_replace_all,
-                     pattern = c("start_year"),
-                     replacement = c(as.character(start_year)))
+                   replacement = c(as.character(Fend)))#|>
+    # dplyr::mutate_if(is.character,
+    #                  stringr::str_replace_all,
+    #                  pattern = c("start_year"),
+    #                  replacement = c(as.character(start_year)))
 
 
   # export df with substituted captions and alt text to csv
-  write.csv(x = caps_alttext_subbed,
+  utils::write.csv(x = caps_alttext_subbed,
             file = file.path(dir,
                              "captions_alt_text.csv"),
             row.names=FALSE)

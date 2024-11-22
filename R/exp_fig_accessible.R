@@ -20,7 +20,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' model_data <- utils::read.csv(here::here("data/Petrale_sole_std_res_2023.csv"))
+#' model_data <- read.csv(here::here("data/Petrale_sole_std_res_2023.csv"))
 #'
 #' fig1 <- satf::plot_spawning_biomass(model_data)
 #'
@@ -62,7 +62,7 @@ exp_fig_accessible <- function(figure,
                             "Alt_text" = as.character(alt_text))
 
   # export alt text csv
-  utils::write.csv(x = alt_text_df,
+  write.csv(x = alt_text_df,
             file = paste0(new_path, "/", fig_name_deparsed, "_alt_text.csv"),
             row.names=FALSE)
 

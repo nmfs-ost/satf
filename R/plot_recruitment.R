@@ -13,13 +13,6 @@
 #' @param show_warnings Include warnings? Default FALSE
 #' @param end_year last year of assessment
 #' @param return Default returns recruitment over time. Options to display recruitment time series, stock recruitment curve, or recruitment fit
-#' @param export_rda TRUE/FALSE; indcate whether to produce an .rda file containing
-#' a list with the figure/table, caption, and alternative text (if figure). If TRUE,
-#' the .rda will be exported to the folder indicated in the argument "rda_dir".
-#' Default is FALSE.
-#' @param rda_dir The location of the folder containing the generated .rda files
-#' ("rda_files") that will be created if the argument `export_rda` = TRUE.
-#' Default is the working directory.
 #'
 #' @return A series of plots are exported including recruitment over time with R0
 #' reference line, stock recruitment curve, and other related figures.
@@ -35,11 +28,7 @@ plot_recruitment <- function(dat,
                              scale_amount = NULL,
                              show_warnings = FALSE,
                              end_year = NULL,
-                             return = "recruitment",
-                             make_rda = FALSE,
-                             rda_dir = getwd()
-                             ){
-
+                             return = "recruitment"){
   # check units
   # biomass
   if(!is.null(recruitment_units)){
@@ -174,43 +163,5 @@ plot_recruitment <- function(dat,
                     y = "Recruitment Deviations")
   }
   plt_fin <- add_theme(plt)
-
-  # create plot-specific variables to use throughout fxn for naming and IDing
-  topic_label <- "recruitment"
-
-  # identify whether function generates a figure or table
-  # extract name of function housing id_fxn_output
-  fxn_name <- as.character(match.call()[[1]])
-
-  # if housing fxn's name starts with "plot", return "figure"; else, return "table"
-  fig_or_table <- ifelse(startsWith(fxn_name, "plot"),
-                         "figure",
-                         "table")
-
-  # run write_captions.R if its output doesn't exist
-  if (!file.exists(
-    fs::path(getwd(), "captions_alt_text.csv"))
-  ) {
-    satf::write_captions(dat = dat,
-                         dir = getwd(),
-                         year = end_year)
-  }
-
-  # extract this plot's caption and alt text
-  caps_alttext <- extract_caps_alttext(topic_label = topic_label,
-                                       fig_or_table = fig_or_table)
-
-
-  # export figure to rda if argument = T
-  if (make_rda == TRUE){
-
-    export_rda(plt_fin = plt_fin,
-               caps_alttext = caps_alttext,
-               rda_dir = rda_dir,
-               topic_label = topic_label,
-               fig_or_table = fig_or_table)
-
-  }
-
   return(plt_fin)
 }

@@ -9,11 +9,7 @@
 #' @export
 #'
 plot_landings <- function(dat,
-                          units = NULL,
-                          make_rda = FALSE,
-                          rda_dir = getwd()
-                          ){
-
+                          units = NULL){
   # read standard data file and extract target quantity
   land <- dat |>
     dplyr::filter(module_name == "t.series" | module_name == "CATCH", # t.series is associated with a conversion from BAM output and CATCH with SS3 converted output
@@ -47,44 +43,5 @@ plot_landings <- function(dat,
     ggplot2::geom_area(ggplot2::aes(x = year, y = estimate, fill = fleet))
   # Apply std NOAA theme
   add_theme(plt)
-
-  plt_fin <- suppressWarnings(add_theme(plt))
-
-  # create plot-specific variables to use throughout fxn for naming and IDing
-  topic_label <- "landings"
-
-  # identify whether function generates a figure or table
-  # extract name of function housing id_fxn_output
-  fxn_name <- as.character(match.call()[[1]])
-
-  # if housing fxn's name starts with "plot", return "figure"; else, return "table"
-  fig_or_table <- ifelse(startsWith(fxn_name, "plot"),
-                         "figure",
-                         "table")
-
-  # run write_captions.R if its output doesn't exist
-  if (!file.exists(
-    fs::path(getwd(), "captions_alt_text.csv"))
-  ) {
-    satf::write_captions(dat = dat,
-                         dir = getwd(),
-                         year = NULL)
-  }
-
-  # extract this plot's caption and alt text
-  caps_alttext <- extract_caps_alttext(topic_label = topic_label,
-                                       fig_or_table = fig_or_table)
-
-  # export figure to rda if argument = T
-  if (make_rda == TRUE){
-
-    export_rda(plt_fin = plt_fin,
-               caps_alttext = caps_alttext,
-               rda_dir = rda_dir,
-               topic_label = topic_label,
-               fig_or_table = fig_or_table)
-  }
-
-  return(plt_fin)
 }
 

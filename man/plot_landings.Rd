@@ -4,16 +4,12 @@
 \alias{plot_landings}
 \title{Plot observed landings by fleet}
 \usage{
-plot_landings(dat, units = NULL, make_rda = FALSE, rda_dir = getwd())
+plot_landings(dat, units = NULL)
 }
 \arguments{
 \item{dat}{A data frame returned from `asar::convert_output()`.}
 
 \item{units}{indicate the name of the units of landings as to label the axis}
-
-\item{rda_dir}{The location of the folder containing the generated .rda files
-("rda_files") that will be created if the argument `export_rda` = TRUE.
-Default is the working directory.}
 }
 \value{
 Create a plot ready for a stock assessment report of cumulative landings

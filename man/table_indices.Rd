@@ -4,14 +4,10 @@
 \alias{table_indices}
 \title{Create Indices of Abundance Table}
 \usage{
-table_indices(dat, make_rda = FALSE, rda_dir = getwd())
+table_indices(dat)
 }
 \arguments{
 \item{dat}{A data frame returned from `asar::convert_output()`.}
-
-\item{rda_dir}{The location of the folder containing the generated .rda files
-("rda_files") that will be created if the argument `export_rda` = TRUE.
-Default is the working directory.}
 }
 \value{
 Create table of observed annual indices of abundance plus error

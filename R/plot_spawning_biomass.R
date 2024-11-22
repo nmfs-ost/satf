@@ -32,31 +32,6 @@ plot_spawning_biomass <- function(
   rda_dir = getwd()
 ) {
 
-  # create plot-specific variables to use throughout fxn for naming and IDing
-  topic_label <- "spawning_biomass"
-
-  # identify whether function generates a figure or table
-  # extract name of function housing id_fxn_output
-  fxn_name <- as.character(match.call()[[1]])
-
-  # if housing fxn's name starts with "plot", return "figure"; else, return "table"
-  fig_or_table <- ifelse(startsWith(fxn_name, "plot"),
-                         "figure",
-                         "table")
-
-  # run write_captions.R if its output doesn't exist
-  if (!file.exists(
-    fs::path(getwd(), "captions_alt_text.csv"))
-  ) {
-    satf::write_captions(dat = dat,
-                         dir = getwd(),
-                         year = end_year)
-  }
-
-  # extract this plot's caption and alt text
-  caps_alttext <- extract_caps_alttext(topic_label = topic_label,
-                                       fig_or_table = fig_or_table)
-
   ref_line <- match.arg(ref_line)
   # TODO: Fix the unit label if scaling. Maybe this is up to the user to do if
   #       they want something scaled then they have to supply a better unit name
@@ -154,6 +129,31 @@ plot_spawning_biomass <- function(
     )
 
   plt_fin <- suppressWarnings(add_theme(plt))
+
+  # create plot-specific variables to use throughout fxn for naming and IDing
+  topic_label <- "spawning_biomass"
+
+  # identify whether function generates a figure or table
+  # extract name of function housing id_fxn_output
+  fxn_name <- as.character(match.call()[[1]])
+
+  # if housing fxn's name starts with "plot", return "figure"; else, return "table"
+  fig_or_table <- ifelse(startsWith(fxn_name, "plot"),
+                         "figure",
+                         "table")
+
+  # run write_captions.R if its output doesn't exist
+  if (!file.exists(
+    fs::path(getwd(), "captions_alt_text.csv"))
+  ) {
+    satf::write_captions(dat = dat,
+                         dir = getwd(),
+                         year = end_year)
+  }
+
+  # extract this plot's caption and alt text
+  caps_alttext <- extract_caps_alttext(topic_label = topic_label,
+                                       fig_or_table = fig_or_table)
 
   # export figure to rda if argument = T
   if (make_rda == TRUE){

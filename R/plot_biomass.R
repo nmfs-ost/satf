@@ -19,7 +19,9 @@ plot_biomass <- function(
     scale_amount = 1,
     ref_line = c("target", "MSY", "msy", "unfished"),
     end_year = NULL,
-    relative = FALSE
+    relative = FALSE,
+    make_rda = FALSE,
+    rda_dir = getwd()
 ){
 
   if(length(ref_line)>1){

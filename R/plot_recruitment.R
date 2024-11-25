@@ -21,7 +21,9 @@ plot_recruitment <- function(
     scale_amount = 1,
     end_year = NULL,
     n_projected_years = 10,
-    relative = FALSE
+    relative = FALSE,
+    make_rda = FALSE,
+    rda_dir = getwd()
 ) {
   # Find R0
   R0 <- dat |>

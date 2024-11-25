@@ -9,7 +9,9 @@
 #' @export
 #'
 plot_landings <- function(dat,
-                          unit_label = "metric tons"){
+                          unit_label = "metric tons",
+                          make_rda = FALSE,
+                          rda_dir = getwd()){
   # Units
   # TODO: fix unit label is scaling
   land_label <- glue::glue("Landings ({unit_label})")

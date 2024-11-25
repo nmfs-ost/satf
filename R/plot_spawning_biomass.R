@@ -24,7 +24,9 @@ plot_spawning_biomass <- function(
   ref_line = c("target", "unfished", "msy"),
   end_year = NULL,
   relative = FALSE,
-  n_projected_years = 10
+  n_projected_years = 10,
+  make_rda = FALSE,
+  rda_dir = getwd()
 ) {
   ref_line <- match.arg(ref_line)
   # TODO: Fix the unit label if scaling. Maybe this is up to the user to do if

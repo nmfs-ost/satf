@@ -4,12 +4,12 @@
 \alias{plot_landings}
 \title{Plot observed landings by fleet}
 \usage{
-plot_landings(dat, units = NULL)
+plot_landings(dat, unit_label = "metric tons")
 }
 \arguments{
 \item{dat}{A data frame returned from `asar::convert_output()`.}
 
-\item{units}{indicate the name of the units of landings as to label the axis}
+\item{unit_label}{indicate the name of the units of landings as to label the axis}
 }
 \value{
 Create a plot ready for a stock assessment report of cumulative landings

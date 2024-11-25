@@ -275,7 +275,7 @@ write_captions <- function(dat, # converted model output object
 
 
   # export df with substituted captions and alt text to csv
-  write.csv(x = caps_alttext_subbed,
+ utils:: write.csv(x = caps_alttext_subbed,
             file = file.path(dir,
                              "captions_alt_text.csv"),
             row.names=FALSE)

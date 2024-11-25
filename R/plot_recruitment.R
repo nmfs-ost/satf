@@ -67,31 +67,62 @@ plot_recruitment <- function(
   }
 
   plt <- ggplot2::ggplot(data = rec) +
-    ggplot2::geom_point(
-      ggplot2::aes(
-        x = year,
-        y = estimate_y
+     ggplot2::geom_point(
+        ggplot2::aes(
+          x = year,
+          y = estimate_y
+          )
+        ) +
+      ggplot2::geom_line(
+        ggplot2::aes(
+          x = year,
+          y = estimate_y
+          ),
+        linewidth = 1) +
+      ggplot2::labs(x = "Year",
+                    y = recruitment_label
+                    ) +
+      ggplot2::theme(
+        legend.position = "none"
+        ) +
+      ggplot2::scale_x_continuous(
+        n.breaks = x_n_breaks,
+        guide = ggplot2::guide_axis(
+          minor.ticks = TRUE
+          )
         )
-      ) +
-    ggplot2::geom_line(
-      ggplot2::aes(
-        x = year,
-        y = estimate_y
-        ),
-      linewidth = 1) +
-    ggplot2::labs(x = "Year",
-                  y = recruitment_label
-                  ) +
-    ggplot2::theme(
-      legend.position = "none"
-      ) +
-    ggplot2::scale_x_continuous(
-      n.breaks = x_n_breaks,
-      guide = ggplot2::guide_axis(
-        minor.ticks = TRUE
-        )
-      )
 
-  suppressWarnings(add_theme(plt))
-  # return(plt_fin)
+  plt_fin <- suppressWarnings(add_theme(plt))
+
+  # create plot-specific variables to use throughout fxn for naming and IDing
+  topic_label <- "recruitment"
+
+  # identify output
+  fig_or_table <- "figure"
+
+  # run write_captions.R if its output doesn't exist
+  if (!file.exists(
+    fs::path(getwd(), "captions_alt_text.csv"))
+  ) {
+    satf::write_captions(dat = dat,
+                         dir = getwd(),
+                         year = end_year)
+  }
+
+  # extract this plot's caption and alt text
+  caps_alttext <- extract_caps_alttext(topic_label = topic_label,
+                                       fig_or_table = fig_or_table)
+
+
+  # export figure to rda if argument = T
+  if (make_rda == TRUE){
+
+    export_rda(plt_fin = plt_fin,
+               caps_alttext = caps_alttext,
+               rda_dir = rda_dir,
+               topic_label = topic_label,
+               fig_or_table = fig_or_table)
+
+  }
+  return(plt_fin)
 }

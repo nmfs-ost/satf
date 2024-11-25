@@ -1,6 +1,14 @@
 # AFSC Tier Table
 table_harvest_projection <- function() {
-  level <- c(
+
+  # REMINDERS: add in code that
+  # -adds make_rda and rda_dir as arguments
+  # -defines topic_label, fig_or_table; and
+  # -makes an rda if make_rda = TRUE
+  # (see table_indices.R for reference)
+  # for the rda-related fxns to work, the final table has to be called tab
+
+    level <- c(
     "Level 1: Normal",
     "Level 2: Substantially Increased Concerns",
     "Level 3: Major Concern",

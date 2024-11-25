@@ -6,46 +6,34 @@
 \usage{
 plot_recruitment(
   dat,
-  params = FALSE,
-  params_only = FALSE,
-  units = c(sb = "metric tons", recruitment = "metric tons"),
-  recruitment_units = "metric tons",
-  spawning_biomass_units = "metric tons",
-  scaled = FALSE,
-  scale_amount = NULL,
-  show_warnings = FALSE,
+  unit_label = "metric tons",
+  scale_amount = 1,
   end_year = NULL,
-  return = "recruitment"
+  n_projected_years = 10,
+  relative = FALSE
 )
 }
 \arguments{
 \item{dat}{A data frame returned from `asar::convert_output()`.}
 
-\item{params}{Print/export the parameters of the stock recruitment function?}
-
-\item{params_only}{Only export the stock recruitment function or both the parameters and the plot(s)?}
-
-\item{units}{If units are not available in the output file, in metric tons,
-or are different for SB and R, then report them here starting with SB units
-and following with R units.}
-
-\item{recruitment_units}{units for recruitment}
-
-\item{spawning_biomass_units}{units of spawning biomass if different from biomass}
-
-\item{scaled}{T/F; indicate whether the output values for biomass and recruitment are scaled}
+\item{unit_label}{units for recruitment}
 
 \item{scale_amount}{indicate the exact amount of scale (i.e. 1000)}
 
-\item{show_warnings}{Include warnings? Default FALSE}
-
 \item{end_year}{last year of assessment}
 
-\item{return}{Default returns recruitment over time. Options to display recruitment time series, stock recruitment curve, or recruitment fit}
+\item{n_projected_years}{Number of years spawning biomass is projected for.
+By default this number is set to 10}
+
+\item{relative}{A logical value specifying if the resulting figures should
+be relative spawning biomass. The default is `FALSE`. `ref_line` indicates
+which reference point to use.}
 }
 \value{
-A series of plots are exported including recruitment over time with R0
-reference line, stock recruitment curve, and other related figures.
+Plot recruitment over time from an assessment model output file
+translated to a standardized output. There are options to return a {ggplot2}
+object or export an rda object containing associated caption and alternative
+text for the figure.
 }
 \description{
 Plot Recruitment

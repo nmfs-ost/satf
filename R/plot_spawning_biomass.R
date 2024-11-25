@@ -11,10 +11,6 @@
 #'   lower-case letters but you must use one of the options specified in the
 #'   default list to ensure that the label on the figure looks correct
 #'   regardless of how it is specified in `dat`.
-#' @param relative A logical value specifying if the resulting figures should
-#'   be relative spawning biomass. The default is `FALSE`. `ref_line` indicates
-#'   which reference point to use.
-#'
 #' @return
 #' Plot spawning biomass from the results of an assessment model translated to
 #' the standard output. The {ggplot2} object is returned for further
@@ -25,9 +21,10 @@ plot_spawning_biomass <- function(
   dat,
   unit_label = "metric ton",
   scale_amount = 1,
-  ref_line = c("target", "unfished"),
+  ref_line = c("target", "unfished", "msy"),
   end_year = NULL,
-  relative = FALSE
+  relative = FALSE,
+  n_projected_years = 10
 ) {
   ref_line <- match.arg(ref_line)
   # TODO: Fix the unit label if scaling. Maybe this is up to the user to do if
@@ -39,19 +36,21 @@ plot_spawning_biomass <- function(
     no = glue::glue("Spawning biomass ({unit_label})")
   )
 
-  output <- dat
+  # output <- dat
   # Determine the end year
-  all_years <- output[["year"]][grepl("^[0-9\\.]+$", output[["year"]])]
+  all_years <- dat[["year"]][grepl("^[0-9\\.]+$", dat[["year"]])]
   if (is.null(end_year)) {
-    end_year <- as.numeric(max(all_years, na.rm = TRUE))
+    end_year <- as.numeric(max(all_years, na.rm = TRUE)) - n_projected_years
   }
   stopifnot(any(end_year >= all_years))
 
   # Select value for reference line and label
-  ref_line_val <- as.numeric(output[
+  # TODO: add case if ref_line not indicated or hard to find - find one of the
+  # options and set as ref_line
+  ref_line_val <- as.numeric(dat[
     grep(
       pattern = glue::glue("^spawning_biomass.*{tolower(ref_line)}"),
-      x = output[["label"]]
+      x = dat[["label"]]
     ),
     "estimate"
   ])
@@ -60,8 +59,13 @@ plot_spawning_biomass <- function(
       "The resulting reference value of `spawning_biomass_{ref_line}` was
       not found in `dat[[\"label\"]]`."
     ))
+  } else if (length(ref_line_val > 1)) {
+    warning(glue::glue(
+      "More than one of the resulting reference value of `spawning_biomass_{ref_line}` was
+      not in `dat[[\"label\"]]`."
+    ))
   }
-  sb <- output |>
+  sb <- dat |>
     dplyr::filter(
       label == "spawning_biomass",
       module_name %in% c("DERIVED_QUANTITIES", "t.series"),
@@ -126,5 +130,34 @@ plot_spawning_biomass <- function(
     )
 
   plt_fin <- suppressWarnings(add_theme(plt))
+
+  # create plot-specific variables to use throughout fxn for naming and IDing
+  topic_label <- "spawning_biomass"
+
+  # identify output
+  fig_or_table <- "figure"
+
+  # run write_captions.R if its output doesn't exist
+  if (!file.exists(
+    fs::path(getwd(), "captions_alt_text.csv"))
+  ) {
+    satf::write_captions(dat = dat,
+                         dir = getwd(),
+                         year = end_year)
+  }
+
+  # extract this plot's caption and alt text
+  caps_alttext <- extract_caps_alttext(topic_label = topic_label,
+                                       fig_or_table = fig_or_table)
+
+  # export figure to rda if argument = T
+  if (make_rda == TRUE){
+
+    export_rda(plt_fin = plt_fin,
+               caps_alttext = caps_alttext,
+               rda_dir = rda_dir,
+              topic_label = topic_label,
+              fig_or_table = fig_or_table)
+  }
   return(plt_fin)
 }

@@ -41,8 +41,14 @@ exp_all_figs_tables <- function(
   # changed ref_line to ref_line_sb to differentiate from plot_biomass arg
   ref_line_sb = c("target", "MSY", "msy", "unfished")
 
+  # imported from table_afsc_tier- add potential unique arguments after dev
+  # imported from table_bnc- add potential unique arguments after dev
+  # imported from table_harvest_projection- add potential unique arguments after dev
+  # imported from table_indices- zero unique arguments
+
 ) {
 
+  # figures
 
   satf::plot_recruitment(dat,
                          unit_label,
@@ -89,5 +95,17 @@ exp_all_figs_tables <- function(
                               n_projected_years,
                               make_rda,
                               rda_dir)
+
+  # tables
+
+  # uncomment when this is working properly
+  # table_indices(dat,
+  #               make_rda,
+  #               rda_dir)
+
+  # undeveloped tables - add arguments after more development
+  # table_afsc_tier()
+  # table_bnc()
+  # table_harvest_projection()
 
 }

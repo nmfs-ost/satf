@@ -10,7 +10,9 @@ plot_biomass(
   scale_amount = 1,
   ref_line = c("target", "MSY", "msy", "unfished"),
   end_year = NULL,
-  relative = FALSE
+  relative = FALSE,
+  make_rda = FALSE,
+  rda_dir = getwd()
 )
 }
 \arguments{
@@ -33,6 +35,10 @@ regardless of how it is specified in `dat`.}
 \item{relative}{A logical value specifying if the resulting figures should
 be relative spawning biomass. The default is `FALSE`. `ref_line` indicates
 which reference point to use.}
+
+\item{rda_dir}{The location of the folder containing the generated .rda files
+("rda_files") that will be created if the argument `export_rda` = TRUE.
+Default is the working directory.}
 }
 \value{
 Plot total biomass from a stock assessment model as found in a NOAA

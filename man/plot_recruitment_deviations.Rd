@@ -7,7 +7,9 @@
 plot_recruitment_deviations(
   dat = NULL,
   end_year = NULL,
-  n_projected_years = 10
+  n_projected_years = 10,
+  make_rda = FALSE,
+  rda_dir = getwd()
 )
 }
 \value{

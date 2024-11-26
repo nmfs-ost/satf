@@ -8,7 +8,9 @@ plot_spawn_recruitment(
   dat = NULL,
   spawning_biomass_label = "metric tons",
   recruitment_label = "metric tons",
-  end_year = NULL
+  end_year = NULL,
+  make_rda = FALSE,
+  rda_dir = getwd()
 )
 }
 \value{

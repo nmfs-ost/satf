@@ -273,11 +273,7 @@ write_captions <- function(dat, # converted model output object
     dplyr::mutate_if(is.character,
                    stringr::str_replace_all,
                    pattern = c("Fend"),
-                   replacement = c(as.character(Fend)))|>
-    dplyr::mutate_if(is.character,
-                     stringr::str_replace_all,
-                     pattern = c("start_year"),
-                     replacement = c(as.character(start_year)))
+                   replacement = c(as.character(Fend)))
 
 
   # export df with substituted captions and alt text to csv

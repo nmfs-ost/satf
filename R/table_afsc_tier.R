@@ -16,7 +16,7 @@ table_afsc_tier <- function() {
     fs::path(getwd(), "captions_alt_text.csv"))
   ) {
     satf::write_captions(dat = dat,
-                         dir = getwd(),
+                         dir = rda_dir,
                          year = NULL)
   }
   level <- c(

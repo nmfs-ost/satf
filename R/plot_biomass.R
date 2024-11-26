@@ -122,7 +122,7 @@ plot_biomass <- function(
     fs::path(getwd(), "captions_alt_text.csv"))
   ) {
     satf::write_captions(dat = dat,
-                         dir = getwd(),
+                         dir = rda_dir,
                          year = end_year)
   }
 

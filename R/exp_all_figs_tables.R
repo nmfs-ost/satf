@@ -1,6 +1,6 @@
 #' Export all figures and tables
 #'
-#' Export all figures in tables within one function.
+#' Export all figures and tables to Rda files within one function.
 #'
 #' @inheritParams plot_recruitment
 #' @param ref_line @inheritParams plot_biomass
@@ -10,10 +10,16 @@
 #' applied to plot_spawning_biomass.
 #'
 #' @return
-#' Rda files for each figure/table.
 #'
 #' @export
+#' Rda files (if make_rda = TRUE) for each figure/table.
 #'
+#' @examples
+#' \dontrun{
+#' exp_all_figs_tables(dat, ref_line = "unfished",
+#' ref_line_sb = "target", make_rda = TRUE)
+#' }
+
 exp_all_figs_tables <- function(
 
   # imported from plot_recruitment

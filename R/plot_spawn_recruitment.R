@@ -66,33 +66,32 @@ plot_spawn_recruitment <- function(
 
   plt_fin <- suppressWarnings(add_theme(plt))
 
-  # create plot-specific variables to use throughout fxn for naming and IDing
-  topic_label <- "est_stock_recruitment"
-
-  # identify output
-  fig_or_table <- "figure"
-
-  # run write_captions.R if its output doesn't exist
-  if (!file.exists(
-    fs::path(getwd(), "captions_alt_text.csv"))
-  ) {
-    satf::write_captions(dat = dat,
-                         dir = rda_dir,
-                         year = end_year)
-  }
-
-  # extract this plot's caption and alt text
-  caps_alttext <- extract_caps_alttext(topic_label = topic_label,
-                                       fig_or_table = fig_or_table)
-
   # export figure to rda if argument = T
   if (make_rda == TRUE){
+    # create plot-specific variables to use throughout fxn for naming and IDing
+    topic_label <- "est_stock_recruitment"
+
+    # identify output
+    fig_or_table <- "figure"
+
+    # run write_captions.R if its output doesn't exist
+    if (!file.exists(
+      fs::path(getwd(), "captions_alt_text.csv"))
+    ) {
+      satf::write_captions(dat = dat,
+                           dir = rda_dir,
+                           year = end_year)
+    }
+
+    # extract this plot's caption and alt text
+    caps_alttext <- extract_caps_alttext(topic_label = topic_label,
+                                         fig_or_table = fig_or_table)
 
     export_rda(plt_fin = plt_fin,
                caps_alttext = caps_alttext,
                rda_dir = rda_dir,
                topic_label = topic_label,
                fig_or_table = fig_or_table)
-
   }
+  return(plt_fin)
 }

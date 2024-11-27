@@ -131,10 +131,10 @@ plot_spawning_biomass <- function(
       parse = TRUE
     )
 
-  # export figure to rda if argument = T
-  if (make_rda == TRUE){
-    plt_fin <- suppressWarnings(add_theme(plt))
+  plt_fin <- suppressWarnings(add_theme(plt))
 
+  # export figure to rda if argument = T
+  if (make_rda == TRUE) {
     # create plot-specific variables to use throughout fxn for naming and IDing
     topic_label <- "spawning_biomass"
 

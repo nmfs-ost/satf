@@ -47,11 +47,49 @@ write_captions <- function(dat, # converted model output object
   ## Biomass plot
   # B_ref_pt <- # biomass reference point
   # B_ref_pt_unit <- # biomass reference point unit
-  # B_start_year_ <- # start year of biomass plot
-  # B_end_year <- # start year of biomass plot
+
+  # start year of biomass plot
+  B_start_year <- dat |>
+    dplyr::filter(label == "biomass",
+                  module_name == "TIME_SERIES" | module_name == "t.series", # SS3 and BAM target module names
+                  is.na(fleet),
+                  is.na(age)) |>
+    dplyr::slice(which.min(year)) |>
+    dplyr::select(year) |>
+    as.numeric()
+
+  # end year of biomass plot
+  B_end_year <- dat |>
+    dplyr::filter(label == "biomass",
+                  module_name == "TIME_SERIES" | module_name == "t.series", # SS3 and BAM target module names
+                  is.na(fleet),
+                  is.na(age)) |>
+    dplyr::slice(which.max(year)) |>
+    dplyr::select(year) |>
+    as.numeric()
+
   # B_units <- # units of B (plural)
-  # B_min <- # minimum B
-  # B_max <- # maximum B
+
+  # minimum B
+  B_min <- dat |>
+    dplyr::filter(label == "biomass",
+                  module_name == "TIME_SERIES" | module_name == "t.series", # SS3 and BAM target module names
+                  is.na(fleet),
+                  is.na(age)) |>
+    dplyr::slice(which.min(estimate)) |>
+    dplyr::select(estimate) |>
+    as.numeric()
+
+  # maximum B
+  B_max <- dat |>
+    dplyr::filter(label == "biomass",
+                  module_name == "TIME_SERIES" | module_name == "t.series", # SS3 and BAM target module names
+                  is.na(fleet),
+                  is.na(age)) |>
+    dplyr::slice(which.max(estimate)) |>
+    dplyr::select(estimate) |>
+    as.numeric()
+
   # Bend <-
   # Btarg <-
   # Bmsy <-
@@ -73,11 +111,52 @@ write_captions <- function(dat, # converted model output object
   # F_Ftarg <-
 
   ## landings plot
-  # landings_start_year <- # start year of landings plot
-  # landings_end_year <- # end year of landings plot
+
+  # start year of landings plot
+  landings_start_year <- dat |>
+    dplyr::filter(
+      c(module_name == "t.series" & grepl("landings_observed", label)) | c(module_name == "CATCH" & grepl("ret_bio", label)),
+      # t.series is associated with a conversion from BAM output and CATCH with SS3 converted output
+      !is.na(fleet)
+    ) |>
+    dplyr::slice(which.min(year)) |>
+    dplyr::select(year) |>
+    as.numeric()
+
+  # end year of landings plot
+  landings_end_year <- dat |>
+    dplyr::filter(
+      c(module_name == "t.series" & grepl("landings_observed", label)) | c(module_name == "CATCH" & grepl("ret_bio", label)),
+      # t.series is associated with a conversion from BAM output and CATCH with SS3 converted output
+      !is.na(fleet)
+    ) |>
+    dplyr::slice(which.max(year)) |>
+    dplyr::select(year) |>
+    as.numeric()
+
   # landings_units <- # units of landings (plural)
-  # landings_min <- # minimum landings
-  # landings_max <- # maximum landings
+
+  # minimum landings
+  landings_min <- dat |>
+    dplyr::filter(
+      c(module_name == "t.series" & grepl("landings_observed", label)) | c(module_name == "CATCH" & grepl("ret_bio", label)),
+      # t.series is associated with a conversion from BAM output and CATCH with SS3 converted output
+      !is.na(fleet)
+    ) |>
+    dplyr::slice(which.min(estimate)) |>
+    dplyr::select(estimate) |>
+    as.numeric()
+
+  # maximum landings
+  landings_max <- dat |>
+    dplyr::filter(
+      c(module_name == "t.series" & grepl("landings_observed", label)) | c(module_name == "CATCH" & grepl("ret_bio", label)),
+      # t.series is associated with a conversion from BAM output and CATCH with SS3 converted output
+      !is.na(fleet)
+    ) |>
+    dplyr::slice(which.max(estimate)) |>
+    dplyr::select(estimate) |>
+    as.numeric()
 
   ## natural mortality (M)
   # M_age_min <- # minimum age of M
@@ -273,7 +352,15 @@ write_captions <- function(dat, # converted model output object
     dplyr::mutate_if(is.character,
                    stringr::str_replace_all,
                    pattern = c("Fend"),
-                   replacement = c(as.character(Fend)))
+                   replacement = c(as.character(Fend))) |>
+    dplyr::mutate_if(is.character,
+                     stringr::str_replace_all,
+                     pattern = c("B_min"),
+                     replacement = c(as.character(B_min))) |>
+    dplyr::mutate_if(is.character,
+                     stringr::str_replace_all,
+                     pattern = c("B_max"),
+                     replacement = c(as.character(B_max)))
 
 
   # export df with substituted captions and alt text to csv

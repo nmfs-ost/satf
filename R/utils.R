@@ -64,6 +64,3 @@ export_rda <- function(plt_fin = plt_fin,
                         "rda_files",
                         paste0(topic_label, "_rda.rda")))
 }
-
-# values within dat$year that are excluded from multiple plotting datasets
-year_exclusions <- c('S/Rcurve', 'Init', 'Virg')

@@ -33,12 +33,12 @@ write_captions <- function(dat, # converted model output object
   # FIGURES-----
 
   ## kobe plot
-  # B_div_BMSY_min <- # minimum value of B/B(MSY)
-  # B_div_BMSY_max <- # maximum value of B/B(MSY)
-  # F_div_FMSY_min <- # minimum value of F/F(MSY)
-  # F_div_FMSY_max <- # maximum value of F/F(MSY)
-  # B_div_BMSY_end_yr <- # value of B/B(MSY) at the end year
-  # F_div_FMSY_end_yr <- # value of F/F(MSY) at the end year
+  # B_BMSY_min <- # minimum value of B/B(MSY)
+  # B_BMSY_max <- # maximum value of B/B(MSY)
+  # F_FMSY_min <- # minimum value of F/F(MSY)
+  # F_FMSY_max <- # maximum value of F/F(MSY)
+  # B_BMSY_end_yr <- # value of B/B(MSY) at the end year
+  # F_FMSY_end_yr <- # value of F/F(MSY) at the end year
   # overfished_status_is_isnot <- # object that should be "is" or "is not" and answers the question, "the stock overfishing status ___ overfished"
   # overfishing_status_is_isnot <- # object that should be "is" or "is not" and answers the question, "the stock ___ experiencing overfishing"
   # kobe_start_year <- # start year of kobe plot
@@ -268,14 +268,14 @@ write_captions <- function(dat, # converted model output object
 
   ## estimated stock recruitment (aka spawning stock biomass)
   # youngest-age recruited fish (instead of age-0)
-  # est_stock_recruitment_age_min <- # unsure how to extract this
+  # sr_age_min <- # unsure how to extract this
 
   # ssb units (plural)
-  # est_stock_recruitment_ssb_units <- # this will take some thought, since
+  # sr_ssb_units <- # this will take some thought, since
   # spawning_biomass_label is entered by the user in plot_spawn_recruitment.R
 
   # minimum ssb
-  est_stock_recruitment_ssb_min <- dat |>
+  sr_ssb_min <- dat |>
   dplyr::filter(label == "spawning_biomass",
                 module_name == "TIME_SERIES" | module_name == "t.series",
                 !is.na(year),
@@ -292,7 +292,7 @@ write_captions <- function(dat, # converted model output object
     as.numeric()
 
   # maximum ssb
-  est_stock_recruitment_ssb_max <- dat |>
+  sr_ssb_max <- dat |>
     dplyr::filter(label == "spawning_biomass",
                   module_name == "TIME_SERIES" | module_name == "t.series",
                   !is.na(year),
@@ -309,11 +309,11 @@ write_captions <- function(dat, # converted model output object
     as.numeric()
 
   # recruitment units (plural)
-  # est_stock_recruitment_units <- # this will take some thought, since recruitment_label
+  # sr_units <- # this will take some thought, since recruitment_label
   # is entered by the user in plot_spawn_recruitment.R
 
   # minimum recruitment
-  est_stock_recruitment_min <- dat |>
+  sr_min <- dat |>
   dplyr::filter(label == "recruitment",
                 module_name == "TIME_SERIES" | module_name == "t.series",
                 !is.na(year),
@@ -330,7 +330,7 @@ write_captions <- function(dat, # converted model output object
     as.numeric()
 
   # maximum recruitment
-  est_stock_recruitment_max <- dat |>
+  sr_max <- dat |>
     dplyr::filter(label == "recruitment",
                   module_name == "TIME_SERIES" | module_name == "t.series",
                   !is.na(year),
@@ -374,10 +374,10 @@ write_captions <- function(dat, # converted model output object
     # either entered by the user or calculated in plot_recruitment.R
 
   # minimum recruitment
-  recruitment_min <- est_stock_recruitment_min
+  recruitment_min <- sr_min
 
   # maximum recruitment
-  recruitment_max <- est_stock_recruitment_max
+  recruitment_max <- sr_max
 
 
   ## recruitment deviations

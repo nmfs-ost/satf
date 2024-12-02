@@ -30,7 +30,7 @@ plot_recruitment_deviations <- function (
                   is.na(sex) | length(unique(sex)) <= 1,
                   is.na(area) | length(unique(area)) <= 1,
                   is.na(growth_pattern) | length(unique(growth_pattern)) <= 1,
-                  year != "S/Rcurve" | year != "Init" | year != "Virg",
+                  !year %in% year_exclusions,
                   year <= end_year
     ) |> # SS3 and BAM target module names
     dplyr::mutate(estimate = as.numeric(estimate),

@@ -62,5 +62,5 @@ export_rda <- function(plt_fin = plt_fin,
   save(rda,
        file = file.path(rda_dir,
                         "rda_files",
-                        paste0(topic_label, "_rda.rda")))
+                        paste0(topic_label, "_", fig_or_table, ".rda")))
 }

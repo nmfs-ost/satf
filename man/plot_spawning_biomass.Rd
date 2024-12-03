@@ -11,7 +11,9 @@ plot_spawning_biomass(
   ref_line = c("target", "unfished", "msy"),
   end_year = NULL,
   relative = FALSE,
-  n_projected_years = 10
+  n_projected_years = 10,
+  make_rda = FALSE,
+  rda_dir = getwd()
 )
 }
 \arguments{
@@ -37,6 +39,10 @@ which reference point to use.}
 
 \item{n_projected_years}{Number of years spawning biomass is projected for.
 By default this number is set to 10}
+
+\item{rda_dir}{The location of the folder containing the generated .rda files
+("rda_files") that will be created if the argument `export_rda` = TRUE.
+Default is the working directory.}
 }
 \value{
 Plot spawning biomass from the results of an assessment model translated to

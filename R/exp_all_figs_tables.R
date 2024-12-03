@@ -63,7 +63,9 @@ exp_all_figs_tables <- function(
                          n_projected_years,
                          relative,
                          make_rda,
-                         rda_dir)
+                         rda_dir) |> suppressWarnings() |> invisible()
+
+  message("Exported plot_recruitment")
 
   satf::plot_biomass(dat,
                      unit_label,
@@ -72,25 +74,33 @@ exp_all_figs_tables <- function(
                      end_year,
                      relative,
                      make_rda,
-                     rda_dir)
+                     rda_dir) |> suppressWarnings() |> invisible()
+
+  message("Exported plot_biomass")
 
   satf::plot_landings(dat,
                       unit_label,
                       make_rda,
-                      rda_dir)
+                      rda_dir) |> suppressWarnings() |> invisible()
+
+  message("Exported plot_landings")
 
   satf::plot_recruitment_deviations(dat,
                                     end_year,
                                     n_projected_years,
                                     make_rda,
-                                    rda_dir)
+                                    rda_dir) |> suppressWarnings() |> invisible()
+
+  message("Exported plot_recruitment_deviations")
 
   satf::plot_spawn_recruitment(dat,
                          spawning_biomass_label,
                          recruitment_label,
                          end_year,
                          make_rda,
-                         rda_dir)
+                         rda_dir) |> suppressWarnings() |> invisible()
+
+  message("Exported plot_spawn_recruitment")
 
   satf::plot_spawning_biomass(dat,
                               unit_label,
@@ -100,18 +110,24 @@ exp_all_figs_tables <- function(
                               relative,
                               n_projected_years,
                               make_rda,
-                              rda_dir)
+                              rda_dir) |>
+ #   suppressWarnings() |>
+    invisible()
+
+  message("Exported plot_spawning_biomass")
 
   # tables
 
   # uncomment when this is working properly
   # table_indices(dat,
   #               make_rda,
-  #               rda_dir)
-
+  #               rda_dir) |> suppressWarnings() |> invisible()
+  #
+  # message("Exported table_indices")
+  #
   # undeveloped tables - add arguments after more development
-  # table_afsc_tier()
-  # table_bnc()
-  # table_harvest_projection()
+  # table_afsc_tier() |> suppressWarnings() |> invisible()
+  # table_bnc() |> suppressWarnings() |> invisible()
+  # table_harvest_projection() |> suppressWarnings() |> invisible()
 
 }

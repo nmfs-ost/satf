@@ -9,12 +9,12 @@
 #' @param relative A logical value specifying if the resulting figures should
 #'   be relative spawning biomass. The default is `FALSE`. `ref_line` indicates
 #'   which reference point to use.
-#' @param export_rda TRUE/FALSE; indicate whether to produce an .rda file containing
+#' @param make_rda TRUE/FALSE; indicate whether to produce an .rda file containing
 #' a list with the figure/table, caption, and alternative text (if figure). If TRUE,
 #' the .rda will be exported to the folder indicated in the argument "rda_dir".
 #' Default is FALSE.
 #' @param rda_dir The location of the folder containing the generated .rda files
-#' ("rda_files") that will be created if the argument `export_rda` = TRUE.
+#' ("rda_files") that will be created if the argument `make_rda` = TRUE.
 #' Default is the working directory.
 #' @return Plot recruitment over time from an assessment model output file
 #' translated to a standardized output. There are options to return a {ggplot2}

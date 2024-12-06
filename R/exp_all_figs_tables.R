@@ -12,7 +12,6 @@
 #' @return
 #'
 #' @export
-#' Rda files (if make_rda = TRUE) for each figure/table.
 #'
 #' @examples
 #' \dontrun{

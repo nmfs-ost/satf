@@ -55,12 +55,12 @@ export_rda <- function(plt_fin = plt_fin,
   }
 
   # check if an rda_files folder already exists; if not, make one
-  if (!dir.exists(file.path(rda_dir, "rda_files"))) {
-    dir.create(file.path(rda_dir, "rda_files"))
+  if (!dir.exists(fs::path(rda_dir, "rda_files"))) {
+    dir.create(fs::path(rda_dir, "rda_files"))
   }
 
   save(rda,
-       file = file.path(rda_dir,
+       file = fs::path(rda_dir,
                         "rda_files",
                         paste0(topic_label, "_", fig_or_table, ".rda")))
 }

@@ -35,8 +35,13 @@ By default this number is set to 10}
 be relative spawning biomass. The default is `FALSE`. `ref_line` indicates
 which reference point to use.}
 
+\item{make_rda}{TRUE/FALSE; indicate whether to produce an .rda file containing
+a list with the figure/table, caption, and alternative text (if figure). If TRUE,
+the .rda will be exported to the folder indicated in the argument "rda_dir".
+Default is FALSE.}
+
 \item{rda_dir}{The location of the folder containing the generated .rda files
-("rda_files") that will be created if the argument `export_rda` = TRUE.
+("rda_files") that will be created if the argument `make_rda` = TRUE.
 Default is the working directory.}
 
 \item{ref_line}{@inheritParams plot_biomass}
@@ -49,8 +54,14 @@ Default is the working directory.}
 applied to plot_spawning_biomass.}
 }
 \value{
-Rda files for each figure/table.
+Rda files (if make_rda = TRUE) for each figure/table.
 }
 \description{
-Export all figures in tables within one function.
+Export all figures and tables to Rda files within one function.
+}
+\examples{
+\dontrun{
+exp_all_figs_tables(dat, ref_line = "unfished",
+ref_line_sb = "target", make_rda = TRUE)
+}
 }

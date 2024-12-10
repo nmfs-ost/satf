@@ -9,10 +9,9 @@
 #' @param ref_line_sb Identical definition as `ref_line`, but this argument is
 #' applied to plot_spawning_biomass.
 #'
-#' @return
+#' @return Rda files (if make_rda = TRUE) for each figure/table.
 #'
 #' @export
-#' Rda files (if make_rda = TRUE) for each figure/table.
 #'
 #' @examples
 #' \dontrun{

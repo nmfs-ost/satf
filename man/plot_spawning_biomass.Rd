@@ -40,8 +40,13 @@ which reference point to use.}
 \item{n_projected_years}{Number of years spawning biomass is projected for.
 By default this number is set to 10}
 
+\item{make_rda}{TRUE/FALSE; indicate whether to produce an .rda file containing
+a list with the figure/table, caption, and alternative text (if figure). If TRUE,
+the .rda will be exported to the folder indicated in the argument "rda_dir".
+Default is FALSE.}
+
 \item{rda_dir}{The location of the folder containing the generated .rda files
-("rda_files") that will be created if the argument `export_rda` = TRUE.
+("rda_files") that will be created if the argument `make_rda` = TRUE.
 Default is the working directory.}
 }
 \value{

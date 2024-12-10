@@ -53,9 +53,11 @@ Default is the working directory.}
 \item{ref_line_sb}{Identical definition as `ref_line`, but this argument is
 applied to plot_spawning_biomass.}
 }
+                                                             
 \value{
 Rda files (if make_rda = TRUE) for each figure/table.
 }
+
 \description{
 Export all figures and tables to Rda files within one function.
 }

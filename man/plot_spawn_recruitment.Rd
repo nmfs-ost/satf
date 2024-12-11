@@ -13,11 +13,27 @@ plot_spawn_recruitment(
   rda_dir = getwd()
 )
 }
+\arguments{
+\item{dat}{A data frame returned from `asar::convert_output()`.}
+
+\item{spawning_biomass_label}{Units for spawning biomass}
+
+\item{recruitment_label}{units for recruitment}
+
+\item{end_year}{last year of assessment}
+
+\item{make_rda}{TRUE/FALSE; indicate whether to produce an .rda file containing
+a list with the figure/table, caption, and alternative text (if figure). If TRUE,
+the .rda will be exported to the folder indicated in the argument "rda_dir".
+Default is FALSE.}
+
+\item{rda_dir}{The location of the folder containing the generated .rda files
+("rda_files") that will be created if the argument `make_rda` = TRUE.
+Default is the working directory.}
+}
 \value{
 Plot spawning recruitment relationship from a standardized output file originating from asar::convert_output()
 }
 \description{
-@inheritParams plot_recruitment
- @param spawning_biomass_label Units for spawning biomass
- @param recruitment_label units for recruitment
+Plot Spawn-Recruit Curve
 }

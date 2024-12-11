@@ -1,6 +1,6 @@
 #' Plot Recruitment Deviations
 #'
-#'  @inheritParams plot_recruitment
+#' @inheritParams plot_recruitment
 #'
 #' @return Plot recruitment deviations relative to one over time from an
 #' assessment model output file translated to a standardized output. There are

@@ -106,7 +106,12 @@ plot_recruitment <- function(
   # export figure to rda if argument = T
   if (make_rda == TRUE){
     # create plot-specific variables to use throughout fxn for naming and IDing
-    topic_label <- "recruitment"
+      # Indicate if recruitment is relative or not
+      if (relative) {
+          topic_label <- "relative_recruitment"
+      } else {
+          topic_label <- "recruitment"
+      }
 
     # identify output
     fig_or_table <- "figure"

@@ -28,7 +28,6 @@ exp_all_figs_tables <- function(
   end_year = NULL,
   n_projected_years = 10,
   relative = FALSE,
-  make_rda = FALSE,
   rda_dir = getwd(),
 
   # imported from plot_biomass
@@ -52,6 +51,8 @@ exp_all_figs_tables <- function(
   # imported from table_indices- zero unique arguments
 
 ) {
+
+  make_rda = TRUE
 
   # figures
 

@@ -26,9 +26,6 @@ write_captions <- function(dat, # converted model output object
 
   # extract key quantities (these are examples and are not accurate)
   # REMINDER: the variable names must exactly match those in the captions/alt text csv.
-  #
-  # This start_year was written previously. Is it usable for any plots, below?
-  # start_year <- min(as.numeric(dat$year[dat$year!="S/Rcurve" | dat$year!="Virg" | dat$year!="Init"]), na.rm = TRUE)
 
   # FIGURES-----
 
@@ -89,6 +86,11 @@ write_captions <- function(dat, # converted model output object
     dplyr::select(estimate) |>
     as.numeric()
 
+  # R0
+  R0 <- dat |>
+    dplyr::filter(grepl('R0', label) | grepl('recruitment_virgin', label)) |>
+    dplyr::pull(estimate)
+
   # Bend <-
   # Btarg <-
   # Bmsy <-
@@ -101,11 +103,6 @@ write_captions <- function(dat, # converted model output object
   # F_units <- # units of F (plural)
   # F_min <- # minimum F
   # F_max <- # maximum F
-  # NOTE: SB added the [1] so one number would be assigned to Fend; otherwise,
-  # this breaks because Fend = hundreds of numbers
-  Fend_df <- dat |>
-    dplyr::filter(label == "fishing_mortality" & year == year | label == "F_terminal")
-  Fend <- as.numeric(Fend_df$estimate)[1]
   # Ftarg <-
   # F_Ftarg <-
 
@@ -560,6 +557,7 @@ write_captions <- function(dat, # converted model output object
 
 
   # make list with all placeholders
+  # uncomment placeholders once uncommented, above
   patterns_replacements <- list(
     # FIGURES-----
 
@@ -583,6 +581,7 @@ write_captions <- function(dat, # converted model output object
    # 'B_units' = B_units,
    'B_min' = B_min,
    'B_max' = B_max,
+   'R0' = R0,
    # 'Bend' = Bend,
    # 'Btarg' = Btarg,
    # 'Bmsy' = Bmsy,
@@ -595,7 +594,6 @@ write_captions <- function(dat, # converted model output object
    # 'F_units' = F_units,
    # 'F_min' = F_min,
    # 'F_max' = F_max,
-    'Fend' = Fend,
    # 'Ftarg' = Ftarg,
    # 'F_Ftarg' = F_Ftarg,
 
@@ -800,22 +798,6 @@ write_captions <- function(dat, # converted model output object
       }
       .
     }))
-
-  # caps_alttext_subbed <- caps_alttext |>
-  #   dplyr::mutate_if(is.character,
-  #                  stringr::str_replace_all,
-  #                  pattern = c("Fend"),
-  #                  replacement = c(as.character(Fend))) |>
-  #   dplyr::mutate_if(is.character,
-  #                    stringr::str_replace_all,
-  #                    pattern = c("B_min"),
-  #                    replacement = c(as.character(B_min))) |>
-  #   dplyr::mutate_if(is.character,
-  #                    stringr::str_replace_all,
-  #                    pattern = c("B_max"),
-  #                    replacement = c(as.character(B_max)))
-
-
 
   # export df with substituted captions and alt text to csv
  utils::write.csv(x = caps_alttext_subbed,

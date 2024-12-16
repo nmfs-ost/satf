@@ -42,8 +42,8 @@ write_captions <- function(dat, # converted model output object
   # kobe_end_year <- # end year of kobe plot
 
   ## Biomass plot
-  # B_ref_pt <- # biomass reference point
-  # B_ref_pt_unit <- # biomass reference point unit
+  # B_ref_pt <- # biomass reference point- SHARED with kobe plot, above
+  # B_ref_pt_units <- # biomass reference point unit
 
   # start year of biomass plot
   B_start_year <- dat |>
@@ -97,7 +97,7 @@ write_captions <- function(dat, # converted model output object
 
   ## mortality (F) plot
   # F_ref_pt <- # F reference point
-  # F_ref_pt_unit <- # F reference point unit
+  # F_ref_pt_units <- # F reference point unit
   # F_start_year_ <- # start year of F plot
   # F_end_year <- # start year of F plot
   # F_units <- # units of F (plural)
@@ -575,7 +575,7 @@ write_captions <- function(dat, # converted model output object
 
     ## Biomass plot
    # 'B_ref_pt' = B_ref_pt,
-   # 'B_ref_pt_unit' = B_ref_pt_unit,
+   # 'B_ref_pt_units' = B_ref_pt_units,
    'B_start_year' = B_start_year,
    # 'B_end_year' = B_end_year,
    # 'B_units' = B_units,
@@ -588,7 +588,7 @@ write_captions <- function(dat, # converted model output object
 
     ## mortality (F) plot
    # 'F_ref_pt' = F_ref_pt,
-   # 'F_ref_pt_unit' = F_ref_pt_unit,
+   # 'F_ref_pt_units' = F_ref_pt_units,
    # 'F_start_year' = F_start_year,
    # 'F_end_year' = F_end_year,
    # 'F_units' = F_units,
@@ -770,7 +770,6 @@ write_captions <- function(dat, # converted model output object
    # 'tot_catch' = tot_catch,
    # 'M' = M,
    # 'steep' = steep,
-   # 'R0' = R0,
    # 'SBmsy' = SBmsy,
    # 'fSB' = fSB,
    # 'sbtarg' = sbtarg,

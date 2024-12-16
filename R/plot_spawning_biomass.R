@@ -11,6 +11,10 @@
 #'   lower-case letters but you must use one of the options specified in the
 #'   default list to ensure that the label on the figure looks correct
 #'   regardless of how it is specified in `dat`.
+#' @param ref_point A known value of the reference point along with the label
+#'   for the reference point as specified in the output file. Please use this
+#'   option if the ref_line cannot find your desired point. Indicate the
+#'   reference point in the form c("label" = value).
 #' @return
 #' Plot spawning biomass from the results of an assessment model translated to
 #' the standard output. The {ggplot2} object is returned for further
@@ -22,13 +26,20 @@ plot_spawning_biomass <- function(
   unit_label = "metric ton",
   scale_amount = 1,
   ref_line = c("target", "unfished", "msy"),
+  ref_point = NULL,
   end_year = NULL,
   relative = FALSE,
   n_projected_years = 10,
   make_rda = FALSE,
   rda_dir = getwd()
 ) {
-  ref_line <- match.arg(ref_line)
+  if (!is.null(ref_point)) {
+    ref_line <- names(ref_point)
+  } else if(length(ref_line)>1){
+    ref_line <- "target"
+  } else {
+    ref_line <- match.arg(ref_line, several.ok = FALSE)
+  }
   # TODO: Fix the unit label if scaling. Maybe this is up to the user to do if
   #       they want something scaled then they have to supply a better unit name
   #       or we create a helper function to do this.
@@ -49,22 +60,44 @@ plot_spawning_biomass <- function(
   # Select value for reference line and label
   # TODO: add case if ref_line not indicated or hard to find - find one of the
   # options and set as ref_line
-  ref_line_val <- as.numeric(dat[
-    grep(
-      pattern = glue::glue("^spawning_biomass.*{tolower(ref_line)}"),
-      x = dat[["label"]]
-    ),
-    "estimate"
-  ])
+  if (!is.null(ref_point)) {
+    ref_line_val <- as.numeric(ref_point)
+  } else {
+    if ( inherits( try( solve(as.numeric(dat[
+      grep(
+        pattern = glue::glue("^spawning_biomass.*{tolower(ref_line)}$"),
+        x = dat[["label"]]
+      ),
+      "estimate"
+    ])), silent = TRUE), "try-error")) {
+      ref_line_val <- NULL
+    } else {
+      ref_line_val <- as.numeric(dat[
+        grep(
+          pattern = glue::glue("^spawning_biomass.*{tolower(ref_line)}$"),
+          x = dat[["label"]]
+        ),
+        "estimate"
+      ])
+    }
+    # ref_line_val <- as.numeric(dat[
+    #   grep(
+    #     pattern = glue::glue("^biomass.*{tolower(ref_line)}$"),
+    #     x = dat[["label"]]
+    #   ),
+    #   "estimate"
+    # ])
+  }
   if (length(ref_line_val) == 0) {
-    stop(glue::glue(
+    warning(glue::glue(
       "The resulting reference value of `spawning_biomass_{ref_line}` was
       not found in `dat[[\"label\"]]`."
     ))
-  } else if (length(ref_line_val > 1)) {
+    warning("Reference line will not be plotted on the figure.")
+  } else if (length(ref_line_val) > 1) {
     warning(glue::glue(
-      "More than one of the resulting reference value of `spawning_biomass_{ref_line}` was
-      not in `dat[[\"label\"]]`."
+      "More than one of the resulting reference value of 'spawing_biomass_{ref_line}` was
+      not in `dat[[\"label\"]]`. \n Both reference points will be plotted on the figure."
     ))
   }
   sb <- dat |>
@@ -99,10 +132,7 @@ plot_spawning_biomass <- function(
       ),
       linewidth = 1
     ) +
-    ggplot2::geom_hline(
-      yintercept = ref_line_val / ifelse(relative, ref_line_val, scale_amount),
-      linetype = 2
-    ) +
+    {if(!is.null(ref_line_val)) ggplot2::geom_hline(yintercept = ref_line_val / ifelse(relative, ref_line_val, scale_amount),linetype = 2)} +
     # Only add confidence intervals for the non NA estimates
     # which allows for no warnings if uncertainty = NA
     ggplot2::geom_ribbon(

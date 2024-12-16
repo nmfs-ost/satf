@@ -1,12 +1,57 @@
-table_bnc <- function(dat,
-                      model) {
-    if (model == "standard"){
+table_bnc <- function(
+    dat,
+    unit_label,
+    alt_label
+    ) {
 
-    } else if (tolower(model) == "ss3") {
+  biomass <- dat |>
+    dplyr::filter(
+      # SS3 params
+      label == "biomass",
+      !is.na(year),
+      module_name %in% c("TIME_SERIES","t.series"),
+      is.na(fleet), is.na(sex), is.na(area), is.na(growth_pattern),
+      module_name != "DERIVED_QUANTITIES"
+    ) |>
+    dplyr::rename(biomass = estimate) |>
+    dplyr::select(year, biomass)
 
-    } else if (tolower(model) == "bam") {
+  if (length(unique(biomass$year)) != nrow(biomass)){
+    stop("Duplicate years found in biomass df.")
+  }
 
-    }
+  catch <- dat |>
+    dplyr::filter(
+      # SS3 params
+      grepl("catch", label),
+      !is.na(year),
+      # module_name %in% c("TIME_SERIES","t.series"),
+      # is.na(fleet), is.na(sex), is.na(area), is.na(growth_pattern),
+      module_name != "DERIVED_QUANTITIES"
+    )
+  # Check if df is by age and summarize to time series
+  if (any(grepl("at_age", tolower(catch$module_name)))) {
+    catch <- catch |>
+      dplyr::group_by(year) |>
+      dplyr::summarise(total_catch = sum(estimate))
+  }
+
+  abundance <- dat |>
+    dplyr::filter(
+      # SS3 params
+      grepl("mature_abundance", label), # | statement for BAM label
+      !is.na(year),
+      module_name %in% c("TIME_SERIES","t.series"),
+      # is.na(fleet), is.na(sex), is.na(area), is.na(growth_pattern),
+      module_name != "DERIVED_QUANTITIES"
+    ) |>
+    dplyr::rename(abundance = estimate) |>
+    dplyr::select(year, abundance)
+
+  # Bring together quantities for table
+  bnc <- biomass |>
+    dplyr::left_join(abundance, by = "year") |>
+    dplyr::left_join(catch, by = "year")
 
   # identify output
   fig_or_table <- "table"

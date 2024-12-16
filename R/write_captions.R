@@ -24,8 +24,10 @@ write_captions <- function(dat, # converted model output object
     system.file("resources", "captions_alt_text_template.csv", package = "satf")
   )
 
-  # extract key quantities (these are examples and are not accurate)
-  # REMINDER: the variable names must exactly match those in the captions/alt text csv.
+  # extract key quantities
+  # REMINDERS:
+  # -the variable names must exactly match those in the captions/alt text csv.
+  # -quantities should be rounded to the nearest whole number.
 
   # FIGURES-----
 
@@ -73,7 +75,8 @@ write_captions <- function(dat, # converted model output object
     dplyr::mutate(estimate = as.numeric(estimate)) |>
     dplyr::slice(which.min(estimate)) |>
     dplyr::select(estimate) |>
-    as.numeric()
+    as.numeric() |>
+    round(digits = 0)
 
   # maximum B
   B_max <- dat |>
@@ -84,16 +87,37 @@ write_captions <- function(dat, # converted model output object
     dplyr::mutate(estimate = as.numeric(estimate)) |>
     dplyr::slice(which.max(estimate)) |>
     dplyr::select(estimate) |>
-    as.numeric()
+    as.numeric() |>
+    round(digits = 0)
 
   # R0
   R0 <- dat |>
     dplyr::filter(grepl('R0', label) | grepl('recruitment_virgin', label)) |>
-    dplyr::pull(estimate)
+    dplyr::pull(estimate) |>
+    as.numeric() |>
+    round(digits = 0)
 
   # Bend <-
-  # Btarg <-
+
+  # Target biomass
+  Btarg <- dat |>
+    dplyr::filter(c(grepl('biomass', label) & grepl('target', label) & estimate >1) | label == 'biomass_msy') |>
+    dplyr::pull(estimate) |>
+    as.numeric() |>
+    round(digits = 0)
+
   # Bmsy <-
+
+
+  ## relative B
+  # relative B min
+  rel_B_min <- (B_min / Btarg) |>
+    round(digits = 0)
+
+  # relative B max
+  rel_B_max <- (B_max / Btarg) |>
+    round(digits = 0)
+
 
   ## mortality (F) plot
   # F_ref_pt <- # F reference point
@@ -153,7 +177,8 @@ write_captions <- function(dat, # converted model output object
     ) |>
     dplyr::slice(which.min(estimate)) |>
     dplyr::select(estimate) |>
-    as.numeric()
+    as.numeric() |>
+    round(digits = 0)
 
   # maximum landings
   landings_max <- dat |>
@@ -168,7 +193,8 @@ write_captions <- function(dat, # converted model output object
     ) |>
     dplyr::slice(which.max(estimate)) |>
     dplyr::select(estimate) |>
-    as.numeric()
+    as.numeric() |>
+    round(digits = 0)
 
   ## natural mortality (M)
   # M_age_min <- # minimum age of M
@@ -286,7 +312,8 @@ write_captions <- function(dat, # converted model output object
                   year = as.numeric(year)) |>
     dplyr::slice(which.min(estimate)) |>
     dplyr::select(estimate) |>
-    as.numeric()
+    as.numeric() |>
+    round(digits = 0)
 
   # maximum ssb
   sr_ssb_max <- dat |>
@@ -303,7 +330,8 @@ write_captions <- function(dat, # converted model output object
                   year = as.numeric(year)) |>
     dplyr::slice(which.max(estimate)) |>
     dplyr::select(estimate) |>
-    as.numeric()
+    as.numeric() |>
+    round(digits = 0)
 
   # recruitment units (plural)
   # sr_units <- # this will take some thought, since recruitment_label
@@ -324,7 +352,8 @@ write_captions <- function(dat, # converted model output object
                   year = as.numeric(year)) |>
     dplyr::slice(which.min(estimate)) |>
     dplyr::select(estimate) |>
-    as.numeric()
+    as.numeric() |>
+    round(digits = 0)
 
   # maximum recruitment
   sr_max <- dat |>
@@ -341,7 +370,17 @@ write_captions <- function(dat, # converted model output object
                   year = as.numeric(year)) |>
     dplyr::slice(which.max(estimate)) |>
     dplyr::select(estimate) |>
-    as.numeric()
+    as.numeric() |>
+    round(digits = 0)
+
+  ## relative recruitment
+  # minimum relative recruitment
+  rel_recruitment_min <- (recruitment_min / R0) |>
+    round(digits = 0)
+
+  # maximum relative recruitment
+  rel_recruitment_max <- (recruitment_max / R0) |>
+    round(digits = 0)
 
 
   ## recruitment ts
@@ -375,7 +414,6 @@ write_captions <- function(dat, # converted model output object
 
   # maximum recruitment
   recruitment_max <- sr_max
-
 
   ## recruitment deviations
   # start year of recruitment deviations plot
@@ -414,7 +452,8 @@ write_captions <- function(dat, # converted model output object
                   year = as.numeric(year)) |>
     dplyr::slice(which.min(estimate)) |>
     dplyr::select(estimate) |>
-    as.numeric()
+    as.numeric() |>
+    round(digits = 0)
 
   # maximum recruitment deviation
   recruit_dev_max <- dat |>
@@ -429,7 +468,8 @@ write_captions <- function(dat, # converted model output object
     ) |> # SS3 and BAM target module names
     dplyr::slice(which.max(estimate)) |>
     dplyr::select(estimate) |>
-    as.numeric()
+    as.numeric() |>
+    round(digits = 0)
 
   ## tot_b (total biomass)
   # biomass_start_year <- # start year of biomass plot
@@ -452,7 +492,8 @@ write_captions <- function(dat, # converted model output object
       year = as.numeric(year)) |>
     dplyr::slice(which.min(year)) |>
     dplyr::select(year) |>
-    as.numeric()
+    as.numeric() |>
+    round(digits = 0)
 
   # end year of ssb plot
   # ssb_end_year <- # this will take some thought, since end_year is
@@ -473,7 +514,8 @@ write_captions <- function(dat, # converted model output object
       year = as.numeric(year)) |>
     dplyr::slice(which.min(estimate)) |>
     dplyr::select(estimate) |>
-    as.numeric()
+    as.numeric() |>
+    round(digits = 0)
 
   # maximum ssb
   ssb_max <- dat |>
@@ -486,7 +528,8 @@ write_captions <- function(dat, # converted model output object
       year = as.numeric(year)) |>
     dplyr::slice(which.max(estimate)) |>
     dplyr::select(estimate) |>
-    as.numeric()
+    as.numeric() |>
+    round(digits = 0)
 
   # ssb reference point
   # ssb_ref_pt <- # this will take some thought, since ref_line_val is
@@ -494,6 +537,21 @@ write_captions <- function(dat, # converted model output object
 
   # ssb reference point units
   # ssb_ref_pt_units <- ssb_units
+
+  ssbtarg <- dat |>
+    dplyr::filter(c(grepl('spawning_biomass', label) & grepl('msy$', label) & estimate >1) | label == 'spawning_biomass_msy$') |>
+    dplyr::pull(estimate) |>
+    as.numeric() |>
+    round(digits = 0)
+
+  ## relative ssb
+  # relative ssb min
+  rel_ssb_min <- (ssb_min / ssbtarg) |>
+    round(digits = 0)
+
+  # relative ssb max
+  rel_ssb_max <- (ssb_max / ssbtarg) |>
+    round(digits = 0)
 
 
   ## spr (spawning potential ratio)
@@ -530,10 +588,8 @@ write_captions <- function(dat, # converted model output object
   # tot_catch <-
   # M <-
   # steep <-
-  # R0 <-
   # SBmsy <-
   # fSB <-
-  # sbtarg <-
 
   # TABLES-----
 
@@ -573,7 +629,12 @@ write_captions <- function(dat, # converted model output object
    # 'kobe_start_year' = kobe_start_year,
    # 'kobe_end_year' = kobe_end_year,
 
-    ## Biomass plot
+   ## Relative biomass plot
+   # NOTE: moving this above biomass so rel_B_min isn't changed to "rel_" + B_min (etc.)
+   'rel_B_min' = rel_B_min,
+   'rel_B_max' = rel_B_max,
+
+   ## Biomass plot
    # 'B_ref_pt' = B_ref_pt,
    # 'B_ref_pt_units' = B_ref_pt_units,
    'B_start_year' = B_start_year,
@@ -583,7 +644,7 @@ write_captions <- function(dat, # converted model output object
    'B_max' = B_max,
    'R0' = R0,
    # 'Bend' = Bend,
-   # 'Btarg' = Btarg,
+   'Btarg' = Btarg,
    # 'Bmsy' = Bmsy,
 
     ## mortality (F) plot
@@ -705,6 +766,12 @@ write_captions <- function(dat, # converted model output object
    'sr_min' = sr_min,
    'sr_max' = sr_max,
 
+   # relative recruitment ts
+   # NOTE: moving this above recruitment so rel_recruitment_min isn't changed
+   # to "rel_" + recruitment_min (etc.)
+   'rel_recruitment_min' = rel_recruitment_min,
+   'rel_recruitment_max' = rel_recruitment_max,
+
    ## recruitment ts
    # 'recruitment_units' = recruitment_units,
    'recruitment_start_year' = recruitment_start_year,
@@ -727,6 +794,12 @@ write_captions <- function(dat, # converted model output object
    # 'biomass_ref_pt' = biomass_ref_pt,
    # 'biomass_ref_pt_units' = biomass_ref_pt_units,
 
+   # relative ssb
+   # NOTE: moving this above recruitment so rel_ssb_min isn't changed to
+   # "rel_" + ssb_min, etc.
+   'rel_ssb_min' = rel_ssb_min,
+   'rel_ssb_max' = rel_ssb_max,
+
    ## spawning_biomass (ssb)
    'ssb_start_year' = ssb_start_year,
    # 'ssb_end_year' = ssb_end_year,
@@ -735,7 +808,9 @@ write_captions <- function(dat, # converted model output object
    'ssb_max' = ssb_max#,
    # 'ssb_ref_pt' = ssb_ref_pt,
    # 'ssb_ref_pt_units' = ssb_ref_pt_units,
-   #
+   # 'ssbtarg' = ssbtarg,
+
+
    # ## spr (spawning potential ratio)
    # 'spr_start_year' = spr_start_year,
    # 'spr_end_year' = spr_end_year,

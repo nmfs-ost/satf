@@ -76,7 +76,7 @@ write_captions <- function(dat, # converted model output object
     dplyr::slice(which.min(estimate)) |>
     dplyr::select(estimate) |>
     as.numeric() |>
-    round(digits = 0)
+    round(digits = 2)
 
   # maximum B
   B_max <- dat |>
@@ -88,14 +88,14 @@ write_captions <- function(dat, # converted model output object
     dplyr::slice(which.max(estimate)) |>
     dplyr::select(estimate) |>
     as.numeric() |>
-    round(digits = 0)
+    round(digits = 2)
 
   # R0
   R0 <- dat |>
     dplyr::filter(grepl('R0', label) | grepl('recruitment_virgin', label)) |>
     dplyr::pull(estimate) |>
     as.numeric() |>
-    round(digits = 0)
+    round(digits = 2)
 
   # Bend <-
 
@@ -104,7 +104,7 @@ write_captions <- function(dat, # converted model output object
     dplyr::filter(c(grepl('biomass', label) & grepl('target', label) & estimate >1) | label == 'biomass_msy') |>
     dplyr::pull(estimate) |>
     as.numeric() |>
-    round(digits = 0)
+    round(digits = 2)
 
   # Bmsy <-
 
@@ -112,11 +112,11 @@ write_captions <- function(dat, # converted model output object
   ## relative B
   # relative B min
   rel_B_min <- (B_min / Btarg) |>
-    round(digits = 0)
+    round(digits = 2)
 
   # relative B max
   rel_B_max <- (B_max / Btarg) |>
-    round(digits = 0)
+    round(digits = 2)
 
 
   ## mortality (F) plot
@@ -178,7 +178,7 @@ write_captions <- function(dat, # converted model output object
     dplyr::slice(which.min(estimate)) |>
     dplyr::select(estimate) |>
     as.numeric() |>
-    round(digits = 0)
+    round(digits = 2)
 
   # maximum landings
   landings_max <- dat |>
@@ -194,7 +194,7 @@ write_captions <- function(dat, # converted model output object
     dplyr::slice(which.max(estimate)) |>
     dplyr::select(estimate) |>
     as.numeric() |>
-    round(digits = 0)
+    round(digits = 2)
 
   ## natural mortality (M)
   # M_age_min <- # minimum age of M
@@ -313,7 +313,7 @@ write_captions <- function(dat, # converted model output object
     dplyr::slice(which.min(estimate)) |>
     dplyr::select(estimate) |>
     as.numeric() |>
-    round(digits = 0)
+    round(digits = 2)
 
   # maximum ssb
   sr_ssb_max <- dat |>
@@ -331,7 +331,7 @@ write_captions <- function(dat, # converted model output object
     dplyr::slice(which.max(estimate)) |>
     dplyr::select(estimate) |>
     as.numeric() |>
-    round(digits = 0)
+    round(digits = 2)
 
   # recruitment units (plural)
   # sr_units <- # this will take some thought, since recruitment_label
@@ -353,7 +353,7 @@ write_captions <- function(dat, # converted model output object
     dplyr::slice(which.min(estimate)) |>
     dplyr::select(estimate) |>
     as.numeric() |>
-    round(digits = 0)
+    round(digits = 2)
 
   # maximum recruitment
   sr_max <- dat |>
@@ -371,16 +371,16 @@ write_captions <- function(dat, # converted model output object
     dplyr::slice(which.max(estimate)) |>
     dplyr::select(estimate) |>
     as.numeric() |>
-    round(digits = 0)
+    round(digits = 2)
 
   ## relative recruitment
   # minimum relative recruitment
   rel_recruitment_min <- (recruitment_min / R0) |>
-    round(digits = 0)
+    round(digits = 2)
 
   # maximum relative recruitment
   rel_recruitment_max <- (recruitment_max / R0) |>
-    round(digits = 0)
+    round(digits = 2)
 
 
   ## recruitment ts
@@ -453,7 +453,7 @@ write_captions <- function(dat, # converted model output object
     dplyr::slice(which.min(estimate)) |>
     dplyr::select(estimate) |>
     as.numeric() |>
-    round(digits = 0)
+    round(digits = 2)
 
   # maximum recruitment deviation
   recruit_dev_max <- dat |>
@@ -469,7 +469,7 @@ write_captions <- function(dat, # converted model output object
     dplyr::slice(which.max(estimate)) |>
     dplyr::select(estimate) |>
     as.numeric() |>
-    round(digits = 0)
+    round(digits = 2)
 
   ## tot_b (total biomass)
   # biomass_start_year <- # start year of biomass plot
@@ -493,7 +493,7 @@ write_captions <- function(dat, # converted model output object
     dplyr::slice(which.min(year)) |>
     dplyr::select(year) |>
     as.numeric() |>
-    round(digits = 0)
+    round(digits = 2)
 
   # end year of ssb plot
   # ssb_end_year <- # this will take some thought, since end_year is
@@ -515,7 +515,7 @@ write_captions <- function(dat, # converted model output object
     dplyr::slice(which.min(estimate)) |>
     dplyr::select(estimate) |>
     as.numeric() |>
-    round(digits = 0)
+    round(digits = 2)
 
   # maximum ssb
   ssb_max <- dat |>
@@ -529,7 +529,7 @@ write_captions <- function(dat, # converted model output object
     dplyr::slice(which.max(estimate)) |>
     dplyr::select(estimate) |>
     as.numeric() |>
-    round(digits = 0)
+    round(digits = 2)
 
   # ssb reference point
   # ssb_ref_pt <- # this will take some thought, since ref_line_val is
@@ -542,16 +542,16 @@ write_captions <- function(dat, # converted model output object
     dplyr::filter(c(grepl('spawning_biomass', label) & grepl('msy$', label) & estimate >1) | label == 'spawning_biomass_msy$') |>
     dplyr::pull(estimate) |>
     as.numeric() |>
-    round(digits = 0)
+    round(digits = 2)
 
   ## relative ssb
   # relative ssb min
   rel_ssb_min <- (ssb_min / ssbtarg) |>
-    round(digits = 0)
+    round(digits = 2)
 
   # relative ssb max
   rel_ssb_max <- (ssb_max / ssbtarg) |>
-    round(digits = 0)
+    round(digits = 2)
 
 
   ## spr (spawning potential ratio)
@@ -864,6 +864,9 @@ write_captions <- function(dat, # converted model output object
    # 'catchability_fleet' = catchability_fleet
   )
 
+  # take the values associated with the quantities and replace the df's
+  # placeholders with them. For example, if ssb_min = 10, this will replace
+  # "the minimum ssb = ssb_min" with "the minimum ssb = 10".
   caps_alttext_subbed <- caps_alttext |>
     dplyr::mutate(across(where(is.character), ~{
       for (pattern in names(patterns_replacements)){
@@ -873,7 +876,7 @@ write_captions <- function(dat, # converted model output object
       .
     }))
 
-  # export df with substituted captions and alt text to csv
+  # export df with updated captions and alt text to csv
  utils::write.csv(x = caps_alttext_subbed,
             file = fs::path(dir,
                              "captions_alt_text.csv"),

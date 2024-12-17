@@ -1,13 +1,15 @@
-#' Title
+#' Biomass, abundance, and catch time series table
 #'
 #' @inheritParams plot_recruitment
 #' @param biomass_unit_label abbreviated units for biomass
 #' @param catch_unit_label abbreviated units for catch
 #'
-#' @return
+#' @return Create a table of biomass, abundance, and catch through all years of
+#' the assessment model output translated to a standard structure.There are
+#' options to return a {flextable} object or export an rda object containing
+#' associated caption for the table.
 #' @export
 #'
-#' @examples
 table_bnc <- function(
     dat,
     end_year = NULL,

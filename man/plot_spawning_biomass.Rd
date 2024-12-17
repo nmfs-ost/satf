@@ -9,6 +9,7 @@ plot_spawning_biomass(
   unit_label = "metric ton",
   scale_amount = 1,
   ref_line = c("target", "unfished", "msy"),
+  ref_point = NULL,
   end_year = NULL,
   relative = FALSE,
   n_projected_years = 10,
@@ -30,6 +31,11 @@ searching in `dat` is case agnostic and will work with either upper- or
 lower-case letters but you must use one of the options specified in the
 default list to ensure that the label on the figure looks correct
 regardless of how it is specified in `dat`.}
+
+\item{ref_point}{A known value of the reference point along with the label
+for the reference point as specified in the output file. Please use this
+option if the ref_line cannot find your desired point. Indicate the
+reference point in the form c("label" = value).}
 
 \item{end_year}{last year of assessment}
 

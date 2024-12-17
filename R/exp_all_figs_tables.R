@@ -9,8 +9,6 @@
 #' @param ref_line_sb Identical definition as `ref_line`, but this argument is
 #' applied to plot_spawning_biomass.
 #'
-#' @return
-#'
 #' @export
 #'
 #' @examples

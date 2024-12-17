@@ -9,6 +9,13 @@
 #' @param relative A logical value specifying if the resulting figures should
 #'   be relative spawning biomass. The default is `FALSE`. `ref_line` indicates
 #'   which reference point to use.
+#' @param make_rda TRUE/FALSE; indicate whether to produce an .rda file containing
+#' a list with the figure/table, caption, and alternative text (if figure). If TRUE,
+#' the .rda will be exported to the folder indicated in the argument "rda_dir".
+#' Default is FALSE.
+#' @param rda_dir The location of the folder containing the generated .rda files
+#' ("rda_files") that will be created if the argument `make_rda` = TRUE.
+#' Default is the working directory.
 #' @return Plot recruitment over time from an assessment model output file
 #' translated to a standardized output. There are options to return a {ggplot2}
 #' object or export an rda object containing associated caption and alternative
@@ -21,7 +28,9 @@ plot_recruitment <- function(
     scale_amount = 1,
     end_year = NULL,
     n_projected_years = 10,
-    relative = FALSE
+    relative = FALSE,
+    make_rda = FALSE,
+    rda_dir = getwd()
 ) {
   # Find R0
   R0 <- dat |>
@@ -45,7 +54,7 @@ plot_recruitment <- function(
                   is.na(sex) | length(unique(sex)) <= 1,
                   is.na(area) | length(unique(area)) <= 1,
                   is.na(growth_pattern) | length(unique(growth_pattern)) <= 1,
-                  year != "S/Rcurve" | year != "Init" | year != "Virg"
+                  !year %in% year_exclusions
     ) |> # SS3 and BAM target module names
     dplyr::mutate(estimate = as.numeric(estimate),
                   year = as.numeric(year),
@@ -94,35 +103,32 @@ plot_recruitment <- function(
 
   plt_fin <- suppressWarnings(add_theme(plt))
 
-  # create plot-specific variables to use throughout fxn for naming and IDing
-  topic_label <- "recruitment"
-
-  # identify output
-  fig_or_table <- "figure"
-
-  # run write_captions.R if its output doesn't exist
-  if (!file.exists(
-    fs::path(getwd(), "captions_alt_text.csv"))
-  ) {
-    satf::write_captions(dat = dat,
-                         dir = getwd(),
-                         year = end_year)
-  }
-
-  # extract this plot's caption and alt text
-  caps_alttext <- extract_caps_alttext(topic_label = topic_label,
-                                       fig_or_table = fig_or_table)
-
-
   # export figure to rda if argument = T
   if (make_rda == TRUE){
+    # create plot-specific variables to use throughout fxn for naming and IDing
+    topic_label <- "recruitment"
+
+    # identify output
+    fig_or_table <- "figure"
+
+    # run write_captions.R if its output doesn't exist
+    if (!file.exists(
+      fs::path(getwd(), "captions_alt_text.csv"))
+    ) {
+      satf::write_captions(dat = dat,
+                           dir = rda_dir,
+                           year = end_year)
+    }
+
+    # extract this plot's caption and alt text
+    caps_alttext <- extract_caps_alttext(topic_label = topic_label,
+                                         fig_or_table = fig_or_table)
 
     export_rda(plt_fin = plt_fin,
                caps_alttext = caps_alttext,
                rda_dir = rda_dir,
                topic_label = topic_label,
                fig_or_table = fig_or_table)
-
   }
   return(plt_fin)
 }

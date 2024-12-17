@@ -1,5 +1,24 @@
 # AFSC Tier Table
-afsc_tier_table <- function() {
+table_afsc_tier <- function() {
+
+  # REMINDERS: add in code that
+  # -adds make_rda and rda_dir as arguments
+  # -defines topic_label, fig_or_table; and
+  # -makes an rda if make_rda = TRUE
+  # (see table_indices.R for reference)
+  # for the rda-related fxns to work, the final table has to be called tab
+
+  # identify output
+  fig_or_table <- "table"
+
+  # run write_captions.R if its output doesn't exist
+  if (!file.exists(
+    fs::path(getwd(), "captions_alt_text.csv"))
+  ) {
+    satf::write_captions(dat = dat,
+                         dir = rda_dir,
+                         year = NULL)
+  }
   level <- c(
     "Level 1: Normal",
     "Level 2: Substantially Increased Concerns",

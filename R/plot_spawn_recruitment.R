@@ -11,7 +11,9 @@ plot_spawn_recruitment <- function(
     dat = NULL,
     spawning_biomass_label = "metric tons",
     recruitment_label = "metric tons",
-    end_year = NULL
+    end_year = NULL,
+    make_rda = FALSE,
+    rda_dir = getwd()
 ) {
   # Extract recruitment
   rec <- dat |>
@@ -22,7 +24,7 @@ plot_spawn_recruitment <- function(
                   is.na(sex) | length(unique(sex)) <= 1,
                   is.na(area) | length(unique(area)) <= 1,
                   is.na(growth_pattern) | length(unique(growth_pattern)) <= 1,
-                  year != "S/Rcurve" | year != "Init" | year != "Virg"
+                  !year %in% year_exclusions
     ) |> # SS3 and BAM target module names
     dplyr::mutate(estimate = as.numeric(estimate),
                   year = as.numeric(year)) |>
@@ -45,7 +47,7 @@ plot_spawn_recruitment <- function(
                   is.na(sex) | length(unique(sex)) <= 1,
                   is.na(area) | length(unique(area)) <= 1,
                   is.na(growth_pattern) | length(unique(growth_pattern)) <= 1,
-                  year != "S/Rcurve" | year != "Init" | year != "Virg"
+                  !year %in% year_exclusions
     ) |> # SS3 and BAM target module names
     dplyr::mutate(estimate = as.numeric(estimate),
                   year = as.numeric(year)) |>
@@ -61,5 +63,35 @@ plot_spawn_recruitment <- function(
     ggplot2::labs(x = glue::glue("Spawning Biomass ({spawning_biomass_label})"),
                   y = glue::glue("Recruitment ({recruitment_label})")) +
     ggplot2::theme(legend.position = "none")
-  suppressWarnings(add_theme(plt))
+
+  plt_fin <- suppressWarnings(add_theme(plt))
+
+  # export figure to rda if argument = T
+  if (make_rda == TRUE){
+    # create plot-specific variables to use throughout fxn for naming and IDing
+    topic_label <- "est_stock_recruitment"
+
+    # identify output
+    fig_or_table <- "figure"
+
+    # run write_captions.R if its output doesn't exist
+    if (!file.exists(
+      fs::path(getwd(), "captions_alt_text.csv"))
+    ) {
+      satf::write_captions(dat = dat,
+                           dir = rda_dir,
+                           year = end_year)
+    }
+
+    # extract this plot's caption and alt text
+    caps_alttext <- extract_caps_alttext(topic_label = topic_label,
+                                         fig_or_table = fig_or_table)
+
+    export_rda(plt_fin = plt_fin,
+               caps_alttext = caps_alttext,
+               rda_dir = rda_dir,
+               topic_label = topic_label,
+               fig_or_table = fig_or_table)
+  }
+  return(plt_fin)
 }

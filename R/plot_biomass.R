@@ -135,7 +135,15 @@ plot_biomass <- function(
       y = biomass_label) +
     ggplot2::scale_x_continuous(
       n.breaks = x_n_breaks,
-      guide = ggplot2::guide_axis(minor.ticks = TRUE))
+      guide = ggplot2::guide_axis(minor.ticks = TRUE)) +
+    +
+    ggplot2::annotate(
+      geom = "text",
+      x = end_year + 0.05,
+      y = ref_line_val / ifelse(relative, ref_line_val, scale_amount),
+      label = list(bquote(B[.(ref_line)])),
+      parse = TRUE
+    )
 
   plt_fin <- add_theme(plt)
 

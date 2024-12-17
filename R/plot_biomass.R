@@ -136,7 +136,6 @@ plot_biomass <- function(
     ggplot2::scale_x_continuous(
       n.breaks = x_n_breaks,
       guide = ggplot2::guide_axis(minor.ticks = TRUE)) +
-    +
     ggplot2::annotate(
       geom = "text",
       x = end_year + 0.05,

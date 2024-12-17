@@ -8,6 +8,10 @@
 #'   lower-case letters but you must use one of the options specified in the
 #'   default list to ensure that the label on the figure looks correct
 #'   regardless of how it is specified in `dat`.
+#' @param ref_point A known value of the reference point along with the label
+#'   for the reference point as specified in the output file. Please use this
+#'   option if the ref_line cannot find your desired point. Indicate the
+#'   reference point in the form c("label" = value).
 #' @return Plot total biomass from a stock assessment model as found in a NOAA
 #' stock assessment report. Units of total biomass can either be manually added
 #' or will be extracted from the provided file if possible. In later releases, model will not
@@ -18,14 +22,17 @@ plot_biomass <- function(
     unit_label = "metric tons",
     scale_amount = 1,
     ref_line = c("target", "MSY", "msy", "unfished"),
+    ref_point = NULL,
     end_year = NULL,
     relative = FALSE,
     make_rda = FALSE,
     rda_dir = getwd()
 ){
 
-  if(length(ref_line)>1){
-    ref_line = "target"
+  if (!is.null(ref_point)) {
+    ref_line <- names(ref_point)
+  } else if(length(ref_line)>1){
+    ref_line <- "target"
   } else {
     ref_line <- match.arg(ref_line, several.ok = FALSE)
   }
@@ -39,22 +46,45 @@ plot_biomass <- function(
   # Select value for reference line and label
   # update the target option later
   # TODO: add option to indicate the reference pt
-  ref_line_val <- as.numeric(dat[
-    grep(
-      pattern = glue::glue("^biomass.*{tolower(ref_line)}$"),
-      x = dat[["label"]]
-    ),
-    "estimate"
-  ])
+  if (!is.null(ref_point)) {
+    ref_line_val <- as.numeric(ref_point)
+  } else {
+    if ( inherits( try( solve(as.numeric(dat[
+      grep(
+        pattern = glue::glue("^biomass.*{tolower(ref_line)}$"),
+        x = dat[["label"]]
+      ),
+      "estimate"
+    ])), silent = TRUE), "try-error")) {
+      ref_line_val <- NULL
+    } else {
+      ref_line_val <- as.numeric(dat[
+        grep(
+          pattern = glue::glue("^biomass.*{tolower(ref_line)}$"),
+          x = dat[["label"]]
+        ),
+        "estimate"
+      ])
+    }
+    # ref_line_val <- as.numeric(dat[
+    #   grep(
+    #     pattern = glue::glue("^biomass.*{tolower(ref_line)}$"),
+    #     x = dat[["label"]]
+    #   ),
+    #   "estimate"
+    # ])
+  }
+
   if (length(ref_line_val) == 0) {
-    stop(glue::glue(
+    warning(glue::glue(
       "The resulting reference value of `biomass_{ref_line}` was
       not found in `dat[[\"label\"]]`."
     ))
+    warning("Reference line will not be plotted on the figure.")
   } else if (length(ref_line_val) > 1) {
     warning(glue::glue(
       "More than one of the resulting reference value of 'biomass_{ref_line}` was
-      not in `dat[[\"label\"]]`."
+      not in `dat[[\"label\"]]`. \n Both reference points will be plotted on the figure."
     ))
   }
 
@@ -99,15 +129,20 @@ plot_biomass <- function(
         ymax = estimate_upper),
       colour = "grey",
       alpha = 0.3) +
-    ggplot2::geom_hline(
-      yintercept = ref_line_val / ifelse(relative, ref_line_val, scale_amount),
-      linetype = 2) +
+    {if(!is.null(ref_line_val)) ggplot2::geom_hline(yintercept = ref_line_val / ifelse(relative, ref_line_val, scale_amount),linetype = 2)} +
     ggplot2::labs(
       x = "Year",
       y = biomass_label) +
     ggplot2::scale_x_continuous(
       n.breaks = x_n_breaks,
-      guide = ggplot2::guide_axis(minor.ticks = TRUE))
+      guide = ggplot2::guide_axis(minor.ticks = TRUE)) +
+    ggplot2::annotate(
+      geom = "text",
+      x = end_year + 0.05,
+      y = ref_line_val / ifelse(relative, ref_line_val, scale_amount),
+      label = list(bquote(B[.(ref_line)])),
+      parse = TRUE
+    )
 
   plt_fin <- add_theme(plt)
 

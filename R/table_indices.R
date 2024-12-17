@@ -25,6 +25,7 @@ table_indices <- function(dat,
   fig_or_table <- "table"
 
   # extract this plot's caption and alt text
+  # Is this needed for a table?
   caps_alttext <- extract_caps_alttext(topic_label = topic_label,
                                        fig_or_table = fig_or_table)
 
@@ -33,8 +34,8 @@ table_indices <- function(dat,
     dplyr::filter(module_name == "INDEX_2" | module_name == "t.series")
   # Check for U
   if (any(unique(output$module_name=="INDEX_2"))) {
-    output2 <- output |>
-      dplyr::filter(grepl("input_indices", label))
+    output <- output |>
+      dplyr::filter(grepl("expected_indices", label)) # grepl("input_indices", label) |
   } else if (any(unique(output$module_name=="t.series"))) {
     output <- output |>
       dplyr::filter(grepl("cpue", label))
@@ -45,17 +46,20 @@ table_indices <- function(dat,
   # re-structure df for table
   indices <- output |>
     tidyr::pivot_wider(
-      id_cols = unique(output$label),
-      names_from = fleet,
-      values_from = estimate
-    )
+      id_cols = year,
+      names_from = c(fleet, uncertainty_label),
+      values_from = c(estimate, uncertainty)
+    ) #|>
     # dplyr::rename(!!unique(output$label) := estimate,
     #               !!unique(output$uncertainty_label) := uncertainty) |>
-    tidyr::pivot_wider(
-      id_cols = -intersect(colnames(output), factors),
-      names_from = fleet,
-      values_from = c(unique(output$label), unique(output$uncertainty_label))
-    ) # stated internal error for tidyr and asks to report - try again monday
+    # tidyr::pivot_wider(
+    #   id_cols = -intersect(colnames(output), factors),
+    #   names_from = fleet,
+    #   values_from = c(unique(output$label), unique(output$uncertainty_label))
+    # ) # stated internal error for tidyr and asks to report
+    # dplyr::mutate(
+    #   ind_[0-9+] = paste()
+    # )
 
   return(tab)
 }

@@ -119,6 +119,9 @@ table_bnc <- function(
   # add theming to final table
   tab_fin <- suppressWarnings(add_theme(bnc))
 
+  # TODO: Needs check as of 18dec2024
+  # export figure to rda if argument = T
+  if (make_rda == TRUE){
   # create plot-specific variables to use throughout fxn for naming and IDing
   topic_label <- "bnc"
 
@@ -145,16 +148,11 @@ table_bnc <- function(
   # caps_alttext <- extract_caps_alttext(topic_label = topic_label,
   #                                      fig_or_table = fig_or_table)
 
-
-  # export figure to rda if argument = T
-  if (make_rda == TRUE){
-
     export_rda(plt_fin = plt_fin,
                # caps_alttext = caps_alttext,
                rda_dir = rda_dir,
                topic_label = topic_label,
                fig_or_table = fig_or_table)
-
   }
   # Return finished table
   tab_fin

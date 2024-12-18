@@ -50,7 +50,7 @@ export_rda <- function(plt_fin = plt_fin,
                 "alt_text" = caps_alttext[[2]])
     # make rda for tables
   } else if (fig_or_table == "table"){
-    rda <- list("table" = tab,
+    rda <- list("table" = tab_fin,
                 "cap" = caps_alttext[[1]])
   }
 

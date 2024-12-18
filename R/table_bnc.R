@@ -15,7 +15,8 @@ table_bnc <- function(
     end_year = NULL,
     biomass_unit_label = "mt",
     catch_unit_label = "mt",
-    make_rda = NULL
+    make_rda = FALSE,
+    rda_dir = getwd()
     ) {
 
   biomass_label <- glue::glue("Biomass ({biomass_unit_label})")
@@ -36,7 +37,7 @@ table_bnc <- function(
       is.na(fleet), is.na(sex), is.na(area), is.na(growth_pattern),
       module_name != "DERIVED_QUANTITIES"
     ) |>
-    dplyr::mutate(estimate = round(estimate, digits = 2)) |>
+    dplyr::mutate(estimate = round(as.numeric(estimate), digits = 2)) |>
     dplyr::rename(biomass = estimate) |>
     dplyr::select(year, biomass)
 
@@ -53,7 +54,7 @@ table_bnc <- function(
       # is.na(fleet), is.na(sex), is.na(area), is.na(growth_pattern),
       module_name != "DERIVED_QUANTITIES"
     ) |>
-    dplyr::mutate(estimate = round(estimate, digits = 2))
+    dplyr::mutate(estimate = round(as.numeric(estimate), digits = 2))
   # Check if df is by age and summarize to time series
   if (length(unique(catch$year)) == nrow(catch)) {
     catch <- catch |>
@@ -89,11 +90,11 @@ table_bnc <- function(
   if(length(unique(abundance$year) != nrow(abundance))) {
     abundance <- abundance |>
       dplyr::group_by(year) |>
-      dplyr::summarise(estimate = sum(estimate))
+      dplyr::summarise(estimate = sum(as.numeric(estimate)))
   }
 
   abundance <- abundance |>
-    dplyr::mutate(estimate = round(estimate, digits = 0)) |>
+    dplyr::mutate(estimate = round(as.numeric(estimate), digits = 0)) |>
     dplyr::rename(abundance = estimate) |>
     dplyr::select(year, abundance)
 
@@ -119,11 +120,10 @@ table_bnc <- function(
   # add theming to final table
   tab_fin <- suppressWarnings(add_theme(bnc))
 
-  # TODO: Needs check as of 18dec2024
   # export figure to rda if argument = T
   if (make_rda == TRUE){
   # create plot-specific variables to use throughout fxn for naming and IDing
-  topic_label <- "bnc"
+  topic_label <- "B.div.N"
 
   # identify output
   fig_or_table <- "table"
@@ -137,23 +137,16 @@ table_bnc <- function(
                          year = NULL)
   }
 
-  # TODO: add in code that
-  # -adds make_rda and rda_dir as arguments
-  # -defines topic_label, fig_or_table; and
-  # -makes an rda if make_rda = TRUE
-  # (see table_indices.R for reference)
-  # for the rda-related fxns to work, the final table has to be called tab
-
   # extract this plot's caption and alt text
-  # caps_alttext <- extract_caps_alttext(topic_label = topic_label,
-  #                                      fig_or_table = fig_or_table)
+  caps_alttext <- extract_caps_alttext(topic_label = topic_label,
+                                       fig_or_table = fig_or_table)
 
-    export_rda(plt_fin = plt_fin,
-               # caps_alttext = caps_alttext,
+  export_rda(plt_fin = tab_fin,
+               caps_alttext = caps_alttext,
                rda_dir = rda_dir,
                topic_label = topic_label,
                fig_or_table = fig_or_table)
   }
   # Return finished table
-  tab_fin
+  return(tab_fin)
 }

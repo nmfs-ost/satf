@@ -57,10 +57,15 @@ plot_landings <- function(dat,
       ggplot2::aes(
         x = year,
         y = estimate,
-        fill = fleet)) #+
+        fill = fleet)) +
     # ggplot2::facet_wrap(~label)
   # Apply std NOAA theme
   # add_theme(plt)
+    ggplot2::labs(
+      x = "Year",
+      y = land_label,
+      fill = "Fleet"
+    )
 
   plt_fin <- suppressWarnings(add_theme(plt))
 
@@ -85,7 +90,6 @@ plot_landings <- function(dat,
 
   # export figure to rda if argument = T
   if (make_rda == TRUE){
-
     export_rda(plt_fin = plt_fin,
                caps_alttext = caps_alttext,
                rda_dir = rda_dir,

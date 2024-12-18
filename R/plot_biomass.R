@@ -141,8 +141,19 @@ plot_biomass <- function(
       x = end_year + 0.05,
       y = ref_line_val / ifelse(relative, ref_line_val, scale_amount),
       label = list(bquote(B[.(ref_line)])),
-      parse = TRUE
+      parse = TRUE,
+      fill = "white"
     )
+    # ggtext::geom_richtext(
+    #   ggplot2::aes(
+    #     x = end_year,
+    #     y = ref_line_val / ifelse(relative, ref_line_val, scale_amount)
+    #     ),
+    #   nudge_x = 0.05,
+    #   nudge_y = 10,
+    #   label.padding = 0.5,
+    #   label.margin = 3
+    # )
 
   plt_fin <- add_theme(plt)
 

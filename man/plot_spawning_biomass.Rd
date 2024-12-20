@@ -20,7 +20,7 @@ plot_spawning_biomass(
 \arguments{
 \item{dat}{A data frame returned from `asar::convert_output()`.}
 
-\item{unit_label}{units for recruitment}
+\item{unit_label}{units for spawning_biomass}
 
 \item{scale_amount}{indicate the exact amount of scale (i.e. 1000)}
 

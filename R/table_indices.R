@@ -122,7 +122,7 @@ table_indices <- function(
                                          fig_or_table = fig_or_table)
 
 
-    export_rda(plt_fin = final,
+    export_rda(final = final,
                caps_alttext = caps_alttext,
                rda_dir = rda_dir,
                topic_label = topic_label,

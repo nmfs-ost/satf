@@ -1,8 +1,8 @@
 #' Plot Spawn-Recruit Curve
 #'
-#'  @inheritParams plot_recruitment
-#'  @param spawning_biomass_label Units for spawning biomass
-#'  @param recruitment_label units for recruitment
+#' @inheritParams plot_recruitment
+#' @param spawning_biomass_label Units for spawning biomass
+#' @param recruitment_label units for recruitment
 #'
 #' @return Plot spawning recruitment relationship from a standardized output file originating from asar::convert_output()
 #' @export

@@ -98,11 +98,12 @@ table_indices <- function(
     flextable::merge_h(part = "header") |>
     flextable::align(part = "header")
 
-  tab_fin <- suppressWarnings(add_theme(tab))
+  final <- suppressWarnings(add_theme(tab))
 
+  # export table to rda if argument = T
   if (make_rda){
     # create plot-specific variables to use throughout fxn for naming and IDing
-    topic_label <- "indices_abun"
+    topic_label <- "indices.abundance"
 
 
     # run write_captions.R if its output doesn't exist
@@ -117,9 +118,15 @@ table_indices <- function(
     fig_or_table <- "table"
 
     # extract this plot's caption and alt text
-    # Is this needed for a table?
     caps_alttext <- extract_caps_alttext(topic_label = topic_label,
                                          fig_or_table = fig_or_table)
+
+
+    export_rda(plt_fin = final,
+               caps_alttext = caps_alttext,
+               rda_dir = rda_dir,
+               topic_label = topic_label,
+               fig_or_table = fig_or_table)
   }
-  tab_fin
+  return(final)
 }

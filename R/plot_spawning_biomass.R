@@ -162,7 +162,7 @@ plot_spawning_biomass <- function(
       parse = TRUE
     )
 
-  plt_fin <- suppressWarnings(add_theme(plt))
+  final <- suppressWarnings(add_theme(plt))
 
   # export figure to rda if argument = T
   if (make_rda == TRUE) {
@@ -189,11 +189,11 @@ plot_spawning_biomass <- function(
     caps_alttext <- extract_caps_alttext(topic_label = topic_label,
                                          fig_or_table = fig_or_table)
 
-    export_rda(plt_fin = plt_fin,
+    export_rda(final = final,
                caps_alttext = caps_alttext,
                rda_dir = rda_dir,
               topic_label = topic_label,
               fig_or_table = fig_or_table)
   }
-  return(plt_fin)
+  return(final)
 }

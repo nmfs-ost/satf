@@ -15,6 +15,7 @@
 #'   for the reference point as specified in the output file. Please use this
 #'   option if the ref_line cannot find your desired point. Indicate the
 #'   reference point in the form c("label" = value).
+#' @param unit_label units for spawning_biomass
 #' @return
 #' Plot spawning biomass from the results of an assessment model translated to
 #' the standard output. The {ggplot2} object is returned for further

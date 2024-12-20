@@ -94,9 +94,9 @@ plot_indices <- function(
   # Final data set for plotting
   indices2 <- indices |>
     dplyr::mutate(
-      estimate_lower = dplyr::case_when(err_val ~ (estimate - uncertainty),
+      estimate_lower = dplyr::case_when(err_val ~ estimate - ((estimate * uncertainty) * 1.96),
                                         TRUE ~ (estimate - 1.96 * uncertainty)),
-      estimate_upper = dplyr::case_when(err_val ~ (estimate + uncertainty),
+      estimate_upper = dplyr::case_when(err_val ~ estimate + ((estimate * uncertainty) * 1.96),
                                         TRUE ~ (estimate + 1.96 * uncertainty)),
       fleet = as.character(fleet),
       year = as.numeric(year)

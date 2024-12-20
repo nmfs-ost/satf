@@ -162,7 +162,7 @@ plot_biomass <- function(
     # create plot-specific variables to use throughout fxn for naming and IDing
     # Indicate if biomass is relative or not
     if (relative) {
-      topic_label <- "relative_biomass"
+      topic_label <- "relative.biomass"
     } else {
       topic_label <- "biomass"
     }

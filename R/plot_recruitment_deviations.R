@@ -88,7 +88,7 @@ plot_recruitment_deviations <- function (
   if (make_rda == TRUE){
 
     # create plot-specific variables to use throughout fxn for naming and IDing
-    topic_label <- "recruitment_deviations"
+    topic_label <- "recruitment.deviations"
 
     # identify output
     fig_or_table <- "figure"

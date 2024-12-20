@@ -169,9 +169,9 @@ plot_spawning_biomass <- function(
     # create plot-specific variables to use throughout fxn for naming and IDing
     # Indicate if spawning biomass is relative or not
     if (relative) {
-      topic_label <- "relative_spawning_biomass"
+      topic_label <- "relative.spawning.biomass"
     } else {
-      topic_label <- "spawning_biomass"
+      topic_label <- "spawning.biomass"
     }
     # identify output
     fig_or_table <- "figure"

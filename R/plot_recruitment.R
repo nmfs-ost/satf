@@ -108,7 +108,7 @@ plot_recruitment <- function(
     # create plot-specific variables to use throughout fxn for naming and IDing
       # Indicate if recruitment is relative or not
       if (relative) {
-          topic_label <- "relative_recruitment"
+          topic_label <- "relative.recruitment"
       } else {
           topic_label <- "recruitment"
       }

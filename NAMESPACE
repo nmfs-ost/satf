@@ -3,6 +3,7 @@
 export(add_theme)
 export(exp_all_figs_tables)
 export(plot_biomass)
+export(plot_indices)
 export(plot_landings)
 export(plot_recruitment)
 export(plot_recruitment_deviations)

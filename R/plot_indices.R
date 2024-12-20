@@ -14,7 +14,7 @@ plot_indices <- function(
     rda_dir = NULL
 ) {
   # Set cpue unit label for plot
-  u_units <- glue::glue("Estimaed CPUE ({unit_label})")
+  u_units <- glue::glue("Estimated CPUE ({unit_label})")
 
   # Load data
   output <- dat |>
@@ -125,11 +125,11 @@ plot_indices <- function(
     #   guide = ggplot2::guide_axis(minor.ticks = TRUE)
     # )
 
-  plt_fin <- suppressWarnings(add_theme(plt))
+  final <- suppressWarnings(add_theme(plt))
 
   if (make_rda) {
     # create plot-specific variables to use throughout fxn for naming and IDing
-    topic_label <- "indices_abun"
+    topic_label <- "CPUE.indices"
 
     # identify output
     fig_or_table <- "figure"
@@ -147,11 +147,11 @@ plot_indices <- function(
     caps_alttext <- extract_caps_alttext(topic_label = topic_label,
                                          fig_or_table = fig_or_table)
 
-    export_rda(plt_fin = plt_fin,
+    export_rda(final = final,
                caps_alttext = caps_alttext,
                rda_dir = rda_dir,
                topic_label = topic_label,
                fig_or_table = fig_or_table)
   }
-  plt_fin
+  return(final)
 }

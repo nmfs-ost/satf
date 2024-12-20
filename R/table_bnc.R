@@ -118,7 +118,7 @@ table_bnc <- function(
     )
 
   # add theming to final table
-  tab_fin <- suppressWarnings(add_theme(bnc))
+  final <- suppressWarnings(add_theme(bnc))
 
   # export figure to rda if argument = T
   if (make_rda == TRUE){
@@ -141,12 +141,12 @@ table_bnc <- function(
   caps_alttext <- extract_caps_alttext(topic_label = topic_label,
                                        fig_or_table = fig_or_table)
 
-  export_rda(plt_fin = tab_fin,
+  export_rda(final = final,
                caps_alttext = caps_alttext,
                rda_dir = rda_dir,
                topic_label = topic_label,
                fig_or_table = fig_or_table)
   }
   # Return finished table
-  return(tab_fin)
+  return(final)
 }

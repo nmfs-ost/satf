@@ -123,7 +123,7 @@ table_bnc <- function(
   # export figure to rda if argument = T
   if (make_rda == TRUE){
   # create plot-specific variables to use throughout fxn for naming and IDing
-  topic_label <- "B.div.N"
+  topic_label <- "bnc"
 
   # identify output
   fig_or_table <- "table"

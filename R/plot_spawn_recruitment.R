@@ -69,7 +69,7 @@ plot_spawn_recruitment <- function(
   # export figure to rda if argument = T
   if (make_rda == TRUE){
     # create plot-specific variables to use throughout fxn for naming and IDing
-    topic_label <- "est_stock_recruitment"
+    topic_label <- "sr"
 
     # identify output
     fig_or_table <- "figure"

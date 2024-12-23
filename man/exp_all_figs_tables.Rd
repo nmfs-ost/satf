@@ -6,22 +6,25 @@
 \usage{
 exp_all_figs_tables(
   dat,
-  unit_label = "metric tons",
+  recruitment_unit_label = "mt",
   scale_amount = 1,
   end_year = NULL,
   n_projected_years = 10,
   relative = FALSE,
   rda_dir = getwd(),
   ref_line = c("target", "MSY", "msy", "unfished"),
-  spawning_biomass_label = "metric tons",
-  recruitment_label = "metric tons",
-  ref_line_sb = c("target", "MSY", "msy", "unfished")
+  landings_unit_label = "mt",
+  spawning_biomass_label = "mt",
+  ref_line_sb = c("target", "MSY", "msy", "unfished"),
+  indices_unit_label = NULL,
+  biomass_unit_label = "mt",
+  catch_unit_label = "mt"
 )
 }
 \arguments{
 \item{dat}{A data frame returned from `asar::convert_output()`.}
 
-\item{unit_label}{units for recruitment}
+\item{recruitment_unit_label}{Units for recruitment}
 
 \item{scale_amount}{indicate the exact amount of scale (i.e. 1000)}
 
@@ -40,15 +43,21 @@ Default is the working directory.}
 
 \item{ref_line}{@inheritParams plot_biomass}
 
-\item{spawning_biomass_label}{@inheritParams plot_spawn_recruitment}
+\item{landings_unit_label}{Units for landings}
 
-\item{recruitment_label}{@inheritParams plot_spawn_recruitment}
+\item{spawning_biomass_label}{@inheritParams plot_spawn_recruitment}
 
 \item{ref_line_sb}{Identical definition as `ref_line`, but this argument is
 applied to plot_spawning_biomass.}
+
+\item{indices_unit_label}{Units for index of abundance/CPUE}
+
+\item{biomass_unit_label}{@inheritParams table_bnc}
+
+\item{catch_unit_label}{@inheritParams table_bnc}
 }
 \value{
-Rda files (if make_rda = TRUE) for each figure/table.
+Rda files for each figure/table.
 }
 \description{
 Export all figures and tables to Rda files within one function.
@@ -56,6 +65,6 @@ Export all figures and tables to Rda files within one function.
 \examples{
 \dontrun{
 exp_all_figs_tables(dat, ref_line = "unfished",
-ref_line_sb = "target", make_rda = TRUE)
+ref_line_sb = "target", make_rda = TRUE, indices_unit_label = "CPUE")
 }
 }

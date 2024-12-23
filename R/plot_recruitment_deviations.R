@@ -82,13 +82,13 @@ plot_recruitment_deviations <- function (
       )
     )
 
-  plt_fin <- suppressWarnings(add_theme(plt))
+  final <- suppressWarnings(add_theme(plt))
 
   # export figure to rda if argument = T
   if (make_rda == TRUE){
 
     # create plot-specific variables to use throughout fxn for naming and IDing
-    topic_label <- "recruitment_deviations"
+    topic_label <- "recruitment.deviations"
 
     # identify output
     fig_or_table <- "figure"
@@ -107,11 +107,11 @@ plot_recruitment_deviations <- function (
                                          fig_or_table = fig_or_table,
                                          dir = rda_dir)
 
-    export_rda(plt_fin = plt_fin,
+    export_rda(final = final,
                caps_alttext = caps_alttext,
                rda_dir = rda_dir,
                topic_label = topic_label,
                fig_or_table = fig_or_table)
   }
-return(plt_fin)
+return(final)
 }

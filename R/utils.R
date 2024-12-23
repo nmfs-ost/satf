@@ -38,7 +38,7 @@ extract_caps_alttext <- function(topic_label,
 }
 
 # export ggplot, alt text, and caption to rda if indicated in arguments
-export_rda <- function(plt_fin = plt_fin,
+export_rda <- function(final = final,
                        caps_alttext = caps_alttext,
                        rda_dir = rda_dir,
                        topic_label = topic_label,
@@ -46,12 +46,12 @@ export_rda <- function(plt_fin = plt_fin,
 
   # make rda for figures
   if (fig_or_table == "figure") {
-    rda <- list("figure" = plt_fin,
+    rda <- list("figure" = final,
                 "cap" = caps_alttext[[1]],
                 "alt_text" = caps_alttext[[2]])
     # make rda for tables
   } else if (fig_or_table == "table"){
-    rda <- list("table" = tab_fin,
+    rda <- list("table" = final,
                 "cap" = caps_alttext[[1]])
   }
 

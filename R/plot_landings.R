@@ -67,7 +67,7 @@ plot_landings <- function(dat,
       fill = "Fleet"
     )
 
-  plt_fin <- suppressWarnings(add_theme(plt))
+  final <- suppressWarnings(add_theme(plt))
 
   # create plot-specific variables to use throughout fxn for naming and IDing
   topic_label <- "landings"
@@ -91,12 +91,12 @@ plot_landings <- function(dat,
 
   # export figure to rda if argument = T
   if (make_rda == TRUE){
-    export_rda(plt_fin = plt_fin,
+    export_rda(final = final,
                caps_alttext = caps_alttext,
                rda_dir = rda_dir,
                topic_label = topic_label,
                fig_or_table = fig_or_table)
   }
-  return(plt_fin)
+  return(final)
 }
 

@@ -118,12 +118,12 @@ table_bnc <- function(
     )
 
   # add theming to final table
-  tab_fin <- suppressWarnings(add_theme(bnc))
+  final <- suppressWarnings(add_theme(bnc))
 
   # export figure to rda if argument = T
   if (make_rda == TRUE){
   # create plot-specific variables to use throughout fxn for naming and IDing
-  topic_label <- "B.div.N"
+  topic_label <- "bnc"
 
   # identify output
   fig_or_table <- "table"
@@ -142,12 +142,12 @@ table_bnc <- function(
                                        fig_or_table = fig_or_table,
                                        dir = rda_dir)
 
-  export_rda(plt_fin = tab_fin,
+  export_rda(final = final,
                caps_alttext = caps_alttext,
                rda_dir = rda_dir,
                topic_label = topic_label,
                fig_or_table = fig_or_table)
   }
   # Return finished table
-  return(tab_fin)
+  return(final)
 }

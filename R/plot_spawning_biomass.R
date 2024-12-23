@@ -163,16 +163,16 @@ plot_spawning_biomass <- function(
       parse = TRUE
     )
 
-  plt_fin <- suppressWarnings(add_theme(plt))
+  final <- suppressWarnings(add_theme(plt))
 
   # export figure to rda if argument = T
   if (make_rda == TRUE) {
     # create plot-specific variables to use throughout fxn for naming and IDing
     # Indicate if spawning biomass is relative or not
     if (relative) {
-      topic_label <- "relative_spawning_biomass"
+      topic_label <- "relative.spawning.biomass"
     } else {
-      topic_label <- "spawning_biomass"
+      topic_label <- "spawning.biomass"
     }
     # identify output
     fig_or_table <- "figure"
@@ -191,11 +191,11 @@ plot_spawning_biomass <- function(
                                          fig_or_table = fig_or_table,
                                          dir = rda_dir)
 
-    export_rda(plt_fin = plt_fin,
+    export_rda(final = final,
                caps_alttext = caps_alttext,
                rda_dir = rda_dir,
               topic_label = topic_label,
               fig_or_table = fig_or_table)
   }
-  return(plt_fin)
+  return(final)
 }

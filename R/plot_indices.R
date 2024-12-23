@@ -145,7 +145,8 @@ plot_indices <- function(
 
     # extract this plot's caption and alt text
     caps_alttext <- extract_caps_alttext(topic_label = topic_label,
-                                         fig_or_table = fig_or_table)
+                                         fig_or_table = fig_or_table,
+                                         dir = rda_dir)
 
     export_rda(plt_fin = plt_fin,
                caps_alttext = caps_alttext,

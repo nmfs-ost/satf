@@ -86,7 +86,8 @@ plot_landings <- function(dat,
 
   # extract this plot's caption and alt text
   caps_alttext <- extract_caps_alttext(topic_label = topic_label,
-                                       fig_or_table = fig_or_table)
+                                       fig_or_table = fig_or_table,
+                                       dir = rda_dir)
 
   # export figure to rda if argument = T
   if (make_rda == TRUE){

@@ -12,12 +12,23 @@
 add_theme <- function(x) {
   # this is bad coding practice, but what I have for now
   if (class(x)[1] == "flextable") {
+    FitFlextableToPage <- function(ft, pgwidth = 6){
+
+      ft_out <- ft |> flextable::autofit()
+
+      ft_out <- flextable::width(ft_out, width = dim(ft_out)$widths*pgwidth /(flextable::flextable_dim(ft_out)$widths))
+      return(ft_out)
+    }
     theme_obj <- x |>
       flextable::merge_h(i = 1, part = "header") |>
       flextable::align(part = "header", align = "center") |>
-      # flextable::font(fontname = "cambria",
+      # flextable::font(fontname = "arial narrow",
       #                 part = "all") |>
-      flextable::add_header_lines(top = FALSE)
+      flextable::bold(part = "header") |>
+      flextable::add_header_lines(top = FALSE) |>
+      flextable::align(align = "center", part = "body") |>
+      flextable::autofit()
+      # FitFlextableToPage()
   } else if (class(x)[1] == "gt_tbl") {
     theme_obj <- x
     # gt object

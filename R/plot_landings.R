@@ -57,12 +57,17 @@ plot_landings <- function(dat,
       ggplot2::aes(
         x = year,
         y = estimate,
-        fill = fleet)) #+
+        fill = fleet)) +
     # ggplot2::facet_wrap(~label)
   # Apply std NOAA theme
   # add_theme(plt)
+    ggplot2::labs(
+      x = "Year",
+      y = land_label,
+      fill = "Fleet"
+    )
 
-  plt_fin <- suppressWarnings(add_theme(plt))
+  final <- suppressWarnings(add_theme(plt))
 
   # create plot-specific variables to use throughout fxn for naming and IDing
   topic_label <- "landings"
@@ -81,17 +86,17 @@ plot_landings <- function(dat,
 
   # extract this plot's caption and alt text
   caps_alttext <- extract_caps_alttext(topic_label = topic_label,
-                                       fig_or_table = fig_or_table)
+                                       fig_or_table = fig_or_table,
+                                       dir = rda_dir)
 
   # export figure to rda if argument = T
   if (make_rda == TRUE){
-
-    export_rda(plt_fin = plt_fin,
+    export_rda(final = final,
                caps_alttext = caps_alttext,
                rda_dir = rda_dir,
                topic_label = topic_label,
                fig_or_table = fig_or_table)
   }
-  return(plt_fin)
+  return(final)
 }
 

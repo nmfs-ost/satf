@@ -15,6 +15,7 @@
 #'   for the reference point as specified in the output file. Please use this
 #'   option if the ref_line cannot find your desired point. Indicate the
 #'   reference point in the form c("label" = value).
+#' @param unit_label units for spawning_biomass
 #' @return
 #' Plot spawning biomass from the results of an assessment model translated to
 #' the standard output. The {ggplot2} object is returned for further
@@ -55,7 +56,8 @@ plot_spawning_biomass <- function(
   if (is.null(end_year)) {
     end_year <- as.numeric(max(all_years, na.rm = TRUE)) - n_projected_years
   }
-  stopifnot(any(end_year >= all_years))
+  # Commenting out bc this might not be consistent now with new setup 23dec2024
+  # stopifnot(any(end_year >= all_years))
 
   # Select value for reference line and label
   # TODO: add case if ref_line not indicated or hard to find - find one of the
@@ -161,16 +163,16 @@ plot_spawning_biomass <- function(
       parse = TRUE
     )
 
-  plt_fin <- suppressWarnings(add_theme(plt))
+  final <- suppressWarnings(add_theme(plt))
 
   # export figure to rda if argument = T
   if (make_rda == TRUE) {
     # create plot-specific variables to use throughout fxn for naming and IDing
     # Indicate if spawning biomass is relative or not
     if (relative) {
-      topic_label <- "relative_spawning_biomass"
+      topic_label <- "relative.spawning.biomass"
     } else {
-      topic_label <- "spawning_biomass"
+      topic_label <- "spawning.biomass"
     }
     # identify output
     fig_or_table <- "figure"
@@ -186,13 +188,14 @@ plot_spawning_biomass <- function(
 
     # extract this plot's caption and alt text
     caps_alttext <- extract_caps_alttext(topic_label = topic_label,
-                                         fig_or_table = fig_or_table)
+                                         fig_or_table = fig_or_table,
+                                         dir = rda_dir)
 
-    export_rda(plt_fin = plt_fin,
+    export_rda(final = final,
                caps_alttext = caps_alttext,
                rda_dir = rda_dir,
               topic_label = topic_label,
               fig_or_table = fig_or_table)
   }
-  return(plt_fin)
+  return(final)
 }

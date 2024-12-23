@@ -4,13 +4,14 @@
 
 # extract captions and alt text from csv in wd
 extract_caps_alttext <- function(topic_label,
-                                 fig_or_table){
+                                 fig_or_table,
+                                 dir = getwd()){
 
   # import csv with captions and alt text
   # Note: make sure to check this later in the workflow and its use -
   # I could see it having issues
   captions_alttext_df <- utils::read.csv(
-    fs::path(getwd(), "captions_alt_text.csv")
+    fs::path(dir, "captions_alt_text.csv")
   )
 
   # extract plot or table's caption and alt text
@@ -37,7 +38,7 @@ extract_caps_alttext <- function(topic_label,
 }
 
 # export ggplot, alt text, and caption to rda if indicated in arguments
-export_rda <- function(plt_fin = plt_fin,
+export_rda <- function(final = final,
                        caps_alttext = caps_alttext,
                        rda_dir = rda_dir,
                        topic_label = topic_label,
@@ -45,12 +46,12 @@ export_rda <- function(plt_fin = plt_fin,
 
   # make rda for figures
   if (fig_or_table == "figure") {
-    rda <- list("figure" = plt_fin,
+    rda <- list("figure" = final,
                 "cap" = caps_alttext[[1]],
                 "alt_text" = caps_alttext[[2]])
     # make rda for tables
   } else if (fig_or_table == "table"){
-    rda <- list("table" = tab,
+    rda <- list("table" = final,
                 "cap" = caps_alttext[[1]])
   }
 

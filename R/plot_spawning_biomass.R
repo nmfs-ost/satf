@@ -56,7 +56,8 @@ plot_spawning_biomass <- function(
   if (is.null(end_year)) {
     end_year <- as.numeric(max(all_years, na.rm = TRUE)) - n_projected_years
   }
-  stopifnot(any(end_year >= all_years))
+  # Commenting out bc this might not be consistent now with new setup 23dec2024
+  # stopifnot(any(end_year >= all_years))
 
   # Select value for reference line and label
   # TODO: add case if ref_line not indicated or hard to find - find one of the

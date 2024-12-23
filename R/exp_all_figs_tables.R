@@ -52,7 +52,7 @@ exp_all_figs_tables <- function(
 
 ) {
 
-  make_rda = TRUE
+  make_rda <- TRUE
 
   # figures
 

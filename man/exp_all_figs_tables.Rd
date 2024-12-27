@@ -43,13 +43,22 @@ which reference point to use.}
 ("rda_files") that will be created if the argument `make_rda` = TRUE.
 Default is the working directory.}
 
-\item{ref_line}{@inheritParams plot_biomass}
+\item{ref_line}{A string specifying the type of reference you want to
+compare biomass to. The default is `"target"`, which looks for
+`"biomass_target"` in the `"label"` column of `dat`. The actual
+searching in `dat` is case agnostic and will work with either upper- or
+lower-case letters but you must use one of the options specified in the
+default list to ensure that the label on the figure looks correct
+regardless of how it is specified in `dat`.}
 
-\item{ref_point}{@inheritParams plot_biomass}
+\item{ref_point}{A known value of the reference point along with the label
+for the reference point as specified in the output file. Please use this
+option if the ref_line cannot find your desired point. Indicate the
+reference point in the form c("label" = value).}
 
 \item{landings_unit_label}{Units for landings}
 
-\item{spawning_biomass_label}{@inheritParams plot_spawn_recruitment}
+\item{spawning_biomass_label}{Units for spawning biomass}
 
 \item{ref_line_sb}{Identical definition as `ref_line`, but this argument is
 applied to plot_spawning_biomass.}
@@ -59,9 +68,9 @@ applied to plot_spawning_biomass.}
 
 \item{indices_unit_label}{Units for index of abundance/CPUE}
 
-\item{biomass_unit_label}{@inheritParams table_bnc}
+\item{biomass_unit_label}{Abbreviated units for biomass}
 
-\item{catch_unit_label}{@inheritParams table_bnc}
+\item{catch_unit_label}{Abbreviated units for catch}
 }
 \value{
 Rda files for each figure/table.

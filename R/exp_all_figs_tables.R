@@ -4,18 +4,27 @@
 #'
 #' @inheritParams plot_recruitment
 #' @param recruitment_unit_label Units for recruitment
-#' @param ref_line @inheritParams plot_biomass
-#' @param ref_point @inheritParams plot_biomass
+#' @param ref_line A string specifying the type of reference you want to
+#' compare biomass to. The default is `"target"`, which looks for
+#' `"biomass_target"` in the `"label"` column of `dat`. The actual
+#' searching in `dat` is case agnostic and will work with either upper- or
+#' lower-case letters but you must use one of the options specified in the
+#' default list to ensure that the label on the figure looks correct
+#' regardless of how it is specified in `dat`.
+#' @param ref_point A known value of the reference point along with the label
+#' for the reference point as specified in the output file. Please use this
+#' option if the ref_line cannot find your desired point. Indicate the
+#' reference point in the form c("label" = value).
 #' @param landings_unit_label Units for landings
 #' @param biomass_unit_label Units for biomass
-#' @param spawning_biomass_label @inheritParams plot_spawn_recruitment
+#' @param spawning_biomass_label Units for spawning biomass
 #' @param ref_line_sb Identical definition as `ref_line`, but this argument is
 #' applied to plot_spawning_biomass.
 #' @param ref_point_sb Identical definition as `ref_point`, but this argument is
 #' applied to plot_spawning_biomass.
 #' @param indices_unit_label Units for index of abundance/CPUE
-#' @param catch_unit_label @inheritParams table_bnc
-#' @param biomass_unit_label @inheritParams table_bnc
+#' @param biomass_unit_label Abbreviated units for biomass
+#' @param catch_unit_label Abbreviated units for catch
 #'
 #' @return Rda files for each figure/table.
 #'

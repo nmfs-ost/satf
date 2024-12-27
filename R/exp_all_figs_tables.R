@@ -5,10 +5,13 @@
 #' @inheritParams plot_recruitment
 #' @param recruitment_unit_label Units for recruitment
 #' @param ref_line @inheritParams plot_biomass
+#' @param ref_point @inheritParams plot_biomass
 #' @param landings_unit_label Units for landings
 #' @param biomass_unit_label Units for biomass
 #' @param spawning_biomass_label @inheritParams plot_spawn_recruitment
 #' @param ref_line_sb Identical definition as `ref_line`, but this argument is
+#' applied to plot_spawning_biomass.
+#' @param ref_point_sb Identical definition as `ref_point`, but this argument is
 #' applied to plot_spawning_biomass.
 #' @param indices_unit_label Units for index of abundance/CPUE
 #' @param catch_unit_label @inheritParams table_bnc
@@ -20,8 +23,8 @@
 #'
 #' @examples
 #' \dontrun{
-#' exp_all_figs_tables(dat, ref_line = "unfished",
-#' ref_line_sb = "target", make_rda = TRUE, indices_unit_label = "CPUE")
+#' exp_all_figs_tables(dat, end_year = 2022, ref_line = "unfished", ref_point = 13000,
+#' ref_point_sb = 13000, ref_line_sb = "target", indices_unit_label = "CPUE")
 #' }
 
 exp_all_figs_tables <- function(
@@ -37,6 +40,7 @@ exp_all_figs_tables <- function(
 
   # imported from plot_biomass
   ref_line = c("target", "MSY", "msy", "unfished"),
+  ref_point = NULL,
 
   # imported from plot_landings
   landings_unit_label = "mt",
@@ -48,6 +52,7 @@ exp_all_figs_tables <- function(
 
   # imported from plot_spawning_biomass
   ref_line_sb = c("target", "MSY", "msy", "unfished"),
+  ref_point_sb = NULL,
 
   # imported from plot_indices
   indices_unit_label = NULL,
@@ -66,6 +71,8 @@ exp_all_figs_tables <- function(
 
   make_rda <- TRUE
 
+  message("Starting export of figures and tables:")
+
   # figures
 
   satf::plot_recruitment(dat,
@@ -83,6 +90,7 @@ exp_all_figs_tables <- function(
                      unit_label = biomass_unit_label,
                      scale_amount,
                      ref_line,
+                     ref_point,
                      end_year,
                      relative,
                      make_rda,
@@ -117,7 +125,8 @@ exp_all_figs_tables <- function(
   satf::plot_spawning_biomass(dat,
                               unit_label = spawning_biomass_label,
                               scale_amount,
-                              ref_line_sb,
+                              ref_line = ref_line_sb,
+                              ref_point = ref_point_sb,
                               end_year,
                               relative,
                               n_projected_years,
@@ -160,5 +169,6 @@ exp_all_figs_tables <- function(
   # undeveloped tables - add arguments after more development
   # table_afsc_tier() |> suppressWarnings() |> invisible()
   # table_harvest_projection() |> suppressWarnings() |> invisible()
+  message("Finished export of figures and tables.")
 
 }

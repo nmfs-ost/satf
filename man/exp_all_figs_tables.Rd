@@ -13,9 +13,11 @@ exp_all_figs_tables(
   relative = FALSE,
   rda_dir = getwd(),
   ref_line = c("target", "MSY", "msy", "unfished"),
+  ref_point = NULL,
   landings_unit_label = "mt",
   spawning_biomass_label = "mt",
   ref_line_sb = c("target", "MSY", "msy", "unfished"),
+  ref_point_sb = NULL,
   indices_unit_label = NULL,
   biomass_unit_label = "mt",
   catch_unit_label = "mt"
@@ -43,11 +45,16 @@ Default is the working directory.}
 
 \item{ref_line}{@inheritParams plot_biomass}
 
+\item{ref_point}{@inheritParams plot_biomass}
+
 \item{landings_unit_label}{Units for landings}
 
 \item{spawning_biomass_label}{@inheritParams plot_spawn_recruitment}
 
 \item{ref_line_sb}{Identical definition as `ref_line`, but this argument is
+applied to plot_spawning_biomass.}
+
+\item{ref_point_sb}{Identical definition as `ref_point`, but this argument is
 applied to plot_spawning_biomass.}
 
 \item{indices_unit_label}{Units for index of abundance/CPUE}
@@ -64,7 +71,7 @@ Export all figures and tables to Rda files within one function.
 }
 \examples{
 \dontrun{
-exp_all_figs_tables(dat, ref_line = "unfished",
-ref_line_sb = "target", make_rda = TRUE, indices_unit_label = "CPUE")
+exp_all_figs_tables(dat, end_year = 2022, ref_line = "unfished", ref_point = 13000,
+ref_point_sb = 13000, ref_line_sb = "target", indices_unit_label = "CPUE")
 }
 }

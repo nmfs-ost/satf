@@ -17,7 +17,7 @@ table_indices <- function(
   if (any(unique(output$module_name=="INDEX_2"))) {
     output <- output |>
       dplyr::filter(
-        grepl("expected_indices", label)) # grepl("input_indices", label) |
+        grepl("expected_indices", label) | grepl("indices_predicted", label)) # grepl("input_indices", label) |
   } else if (any(unique(output$module_name=="t.series"))) {
     output <- output |>
       dplyr::filter(grepl("cpue", label))
@@ -54,6 +54,8 @@ table_indices <- function(
   # rename columns to remove cpue/effort
   if(any(grep("_indices", colnames(indices)))){
     colnames(indices) <- stringr::str_replace_all(colnames(indices), "_indices", "")
+  } else if (any(grep("indices_", colnames(indices)))) {
+    colnames(indices) <- stringr::str_replace_all(colnames(indices), "indices_", "")
   } else {
     colnames(indices) <- stringr::str_replace_all(colnames(indices), "cpue_", "")
   }

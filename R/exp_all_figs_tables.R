@@ -141,7 +141,7 @@ exp_all_figs_tables <- function(
                               n_projected_years,
                               make_rda,
                               rda_dir) |>
- #   suppressWarnings() |>
+    suppressWarnings() |>
     invisible()
 
   message("Exported plot_spawning_biomass")

@@ -1,0 +1,38 @@
+test_that("plot_landings generates plots without errors", {
+
+  # read in sample dataset
+  dat <- utils::read.csv(
+    system.file("tests", "testthat", "fixtures", "sample_data", "petrale_sole-after_2020.csv", package = "satf")
+  )
+
+  # expect error-free plot with minimal arguments
+  expect_no_error(
+    satf::plot_landings(dat)
+  )
+
+
+  # expect ggplot object is returned
+  expect_s3_class(
+    satf::plot_landings(dat)
+    ,
+    "gg"
+  )
+
+})
+
+test_that("rda file made when indicated",{
+
+  # read in sample dataset
+  dat <- utils::read.csv(
+    system.file("tests", "testthat", "fixtures", "sample_data", "petrale_sole-after_2020.csv", package = "satf")
+  )
+
+  # export rda
+  plot_landings(dat,
+                make_rda = TRUE)
+
+  # expect that both rda_files dir and the landings_figure.rda file exist
+  expect_true(dir.exists(file.path(here::here(), "rda_files")))
+  expect_true(file.exists(file.path(here::here(), "rda_files", "landings_figure.rda")))
+
+})

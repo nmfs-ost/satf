@@ -90,24 +90,25 @@ test_that("plot_biomass plots contain reference point when indicated", {
 
 })
 
-# test_that("rda file made when indicated",{
-#
-#   # read in sample dataset
-#   dat <- utils::read.csv(
-#     system.file("tests", "testthat", "fixtures", "sample_data", "petrale_sole-after_2020.csv", package = "satf")
-#   )
-#
-#   # export rda
-#   plot_biomass(
-#     dat,
-#     rda_dir = here::here(),
-#     make_rda = TRUE,
-#     end_year = 2023
-#   )
-#
-#   # expect that both rda_files dir and the biomass_figure.rda file exist
-#   expect_true(dir.exists(file.path(here::here(), "rda_files")))
-#   expect_true(file.exists(file.path(here::here(), "rda_files", "biomass_figure.rda")))
-#
-#
-# })
+test_that("rda file made when indicated",{
+
+  # read in sample dataset
+  dat <- utils::read.csv(
+    system.file("tests", "testthat", "fixtures", "sample_data", "petrale_sole-after_2020.csv", package = "satf")
+  )
+
+  # export rda
+  plot_biomass(
+    dat,
+    rda_dir = here::here(),
+    make_rda = TRUE,
+    end_year = 2023,
+    ref_point = 18000
+  )
+
+  # expect that both rda_files dir and the biomass_figure.rda file exist
+  expect_true(dir.exists(file.path(here::here(), "rda_files")))
+  expect_true(file.exists(file.path(here::here(), "rda_files", "biomass_figure.rda")))
+
+
+})

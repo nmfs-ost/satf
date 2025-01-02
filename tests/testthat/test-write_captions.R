@@ -10,22 +10,39 @@ test_that("write_captions() function imports alt text/captions template
 
           })
 
-# test_that("write_captions() function replaces placeholder text with key quantities as expected",
-#           {
-#             dat <- utils::read.csv(
-#               system.file(
-#                 "tests",
-#                 "testthat",
-#                 "fixtures",
-#                 "sample_data",
-#                 "petrale_sole-after_2020.csv",
-#                 package = "satf"
-#               )
-#             )
-#
-#             write_captions(dat, dir = here::here(), year = 2022)
-#
-#             caps <- read.csv(here::here(tempdir, "captions_alt_text.csv"))
-#
-#             caps[2,2]
-#           })
+test_that("write_captions() function replaces placeholder text with key quantities as expected",
+          {
+            # import data
+            dat <- utils::read.csv(
+              system.file(
+                "tests",
+                "testthat",
+                "fixtures",
+                "sample_data",
+                "petrale_sole-after_2020.csv",
+                package = "satf"
+              )
+            )
+
+            # make captions/alt text csv
+            write_captions(dat, dir = here::here(), year = 2022)
+
+            # import csv
+            caps <- read.csv(here::here("captions_alt_text.csv"))
+
+            # extract alt text from biomass figure
+            B_alt_text <- caps |>
+              dplyr::filter(label == "biomass",
+                            type == "figure") |>
+              dplyr::select(alt_text) |>
+              as.character()
+
+            # expected alt text from end of biomass figure
+            expected_alt_text_substring <- "spans from 14361.9 to 18500.9."
+
+            # test expected alt text within B alt text
+            expect_true(
+              grepl(expected_alt_text_substring, B_alt_text, fixed = T)
+            )
+
+                      })

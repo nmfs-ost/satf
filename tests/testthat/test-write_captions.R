@@ -45,4 +45,7 @@ test_that("write_captions() function replaces placeholder text with key quantiti
               grepl(expected_alt_text_substring, B_alt_text, fixed = T)
             )
 
+            # erase files placed in here::here()
+            on.exit(unlink(file.path(here::here(), "captions_alt_text.csv"), recursive = TRUE))
+
                       })

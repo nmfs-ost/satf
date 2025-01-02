@@ -100,15 +100,19 @@ test_that("rda file made when indicated",{
   # export rda
   plot_biomass(
     dat,
-    rda_dir = here::here(),
+    rda_dir = getwd(),
     make_rda = TRUE,
     end_year = 2023,
     ref_point = 18000
   )
 
   # expect that both rda_files dir and the biomass_figure.rda file exist
-  expect_true(dir.exists(file.path(here::here(), "rda_files")))
-  expect_true(file.exists(file.path(here::here(), "rda_files", "biomass_figure.rda")))
+  expect_true(dir.exists(file.path(here::here(getwd(), "rda_files"))))
+  expect_true(file.exists(file.path(here::here(getwd(), "rda_files", "biomass_figure.rda"))))
+
+  # erase files placed in here::here()
+  on.exit(unlink(file.path(here::here(getwd(), "captions_alt_text.csv"))))
+  on.exit(unlink(file.path(here::here(getwd(), "rda_files"), recursive = TRUE)))
 
 
 })

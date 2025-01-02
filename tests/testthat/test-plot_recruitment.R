@@ -66,13 +66,17 @@ test_that("rda file made when indicated",{
   # export rda
   plot_recruitment(
     dat,
-    rda_dir = here::here(),
+    rda_dir = getwd(),
     make_rda = TRUE
   )
 
   # expect that both rda_files dir and the recruitment_figure.rda file exist
-  expect_true(dir.exists(file.path(here::here(), "rda_files")))
-  expect_true(file.exists(file.path(here::here(), "rda_files", "recruitment_figure.rda")))
+  expect_true(dir.exists(file.path(here::here(getwd(), "rda_files"))))
+  expect_true(file.exists(file.path(here::here(getwd(), "rda_files", "recruitment_figure.rda"))))
+
+  # erase files placed in here::here()
+  on.exit(unlink(file.path(here::here(getwd(), "captions_alt_text.csv"))))
+  on.exit(unlink(file.path(here::here(getwd(), "rda_files"), recursive = TRUE)))
 
 
 })

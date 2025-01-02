@@ -84,43 +84,68 @@ exp_all_figs_tables <- function(
 
   # figures
 
-  satf::plot_recruitment(dat,
-                         unit_label = recruitment_unit_label,
-                         scale_amount,
-                         end_year,
-                         n_projected_years,
-                         relative,
-                         make_rda,
-                         rda_dir) |> suppressWarnings() |> invisible()
+  tryCatch({
+    satf::plot_recruitment(
+      dat,
+      unit_label = recruitment_unit_label,
+      scale_amount,
+      end_year,
+      n_projected_years,
+      relative,
+      make_rda,
+      rda_dir
+    ) |> suppressWarnings() |> invisible()
 
-  message("Exported plot_recruitment")
+    message("Exported plot_recruitment")
 
-  satf::plot_biomass(dat,
-                     unit_label = biomass_unit_label,
-                     scale_amount,
-                     ref_line,
-                     ref_point,
-                     end_year,
-                     relative,
-                     make_rda,
-                     rda_dir) |> suppressWarnings() |> invisible()
+  }, error = function(e) {
+    message('Failed to export plot_recruitment. Tip: check that your arguments are correct.')
+    print(e)
+  })
 
-  message("Exported plot_biomass")
 
-  satf::plot_landings(dat,
-                      unit_label = landings_unit_label,
-                      make_rda,
-                      rda_dir) |> suppressWarnings() |> invisible()
+  tryCatch({
+    satf::plot_biomass(
+      dat,
+      unit_label = biomass_unit_label,
+      scale_amount,
+      ref_line,
+      ref_point,
+      end_year,
+      relative,
+      make_rda,
+      rda_dir
+    ) |> suppressWarnings() |> invisible()
 
-  message("Exported plot_landings")
+    message("Exported plot_biomass")
 
-  satf::plot_recruitment_deviations(dat,
-                                    end_year,
-                                    n_projected_years,
-                                    make_rda,
-                                    rda_dir) |> suppressWarnings() |> invisible()
+  }, error = function(e) {
+    message('Failed to export plot_biomass Tip: check that your arguments are correct.')
+    print(e)
+  })
 
-  message("Exported plot_recruitment_deviations")
+
+  tryCatch({
+    satf::plot_landings(dat, unit_label = landings_unit_label, make_rda, rda_dir) |> suppressWarnings() |> invisible()
+
+    message("Exported plot_landings")
+
+  }, error = function(e) {
+    message('Failed to export plot_landings. Tip: check that your arguments are correct.')
+    print(e)
+  })
+
+  tryCatch({
+    satf::plot_recruitment_deviations(dat, end_year, n_projected_years, make_rda, rda_dir) |> suppressWarnings() |> invisible()
+
+    message("Exported plot_recruitment_deviations")
+
+  }, error = function(e) {
+    message(
+      'Failed to export plot_recruitment_deviations. Tip: check that your arguments are correct.'
+    )
+    print(e)
+  })
 
   # satf::plot_spawn_recruitment(dat,
   #                        spawning_biomass_label,
@@ -131,20 +156,28 @@ exp_all_figs_tables <- function(
   #
   # message("Exported plot_spawn_recruitment")
 
-  satf::plot_spawning_biomass(dat,
-                              unit_label = spawning_biomass_label,
-                              scale_amount,
-                              ref_line = ref_line_sb,
-                              ref_point = ref_point_sb,
-                              end_year,
-                              relative,
-                              n_projected_years,
-                              make_rda,
-                              rda_dir) |>
-    suppressWarnings() |>
-    invisible()
+  tryCatch({
+    satf::plot_spawning_biomass(
+      dat,
+      unit_label = spawning_biomass_label,
+      scale_amount,
+      ref_line = ref_line_sb,
+      ref_point = ref_point_sb,
+      end_year,
+      relative,
+      n_projected_years,
+      make_rda,
+      rda_dir
+    ) |>
+      suppressWarnings() |>
+      invisible()
 
-  message("Exported plot_spawning_biomass")
+    message("Exported plot_spawning_biomass")
+
+  }, error = function(e) {
+    message('Failed to export plot_spawning_biomass. Tip: check that your arguments are correct.')
+    print(e)
+  })
 
   # uncomment when this is working properly
   # satf::plot_indices(dat,
@@ -155,20 +188,30 @@ exp_all_figs_tables <- function(
   # message("Exported plot_indices")
 
   # tables
-  satf::table_bnc(dat,
-            end_year,
-            biomass_unit_label,
-            catch_unit_label,
-            make_rda,
-            rda_dir) |> suppressWarnings() |> invisible()
+  tryCatch({
+    satf::table_bnc(dat,
+                    end_year,
+                    biomass_unit_label,
+                    catch_unit_label,
+                    make_rda,
+                    rda_dir) |> suppressWarnings() |> invisible()
 
-  message("Exported table_bnc")
+    message("Exported table_bnc")
 
-  satf::table_indices(dat,
-                make_rda,
-                rda_dir) |> suppressWarnings() |> invisible()
+  }, error = function(e) {
+    message('Failed to export table_bnc. Tip: check that your arguments are correct.')
+    print(e)
+  })
 
-  message("Exported table_indices")
+  tryCatch({
+    satf::table_indices(dat, make_rda, rda_dir) |> suppressWarnings() |> invisible()
+
+    message("Exported table_indices")
+
+  }, error = function(e) {
+    message('Failed to export table_indices. Tip: check that your arguments are correct.')
+    print(e)
+  })
 
   # uncomment when finished
   # satf::table_landings(dat) |> suppressWarnings() |> invisible()

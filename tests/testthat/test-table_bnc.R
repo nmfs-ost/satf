@@ -57,12 +57,12 @@ test_that("rda file made when indicated",{
   )
 
   # expect that both rda_files dir and the bnc_table.rda file exist
-  expect_true(dir.exists(file.path(here::here(getwd(), "rda_files"))))
-  expect_true(file.exists(file.path(here::here(getwd(), "rda_files", "bnc_table.rda"))))
+  expect_true(dir.exists(fs::path(getwd(), "rda_files")))
+  expect_true(file.exists(fs::path(getwd(), "rda_files", "bnc_table.rda")))
 
-  # erase files placed in here::here()
-  on.exit(unlink(file.path(here::here(getwd(), "captions_alt_text.csv"))))
-  on.exit(unlink(file.path(here::here(getwd(), "rda_files"), recursive = TRUE)))
+  # erase temporary testing files
+  file.remove(fs::path(getwd(), "captions_alt_text.csv"))
+  unlink(fs::path(getwd(), "rda_files"), recursive = T)
 
 
 })

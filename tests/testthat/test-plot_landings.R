@@ -2,7 +2,7 @@ test_that("plot_landings generates plots without errors", {
 
   # read in sample dataset
   dat <- utils::read.csv(
-    system.file("tests", "testthat", "fixtures", "sample_data", "petrale_sole-after_2020.csv", package = "satf")
+    system.file("resources", "sample_data", "petrale_sole-after_2020.csv", package = "satf")
   )
 
   # expect error-free plot with minimal arguments
@@ -24,7 +24,7 @@ test_that("rda file made when indicated",{
 
   # read in sample dataset
   dat <- utils::read.csv(
-    system.file("tests", "testthat", "fixtures", "sample_data", "petrale_sole-after_2020.csv", package = "satf")
+    system.file("resources", "sample_data", "petrale_sole-after_2020.csv", package = "satf")
   )
 
   # export rda

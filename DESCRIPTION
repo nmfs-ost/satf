@@ -24,12 +24,20 @@ Imports:
     data.table,
     dplyr,
     flextable,
+    fs,
     ggplot2,
     glue,
+    gt,
+    here,
+    kableExtra,
+    knitr,
     naniar,
     nmfspalette,
+    officer,
     stringr,
+    tibble,
     tidyr,
+    tidyselect,
     utils
 Remotes:
     nmfs-fish-tools/nmfspalette
@@ -38,3 +46,5 @@ Depends:
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
+Config/testthat/parallel: false
+Language: en-US

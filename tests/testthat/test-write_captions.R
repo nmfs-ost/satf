@@ -15,9 +15,7 @@ test_that("write_captions() function replaces placeholder text with key quantiti
             # import data
             dat <- utils::read.csv(
               system.file(
-                "tests",
-                "testthat",
-                "fixtures",
+                "resources",
                 "sample_data",
                 "petrale_sole-after_2020.csv",
                 package = "satf"
@@ -46,6 +44,6 @@ test_that("write_captions() function replaces placeholder text with key quantiti
             )
 
             # erase files placed in here::here()
-            on.exit(unlink(file.path(here::here(), "captions_alt_text.csv"), recursive = TRUE))
+            on.exit(unlink(fs::path(here::here(), "captions_alt_text.csv"), recursive = TRUE))
 
                       })

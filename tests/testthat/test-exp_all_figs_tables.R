@@ -2,7 +2,7 @@ test_that("exp_all_figs_tables works when all figures/tables are plotted", {
 
   # read in sample dataset
   dat <- utils::read.csv(
-    system.file("tests", "testthat", "fixtures", "sample_data", "petrale_sole-after_2020.csv", package = "satf")
+    system.file("resources", "sample_data", "petrale_sole-after_2020.csv", package = "satf")
   )
 
   satf::exp_all_figs_tables(  dat,
@@ -38,7 +38,7 @@ test_that("exp_all_figs_tables works when some figures/tables are not plotted", 
 
   # read in sample dataset
   dat <- utils::read.csv(
-    system.file("tests", "testthat", "fixtures", "sample_data", "petrale_sole-after_2020.csv", package = "satf")
+    system.file("resources", "sample_data", "petrale_sole-after_2020.csv", package = "satf")
   )
 
   # plot all figs/tables except for plot_biomass

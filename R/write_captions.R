@@ -622,7 +622,7 @@ write_captions <- function(dat, # converted model output object
     # FIGURES-----
 
    ## kobe plot
-   # 'B.BMSY.min' = as.character(as.character(B.BMSY.min),
+   # 'B.BMSY.min' = as.character(B.BMSY.min),
    # 'B.BMSY.max' = as.character(B.BMSY.max),
    # 'F.FMSY.min' = as.character(F.FMSY.min),
    # 'F.FMSY.max' = as.character(F.FMSY.max),

@@ -57,8 +57,8 @@ export_rda <- function(final = final,
                         paste0(topic_label, "_", fig_or_table, ".rda")))
 }
 
-# substitute in more key quantities (units and end_years) to captions/alt text
-add_yr_units <- function(
+# substitute in more key quantities (units, end_years, reference points) to captions/alt text
+add_more_key_quants <- function(
     topic = topic_label,
     fig_or_table = fig_or_table,
     end_year = NULL,
@@ -78,8 +78,8 @@ add_yr_units <- function(
                   type == fig_or_table)
 
   # select caption
-  topic_cap <- topic_cap_alt |>
-    dplyr::select(caption)
+  # topic_cap <- topic_cap_alt |>
+  #   dplyr::select(caption)
 
   # select alt text
   topic_alt <- topic_cap_alt |>
@@ -97,7 +97,13 @@ add_yr_units <- function(
                    as.character(units),
                    topic_alt)
 
+  ## reference points
+  ## TODO: ADD HERE
 
+  # replace old alt text with new alt text
+ test <- caps_alt_df[caps_alt_df$type == fig_or_table,
+                    # caps_alt_df$label == topic
+                     ]
 
 
   }

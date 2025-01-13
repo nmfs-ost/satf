@@ -129,10 +129,23 @@ write_captions <- function(dat, # converted model output object
 
 
   ## mortality (F) plot
-  # F.ref.pt <- # F reference point
-  # --(use to_lower): F_targ if it's present. if not, use F_proxy; if not, Fmsy (these are labels in dat)
-  # F.start.year. <- # start year of F plot
-  # --like Fend, but minimum year
+  # F reference point
+  F.ref.pt <- dat |>
+    dplyr::filter(
+      label == stringr::str_to_lower("F_targ") |
+        label == stringr::str_to_lower("F_proxy") |
+        label == stringr::str_to_lower("F_msy")
+    ) |>
+    dplyr::pull(estimate) |>
+    as.numeric() |>
+    round(digits = 2)
+
+  # start year of F plot
+  F.start.year <- dat |>
+    dplyr::filter(label == 'fishing_mortality') |>
+    dplyr::slice(which.min(year)) |>
+    dplyr::select(year) |>
+    as.numeric()
 
   # terminal fishing mortality
   # TODO: Put this in utils function, since F.end.year needs end_year
@@ -146,11 +159,21 @@ write_captions <- function(dat, # converted model output object
   #   as.numeric() |>
   # round(digits = 2)
 
-  # F.min <- # minimum F
+  # minimum F
+  # F.min <- dat |>
+  #   dplyr::filter(label == 'fishing_mortality')
+  #
+  # if (F.min$age)
+  #
+  #   dplyr::slice(which.min(year)) |>
+  #   as.numeric() |>
+  # round(digits = 2)
   # --if age = na, then take min(time series)
   # --if age & year != na, then group_by(age) |> summarize(val = max(estimate)) |>
   # pull(min(val))
-  # F.max <- # maximum F
+
+  # maximum F
+  # F.max <-
   # --if age = na, then take max(time series)
   # --if age & year != na, then group_by(age) |> summarize(val = max(estimate))
   # pull(max(val))
@@ -491,20 +514,14 @@ write_captions <- function(dat, # converted model output object
   # recruitment.end.year <- # this will take some thought, since end_year is
     # either entered by the user or calculated in plot_recruitment.R
 
-  # minimum recruitment
-  recruitment.min <- sr.min
-
-  # maximum recruitment
-  recruitment.max <- sr.max
-
 
   ## relative recruitment
   # minimum relative recruitment
-  rel.recruitment.min <- (recruitment.min / R0) |>
+  rel.recruitment.min <- (sr.min / R0) |>
     round(digits = 2)
 
   # maximum relative recruitment
-  rel.recruitment.max <- (recruitment.max / R0) |>
+  rel.recruitment.max <- (sr.max / R0) |>
     round(digits = 2)
 
 
@@ -564,13 +581,7 @@ write_captions <- function(dat, # converted model output object
     as.numeric() |>
     round(digits = 2)
 
-  ## tot_b (total biomass)
-  ## -same as B plot above
-  # biomass.start.year <- # start year of biomass plot
-  # biomass.end.year <- # end year of biomass plot
-  # biomass.units <- # biomass units (plural)
-  # biomass.min <- # minimum biomass
-  # biomass.max <- # maximum biomass
+  ## tot_b (total biomass): same as B plot above
 
   ## spawning_biomass (ssb)
   # start year of ssb plot
@@ -627,9 +638,6 @@ write_captions <- function(dat, # converted model output object
   # ssb.ref.pt <- # this will take some thought, since ref_line_val is
   # calculated in plot_spawning_biomass.R
 
-  # ssb reference point units
-  # ssb.ref.pt.units <- ssb_units
-
   ssbtarg <- dat |>
     dplyr::filter(c(grepl('spawning_biomass', label) & grepl('msy$', label) & estimate >1) | label == 'spawning_biomass_msy$') |>
     dplyr::pull(estimate) |>
@@ -647,16 +655,30 @@ write_captions <- function(dat, # converted model output object
 
 
   ## spr (spawning potential ratio)
-  # spr.start.year <- # start year of spr plot
-  # -same as ssb plot
-  # spr.end.year <- # end year of spr plot
-  # -same as ssb plot
-  # spr.min <- # minimum spr
-  # -label = spr (min) & end.year != na ; OR grepl("spr")- could be iffy
-  # spr.max  <- # maximum spr
-  # - "
-  # spr.ref.pt <- # spr reference point
-  # -spr_msy
+  # minimum spr
+  spr.min <- dat |>
+    dplyr::filter(c(grepl('spr', label) |
+                      label == "spr") & !is.na(year) & !is.na(estimate)) |>
+    dplyr::slice(which.min(estimate)) |>
+    dplyr::select(estimate) |>
+    as.numeric() |>
+    round(digits = 2)
+
+  # maximum spr
+  spr.max <- dat |>
+    dplyr::filter(c(grepl('spr', label) |
+                      label == "spr") & !is.na(year) & !is.na(estimate)) |>
+    dplyr::slice(which.max(estimate)) |>
+    dplyr::select(estimate) |>
+    as.numeric() |>
+    round(digits = 2)
+
+  # spr reference point
+  spr.ref.pt <- dat |>
+  dplyr::filter(label == "spr_msy") |>
+    dplyr::select(estimate) |>
+    as.numeric() |>
+    round(digits = 2)
 
   #TODO: LEFT OFF HERE (identifying how to extract quantities with Sam, Steve)
   ## pop_naa_baa (population numbers at age and population biomass at age)
@@ -739,12 +761,12 @@ write_captions <- function(dat, # converted model output object
    # 'Bmsy' = as.character(Bmsy),
 
     ## mortality (F) plot
-   # 'F.ref.pt' = as.character(F.ref.pt),
-   # 'F.start.year' = as.character(F.start.year),
+   'F.ref.pt' = as.character(F.ref.pt),
+   'F.start.year' = as.character(F.start.year),
    # 'F.end.year' = as.character(F.end.year),
    # 'F.min' = as.character(F.min),
    # 'F.max' = as.character(F.max),
-   # 'Ftarg' = as.character(Ftarg),
+   'Ftarg' = as.character(Ftarg),
    # 'F.Ftarg' = as.character(F.Ftarg),
 
     ## landings plot
@@ -813,10 +835,10 @@ write_captions <- function(dat, # converted model output object
    # 'cpue.max' = as.character(cpue.max),
 
    ## NAA (numbers at age)
-   # 'bubble.start.year.min' = as.character(bubble.start.year.min),
-   # 'bubble.end.year.max' = as.character(bubble.end.year.max),
-   # 'bubble.age.min' = as.character(bubble.age.min),
-   # 'bubble.age.max' = as.character(bubble.age.max),
+   'bubble.start.year.min' = as.character(bubble.start.year.min),
+   'bubble.end.year.max' = as.character(bubble.end.year.max),
+   'bubble.age.min' = as.character(bubble.age.min),
+   'bubble.age.max' = as.character(bubble.age.max),
 
    ## mod_fit_catch (model fit to catch ts)
    # 'mod.fit.catch.start.year' = as.character(mod.fit.catch.start.year),
@@ -862,21 +884,12 @@ write_captions <- function(dat, # converted model output object
    # 'recruitment.units' = as.character(recruitment.units),
    'recruitment.start.year' = as.character(recruitment.start.year),
    # 'recruitment.end.year' = as.character(recruitment.end.year),
-   'recruitment.min' = as.character(recruitment.min),
-   'recruitment.max' = as.character(recruitment.max),
 
    ## recruitment deviations
    'recruit.dev.start.year' = as.character(recruit.dev.start.year),
    # 'recruit.dev.end.year' = as.character(recruit.dev.end.year),
    'recruit.dev.min' = as.character(recruit.dev.min),
    'recruit.dev.max' = as.character(recruit.dev.max),
-
-   ## tot_b (total biomass)
-   # 'biomass.start.year' = as.character(biomass.start.year),
-   # 'biomass.end.year' = as.character(biomass.end.year),
-   # 'biomass.units' = as.character(biomass.units),
-   # 'biomass.min' = as.character(biomass.min),
-   # 'biomass.max' = as.character(biomass.max),
 
    # relative ssb
    # NOTE: moving this above recruitment so rel.ssb.min isn't changed to
@@ -889,19 +902,16 @@ write_captions <- function(dat, # converted model output object
    # 'ssb.end.year' = as.character(ssb.end.year),
    # 'ssb.units' = as.character(ssb.units),
    'ssb.min' = as.character(ssb.min),
-   'ssb.max' = as.character(ssb.max)#,
+   'ssb.max' = as.character(ssb.max),
    # 'ssb.ref.pt' = as.character(ssb.ref.pt),
-   # 'ssb.ref.pt.units' = as.character(ssb.ref.pt.units),
    # 'ssbtarg' = as.character(ssbtarg),
 
 
-   # ## spr (spawning potential ratio)
-   # 'spr.start.year' = as.character(spr.start.year),
-   # 'spr.end.year' = as.character(spr.end.year),
-   # 'spr.min' = as.character(spr.min),
-   # 'spr.max' = as.character(spr.max),
-   # 'spr.ref.pt' = as.character(spr.ref.pt),
-   #
+   ## spr (spawning potential ratio)
+   'spr.min' = as.character(spr.min),
+   'spr.max' = as.character(spr.max),
+   'spr.ref.pt' = as.character(spr.ref.pt)#,
+
    # ## pop_naa_baa (population numbers at age and population biomass at age)
    # 'pop.naa.baa.start.year' = as.character(pop.naa.baa.start.year),
    # 'pop.naa.baa.end.year' = as.character(pop.naa.baa.end.year),

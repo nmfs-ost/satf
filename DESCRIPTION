@@ -32,15 +32,12 @@ Imports:
     kableExtra,
     knitr,
     naniar,
-    nmfspalette,
     officer,
     stringr,
     tibble,
     tidyr,
     tidyselect,
     utils
-Remotes:
-    nmfs-fish-tools/nmfspalette
 Depends: 
     R (>= 2.10)
 Suggests: 

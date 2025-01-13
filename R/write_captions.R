@@ -33,21 +33,28 @@ write_captions <- function(dat, # converted model output object
 
   # FIGURES-----
 
-  ## kobe plot
-  # B.BMSY.min <- # minimum value of B/B(MSY)
-  # B.BMSY.max <- # maximum value of B/B(MSY)
-  # F.FMSY.min <- # minimum value of F/F(MSY)
-  # F.FMSY.max <- # maximum value of F/F(MSY)
-  # B.BMSY.end.yr <- # value of B/B(MSY) at the end year
-  # F.FMSY.end.yr <- # value of F/F(MSY) at the end year
-  # overfished.status.is.isnot <- # object that should be "is" or "is not" and answers the question, "the stock overfishing status ... overfished"
-  # overfishing.status.is.isnot <- # object that should be "is" or "is not" and answers the question, "the stock ... experiencing overfishing"
-  # kobe.start.year <- # start year of kobe plot
-  # kobe.end.year <- # end year of kobe plot
+  ## kobe plot- don't code quantities yet
+  # kobe.end.year <-
+  # value of B/B(MSY) at the end year
+  # B.BMSY.end.yr <- B/BMSY
+  # --B = time series of biomass, last year
+  # --BMSY = dplyr::filter(grepl('b_target', label) | grepl('b_msy', label) | c(grepl('fishing_mortality_msy', label) & is.na(year)))
+  #   CHECK: if length > 1, then select b_target
+
+  # value of F/F(MSY) at the end year
+  # F.FMSY.end.yr <-
+
+  # object that should be "is" or "is not" and answers the question,
+  # "the stock overfishing status ... overfished"
+  # overfished.status.is.isnot <-
+
+  # object that should be "is" or "is not" and answers the question,
+  # "the stock ... experiencing overfishing"
+  # overfishing.status.is.isnot <-
+
 
   ## Biomass plot
-  # B.ref.pt <- # biomass reference point- SHARED with kobe plot, above
-  # B.ref.pt.units <- # biomass reference point unit
+  # B.ref.pt <- # biomass reference point
 
   # start year of biomass plot
   B.start.year <- dat |>
@@ -123,14 +130,24 @@ write_captions <- function(dat, # converted model output object
 
   ## mortality (F) plot
   # F.ref.pt <- # F reference point
-  # F.ref.pt.units <- # F reference point unit
+  # --(use to_lower): F_targ if it's present. if not, use F_proxy; if not, Fmsy (these are labels in dat)
   # F.start.year. <- # start year of F plot
-  # F.end.year <- # start year of F plot
-  # F.units <- # units of F (plural)
+  # --like Fend, but minimum year
+  # F.end.year <- # end year of F plot
+  # --Fend
   # F.min <- # minimum F
+  # --if age = na, then take min(time series)
+  # --if age & year != na, then group_by(age) |> summarize(val = max(estimate)) |>
+  # pull(min(val))
   # F.max <- # maximum F
+  # --if age = na, then take max(time series)
+  # --if age & year != na, then group_by(age) |> summarize(val = max(estimate))
+  # pull(max(val))
   # Ftarg <-
+  # --Ftarg
   # F.Ftarg <-
+  # --F_Ftarg
+
 
   ## landings plot
 
@@ -200,20 +217,22 @@ write_captions <- function(dat, # converted model output object
 
   ## natural mortality (M)
   # M.age.min <- # minimum age of M
+  # --if age != na, min(age)
   # M.age.max <- # maximum age of M
-  # M.units <- # units of M (plural)
+  # --if age != na, max(age)
   # M.rate.min <- # minimum M rate
+  # -label = natural_mortality (min); est in est col
   # M.rate.max <- # maximum M rate
+  # -label = natural_mortality (min); est in est col
 
-  ## vonB LAA (von Bertalanffy growth function + length at age)
-  # vonb.age.units <- # vonB age units (plural)
+  ## vonB LAA (von Bertalanffy growth function + length at age)- don't code quantities yet
   # vonb.age.min <- # minimum vonB age
   # vonb.age.max <- # maximum vonB age
   # vonb.length.units <- # vonB length units (plural)
   # vonb.length.min <- # minimum vonB length
   # vonb.length.max <- # minimum vonB length
 
-  ## length-type conversion plot
+  ## length-type conversion plot- don't code quantities yet
   # total.length.units <- # total length units (plural)
   # total.length.min <- # minimum total length
   # total.length.max <- # maximum total length
@@ -221,7 +240,7 @@ write_captions <- function(dat, # converted model output object
   # fork.length.min <- # minimum fork length
   # fork.length.max <- # maximum fork length
 
-  ## weight-length conversion plot
+  ## weight-length conversion plot- don't code quantities yet
   # wl.length.units <- # length units (plural)
   # wl.length.min <- # minimum length
   # wl.length.max <- # maximum length
@@ -229,12 +248,12 @@ write_captions <- function(dat, # converted model output object
   # wl.weight.min <- # minimum weight
   # wl.weight.max <- # maximum weight
 
-  ## maturity schedule (proportion mature)
+  ## maturity schedule (proportion mature)- don't code quantities yet
   # prop.mat.length.units <- # length units (plural)
   # prop.mat.length.min <- # minimum length
   # prop.mat.length.max <- # maximum length
 
-  ## fecundity at length
+  ## fecundity at length- don't code quantities yet
   # fecundity.length.units <- # length units (plural)
   # fecundity.length.min <- # minimum length
   # fecundity.length.max <- # maximum length
@@ -242,16 +261,16 @@ write_captions <- function(dat, # converted model output object
   # fecundity.min <- # minimum fecundity
   # fecundity.max <- # maximum fecundity
 
-  ## CAA (catch at age)
+  ## CAA (catch at age)- don't code quantities yet
   # fleet.or.survey.name <- # fleet or survey name (SHARED with CAL, below)
   # caa.age.min <- # minimum age group
   # caa.age.max <- # maximum age group
 
-  ## CAL (catch at length)
+  ## CAL (catch at length)- don't code quantities yet
   # cal.length.min <- # minimum length group
   # cal.length.max <- # maximum length group
 
-  ## CPUE indices plot
+  ## CPUE indices plot- don't code quantities yet
   # cpue.start.year <- # start year of CPUE indices plot
   # cpue.end.year <- # end year of CPUE indices plot
   # cpue.units <- # CPUE units (plural) (SHARED with mod.fit.abun, below)
@@ -260,12 +279,15 @@ write_captions <- function(dat, # converted model output object
 
   ## NAA (numbers at age)
   # bubble.start.year.min <- # start year of NAA plot
+  # -label = abundance ; year != na; min(year)
   # bubble.end.year.max <- # end year of NAA plot
-  # bubble.age.units <- # age units (plural)
+  # -label = abundance ; year != na; max(year)
   # bubble.age.min <- # minimum age
+  # year != na; min(age)
   # bubble.age.max <- # maximum age
+  # year != na; max(age)
 
-  ## mod_fit_catch (model fit to catch ts)
+  ## mod_fit_catch (model fit to catch ts)- don't code quantities yet
   # mod.fit.catch.start.year <- # start year of model fit to catch ts plot
   # mod.fit.catch.end.year <- # end year of model fit to catch ts plot
   # mod.fit.catch.units <- # catch units (plural)
@@ -276,14 +298,19 @@ write_captions <- function(dat, # converted model output object
   # mod.fit.abun.start.year <- # start year of model fit to abundance indices plot
   # mod.fit.abun.end.year <- # end year of model fit to abundance indices plot
 
-  ## mod_fit_discards
+  ## mod_fit_discards- will be by fleet
+  ## for ss3, obs discards not in output file
+  ## -filter labels as discard_observed | discard_predicted | discard
+  ## -then group_by(year, fleet, label), then summarize(estimate_y = sum(estimate))
+  ## ---then, get the following:
+  ## -change alt text so that we add the line's min/max, but analyst has to describe further
   # mod.fit.discards.start.year <- # start year of model fit to discards plot
-  # mod.fit.discards.end.year <- # end year of model fit to discards plot
+  # mod.fit.discards.end.year <- # end year of F
   # mod.fit.discards.units <- # discards units (plural)
   # mod.fit.discards.min <- # minimum discards
   # mod.fit.discards.max <- # maximum discards
 
-  ## selectivity
+  ## selectivity- don't code quantities yet
   # selectivity.start.year <- # start year of selectivity plot
   # selectivity.end.year <- # end year of selectivity plot
   # selectivity.length.units <- # length units (plural)
@@ -291,9 +318,9 @@ write_captions <- function(dat, # converted model output object
   # selectivity.length.max <- # maximum length
 
 
-  ## estimated stock recruitment (aka spawning stock biomass)
+  ## estimated stock recruitment
   # youngest-age recruited fish (instead of age-0)
-  # sr.age.min <- # unsure how to extract this
+  # sr.age.min <- min(age) (usually 1)
 
   # ssb units (plural)
   # sr.ssb.units <- # this will take some thought, since
@@ -476,6 +503,7 @@ write_captions <- function(dat, # converted model output object
     round(digits = 2)
 
   ## tot_b (total biomass)
+  ## -same as B plot above
   # biomass.start.year <- # start year of biomass plot
   # biomass.end.year <- # end year of biomass plot
   # biomass.units <- # biomass units (plural)
@@ -560,12 +588,17 @@ write_captions <- function(dat, # converted model output object
 
   ## spr (spawning potential ratio)
   # spr.start.year <- # start year of spr plot
+  # -same as ssb plot
   # spr.end.year <- # end year of spr plot
+  # -same as ssb plot
   # spr.min <- # minimum spr
+  # -label = spr (min) & end.year != na ; OR grepl("spr")- could be iffy
   # spr.max  <- # maximum spr
+  # - "
   # spr.ref.pt <- # spr reference point
-  # spr.ref.pt.units <- # spr reference point units
+  # -spr_msy
 
+  #TODO: LEFT OFF HERE (identifying how to extract quantities with Sam, Steve)
   ## pop_naa_baa (population numbers at age and population biomass at age)
   # pop.naa.baa.start.year <- # start year of spr plot
   # pop.naa.baa.end.year <- # end year of spr plot
@@ -622,16 +655,11 @@ write_captions <- function(dat, # converted model output object
     # FIGURES-----
 
    ## kobe plot
-   # 'B.BMSY.min' = as.character(B.BMSY.min),
-   # 'B.BMSY.max' = as.character(B.BMSY.max),
-   # 'F.FMSY.min' = as.character(F.FMSY.min),
-   # 'F.FMSY.max' = as.character(F.FMSY.max),
+   # 'kobe.end.year' = as.character(kobe.end.year),
    # 'B.BMSY.end.yr' = as.character(B.BMSY.end.yr),
    # 'F.FMSY.end.yr' = as.character(F.FMSY.end.yr),
    # 'overfished.status.is.isnot' = as.character(overfished.status.is.isnot),
    # 'overfishing.status.is.isnot' = as.character(overfishing.status.is.isnot),
-   # 'kobe.start.year' = as.character(kobe.start.year),
-   # 'kobe.end.year' = as.character(kobe.end.year),
 
    ## Relative biomass plot
    # NOTE: moving this above biomass so rel.B.min isn't changed to "rel." + B.min (etc.)
@@ -640,7 +668,6 @@ write_captions <- function(dat, # converted model output object
 
    ## Biomass plot
    # 'B.ref.pt' = as.character(B.ref.pt),
-   # 'B.ref.pt.units' = as.character(B.ref.pt.units),
    'B.start.year' = as.character(B.start.year),
    # 'B.end.year' = as.character(B.end.year),
    # 'B.units' = as.character(B.units),
@@ -653,10 +680,8 @@ write_captions <- function(dat, # converted model output object
 
     ## mortality (F) plot
    # 'F.ref.pt' = as.character(F.ref.pt),
-   # 'F.ref.pt.units' = as.character(F.ref.pt.units),
    # 'F.start.year' = as.character(F.start.year),
    # 'F.end.year' = as.character(F.end.year),
-   # 'F.units' = as.character(F.units),
    # 'F.min' = as.character(F.min),
    # 'F.max' = as.character(F.max),
    # 'Ftarg' = as.character(Ftarg),
@@ -672,12 +697,10 @@ write_captions <- function(dat, # converted model output object
    ## natural mortality (M)
    # 'M.age.min' = as.character(M.age.min),
    # 'M.age.max' = as.character(M.age.max),
-   # 'M.units' = as.character(M.units),
    # 'M.rate.min' = as.character(M.rate.min),
    # 'M.rate.max' = as.character(M.rate.max),
 
    ## vonB LAA (von Bertalanffy growth function + length at age)
-   # 'vonb.age.units' = as.character(vonb.age.units),
    # 'vonb.age.min' = as.character(vonb.age.min),
    # 'vonb.age.max' = as.character(vonb.age.max),
    # 'vonb.length.units' = as.character(vonb.length.units),
@@ -732,7 +755,6 @@ write_captions <- function(dat, # converted model output object
    ## NAA (numbers at age)
    # 'bubble.start.year.min' = as.character(bubble.start.year.min),
    # 'bubble.end.year.max' = as.character(bubble.end.year.max),
-   # 'bubble.age.units' = as.character(bubble.age.units),
    # 'bubble.age.min' = as.character(bubble.age.min),
    # 'bubble.age.max' = as.character(bubble.age.max),
 
@@ -821,7 +843,6 @@ write_captions <- function(dat, # converted model output object
    # 'spr.min' = as.character(spr.min),
    # 'spr.max' = as.character(spr.max),
    # 'spr.ref.pt' = as.character(spr.ref.pt),
-   # 'spr.ref.pt.units' = as.character(spr.ref.pt.units),
    #
    # ## pop_naa_baa (population numbers at age and population biomass at age)
    # 'pop.naa.baa.start.year' = as.character(pop.naa.baa.start.year),

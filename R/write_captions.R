@@ -133,8 +133,19 @@ write_captions <- function(dat, # converted model output object
   # --(use to_lower): F_targ if it's present. if not, use F_proxy; if not, Fmsy (these are labels in dat)
   # F.start.year. <- # start year of F plot
   # --like Fend, but minimum year
-  # F.end.year <- # end year of F plot
-  # --Fend
+
+  # terminal fishing mortality
+  # TODO: Put this in utils function, since F.end.year needs end_year
+  # F.end.year <- dat |>
+  #   dplyr::filter(
+  #     c(label == 'fishing_mortality' &
+  #         year == end_year) |
+  #       c(label == 'terminal_fishing_mortality' & is.na(year))
+  #   ) |>
+  #   dplyr::pull(estimate) |>
+  #   as.numeric() |>
+  # round(digits = 2)
+
   # F.min <- # minimum F
   # --if age = na, then take min(time series)
   # --if age & year != na, then group_by(age) |> summarize(val = max(estimate)) |>
@@ -143,10 +154,19 @@ write_captions <- function(dat, # converted model output object
   # --if age = na, then take max(time series)
   # --if age & year != na, then group_by(age) |> summarize(val = max(estimate))
   # pull(max(val))
-  # Ftarg <-
-  # --Ftarg
-  # F.Ftarg <-
-  # --F_Ftarg
+
+  # fishing mortality at msy
+  Ftarg <- dat |>
+    dplyr::filter(grepl('f_target', label) |
+                    grepl('f_msy', label) |
+                    c(grepl('fishing_mortality_msy', label) & is.na(year))) |>
+    dplyr::pull(estimate) |>
+    as.numeric() |>
+    round(digits = 2)
+
+  # Terminal year F respective to F target
+  # TODO: Put this in utils function, since F.end.year needs end_year
+  # F.Ftarg <- F.end.year / Ftarg
 
 
   ## landings plot
@@ -216,11 +236,27 @@ write_captions <- function(dat, # converted model output object
     round(digits = 2)
 
   ## natural mortality (M)
-  # M.age.min <- # minimum age of M
-  # --if age != na, min(age)
-  # M.age.max <- # maximum age of M
-  # --if age != na, max(age)
-  # M.rate.min <- # minimum M rate
+  ## Should this be filtered by label = natural_mortality too?
+  # minimum age of M
+  # M.age.min <- dat |>
+  #   dplyr::select(age) |>
+  #   dplyr::filter(!is.na(age)) |>
+  #   dplyr::slice(which.min(age)) |>
+  #   as.numeric()
+  #
+  # # maximum age of M
+  # M.age.max <- dat |>
+  # dplyr::select(age) |>
+  #   dplyr::filter(!is.na(age)) |>
+  #   dplyr::slice(which.max(age)) |>
+  #   as.numeric()
+
+  # minimum M rate
+  # The "petrale_sole_std_output.csv" doesn't have a natural_mortality label...
+  # doesn't work
+  # M.rate.min <- dat |>
+  #   dplyr::filter(
+  #     grepl("natural_mortality", label)) |>
   # -label = natural_mortality (min); est in est col
   # M.rate.max <- # maximum M rate
   # -label = natural_mortality (min); est in est col
@@ -278,14 +314,33 @@ write_captions <- function(dat, # converted model output object
   # cpue.max <- # maximum CPUE (SHARED with mod_fit_abun, below)
 
   ## NAA (numbers at age)
-  # bubble.start.year.min <- # start year of NAA plot
-  # -label = abundance ; year != na; min(year)
-  # bubble.end.year.max <- # end year of NAA plot
-  # -label = abundance ; year != na; max(year)
-  # bubble.age.min <- # minimum age
-  # year != na; min(age)
-  # bubble.age.max <- # maximum age
-  # year != na; max(age)
+  # start year of NAA plot
+  bubble.start.year.min <- dat |>
+    dplyr::filter(label == "abundance" & !is.na(year)) |>
+    dplyr::slice(which.min(year)) |>
+    dplyr::select(year) |>
+    as.numeric()
+
+  # end year of NAA plot
+  bubble.end.year.max <- dat |>
+  dplyr::filter(label == "abundance" & !is.na(year)) |>
+    dplyr::slice(which.max(year)) |>
+    dplyr::select(year) |>
+    as.numeric()
+
+  # minimum age
+  bubble.age.min <- dat |>
+    dplyr::filter(label == "abundance" & !is.na(year)) |>
+    dplyr::slice(which.min(age)) |>
+    dplyr::select(age) |>
+    as.numeric()
+
+  # maximum age
+  bubble.age.max <- dat |>
+    dplyr::filter(label == "abundance" & !is.na(year)) |>
+    dplyr::slice(which.max(age)) |>
+    dplyr::select(age) |>
+    as.numeric()
 
   ## mod_fit_catch (model fit to catch ts)- don't code quantities yet
   # mod.fit.catch.start.year <- # start year of model fit to catch ts plot
@@ -294,9 +349,12 @@ write_captions <- function(dat, # converted model output object
   # mod.fit.catch.min <- # minimum catch
   # mod.fit.catch.max <- # maximum catch
 
-  ## mod_fit_abun (model fit to abundance indices plot)
-  # mod.fit.abun.start.year <- # start year of model fit to abundance indices plot
-  # mod.fit.abun.end.year <- # end year of model fit to abundance indices plot
+  ## mod_fit_abun (model fit to abundance indices plot)- don't code quantities yet
+  # start year of model fit to abundance indices plot
+  # mod.fit.abun.start.year <-
+
+  # end year of model fit to abundance indices plot
+  # mod.fit.abun.end.year <-
 
   ## mod_fit_discards- will be by fleet
   ## for ss3, obs discards not in output file
@@ -320,7 +378,11 @@ write_captions <- function(dat, # converted model output object
 
   ## estimated stock recruitment
   # youngest-age recruited fish (instead of age-0)
-  # sr.age.min <- min(age) (usually 1)
+  # sr.age.min <- dat |>
+  #   dplyr::filter(!is.na(year) & !is.na(age)) # |>
+  #   dplyr::slice(which.min(age)) |>
+  #   dplyr::select(age) |>
+  #   as.numeric()
 
   # ssb units (plural)
   # sr.ssb.units <- # this will take some thought, since
@@ -509,8 +571,6 @@ write_captions <- function(dat, # converted model output object
   # biomass.units <- # biomass units (plural)
   # biomass.min <- # minimum biomass
   # biomass.max <- # maximum biomass
-  # biomass.ref.pt <- # biomass reference point
-  # biomass.ref.pt.units <- # biomass reference point units
 
   ## spawning_biomass (ssb)
   # start year of ssb plot
@@ -817,8 +877,6 @@ write_captions <- function(dat, # converted model output object
    # 'biomass.units' = as.character(biomass.units),
    # 'biomass.min' = as.character(biomass.min),
    # 'biomass.max' = as.character(biomass.max),
-   # 'biomass.ref.pt' = as.character(biomass.ref.pt),
-   # 'biomass.ref.pt.units' = as.character(biomass.ref.pt.units),
 
    # relative ssb
    # NOTE: moving this above recruitment so rel.ssb.min isn't changed to

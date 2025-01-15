@@ -92,6 +92,7 @@ add_more_key_quants <- function(
 
   # replace placeholders (e.g., if "end.year" is found in topic_alt, replace it with end_year)
   ## end_year-----
+  if(!is.null(end_year)){
   ### alt text
   ### this regex preserves the comma after the end year
   topic_cap_alt <- topic_cap_alt |>
@@ -104,6 +105,7 @@ add_more_key_quants <- function(
     dplyr::mutate(alt_text = stringr::str_replace_all(alt_text,
                                                       stringr::regex("\\S*end\\.year\\S*\\s*"),
                                                       end_year))
+  }
   ## units-----
   if(!is.null(units)){
   ### caption
@@ -162,12 +164,14 @@ add_more_key_quants <- function(
 
   }
   ## reference points-----
+  if(!is.null(ref_pt)){
   ### caption
   ### this regex preserves the opening ( before the ref pt
   topic_cap_alt <- topic_cap_alt |>
     dplyr::mutate(caption = stringr::str_replace_all(caption,
                                                      stringr::regex("\\(\\S*ref\\.pt*\\S*"),
                                                      paste0("(", as.character(ref_pt))))
+  }
 
   # remove row with old caption/alt text, then add new row
   replaced_df <- dplyr::anti_join(caps_alt_df,

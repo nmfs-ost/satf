@@ -54,7 +54,8 @@ write_captions <- function(dat, # converted model output object
 
 
   ## Biomass plot
-  # B.ref.pt <- # biomass reference point
+  # biomass reference point
+  # B.ref.pt : added with add_more_key_quants
 
   # start year of biomass plot
   B.start.year <- dat |>
@@ -68,12 +69,10 @@ write_captions <- function(dat, # converted model output object
     as.numeric()
 
   # end year of biomass plot
-  # B.end.year <- # this will take some thought, since end_year is
-    # either entered by the user or calculated in plot_biomass.R
+  # B.end.year : added with add_more_key_quants
 
   # units of B (plural)
-  # B.units <- # this will take some thought, since units is
-    # entered by the user in plot_biomass.R
+  # B.units : added with add_more_key_quants
 
   # minimum B
   B.min <- dat |>
@@ -223,8 +222,7 @@ write_captions <- function(dat, # converted model output object
     as.numeric()
 
   # units of landings (plural)
-  # landings.units <- # this will take some thought, since units is
-  # entered by the user in plot_landings.R
+  # landings.units : added with add_more_key_quants
 
   # minimum landings
   landings.min <- dat |>
@@ -284,41 +282,66 @@ write_captions <- function(dat, # converted model output object
   # M.rate.max <- # maximum M rate
   # -label = natural_mortality (min); est in est col
 
+
   ## vonB LAA (von Bertalanffy growth function + length at age)- don't code quantities yet
   # vonb.age.min <- # minimum vonB age
   # vonb.age.max <- # maximum vonB age
-  # vonb.length.units <- # vonB length units (plural)
+
+  # vonB length units (plural)
+  # vonb.length.units : added with add_more_key_quants
+
   # vonb.length.min <- # minimum vonB length
   # vonb.length.max <- # minimum vonB length
 
+
   ## length-type conversion plot- don't code quantities yet
-  # total.length.units <- # total length units (plural)
+  # total length units (plural)
+  # total.length.units : added with add_more_key_quants
+
   # total.length.min <- # minimum total length
   # total.length.max <- # maximum total length
-  # fork.length.units <- # fork length units (plural)
+  # fork length units (plural)
+  # fork.length.units : added with add_more_key_quants
+
   # fork.length.min <- # minimum fork length
   # fork.length.max <- # maximum fork length
 
+
   ## weight-length conversion plot- don't code quantities yet
-  # wl.length.units <- # length units (plural)
+  # length units (plural)
+  # wl.length.units : added with add_more_key_quants
+
   # wl.length.min <- # minimum length
   # wl.length.max <- # maximum length
-  # wl.weight.units <- # weight units (plural)
+
+  # weight units (plural)
+  # wl.weight.units : added with add_more_key_quants
+
   # wl.weight.min <- # minimum weight
   # wl.weight.max <- # maximum weight
 
+
   ## maturity schedule (proportion mature)- don't code quantities yet
-  # prop.mat.length.units <- # length units (plural)
+  # length units (plural)
+  # prop.mat.length.units : added with add_more_key_quants
+
   # prop.mat.length.min <- # minimum length
   # prop.mat.length.max <- # maximum length
 
+
   ## fecundity at length- don't code quantities yet
-  # fecundity.length.units <- # length units (plural)
+  # length units (plural)
+  # fecundity.length.units : added with add_more_key_quants
+
   # fecundity.length.min <- # minimum length
   # fecundity.length.max <- # maximum length
-  # fecundity.units <- # fecundity units (plural)
+
+  # fecundity units (plural)
+  # fecundity.units : added with add_more_key_quants
+
   # fecundity.min <- # minimum fecundity
   # fecundity.max <- # maximum fecundity
+
 
   ## CAA (catch at age)- don't code quantities yet
   # fleet.or.survey.name <- # fleet or survey name (SHARED with CAL, below)
@@ -329,12 +352,17 @@ write_captions <- function(dat, # converted model output object
   # cal.length.min <- # minimum length group
   # cal.length.max <- # maximum length group
 
+
   ## CPUE indices plot- don't code quantities yet
   # cpue.start.year <- # start year of CPUE indices plot
   # cpue.end.year <- # end year of CPUE indices plot
-  # cpue.units <- # CPUE units (plural) (SHARED with mod.fit.abun, below)
+
+  # CPUE units (plural) (SHARED with mod.fit.abun, below)
+  # cpue.units : added with add_more_key_quants
+
   # cpue.min <- # minimum CPUE (SHARED with mod_fit_abun, below)
   # cpue.max <- # maximum CPUE (SHARED with mod_fit_abun, below)
+
 
   ## NAA (numbers at age)
   # start year of NAA plot
@@ -365,12 +393,17 @@ write_captions <- function(dat, # converted model output object
     dplyr::select(age) |>
     as.numeric()
 
+
   ## mod_fit_catch (model fit to catch ts)- don't code quantities yet
   # mod.fit.catch.start.year <- # start year of model fit to catch ts plot
   # mod.fit.catch.end.year <- # end year of model fit to catch ts plot
-  # mod.fit.catch.units <- # catch units (plural)
+
+  # catch units (plural)
+  # mod.fit.catch.units : added with add_more_key_quants
+
   # mod.fit.catch.min <- # minimum catch
   # mod.fit.catch.max <- # maximum catch
+
 
   ## mod_fit_abun (model fit to abundance indices plot)- don't code quantities yet
   # start year of model fit to abundance indices plot
@@ -408,8 +441,7 @@ write_captions <- function(dat, # converted model output object
   #   as.numeric()
 
   # ssb units (plural)
-  # sr.ssb.units <- # this will take some thought, since
-  # spawning_biomass_label is entered by the user in plot_spawn_recruitment.R
+  # sr.ssb.units : added with add_more_key_quants
 
   # minimum ssb
   sr.ssb.min <- dat |>
@@ -448,8 +480,7 @@ write_captions <- function(dat, # converted model output object
     round(digits = 2)
 
   # recruitment units (plural)
-  # sr.units <- # this will take some thought, since recruitment_label
-  # is entered by the user in plot_spawn_recruitment.R
+  # sr.units : added with add_more_key_quants
 
   # minimum recruitment
   sr.min <- dat |>
@@ -490,8 +521,7 @@ write_captions <- function(dat, # converted model output object
 
   ## recruitment ts
   # recruitment units (plural) - numbers of fish, in thousands
-  # recruitment.units <- # this will take some thought, since unit_label is
-    # entered by the user in plot_recruitment.R
+  # recruitment.units : added with add_more_key_quants
 
   # start year of recruitment ts plot
   recruitment.start.year <- dat |>
@@ -511,8 +541,7 @@ write_captions <- function(dat, # converted model output object
     as.numeric()
 
   # end year of recruitment ts plot
-  # recruitment.end.year <- # this will take some thought, since end_year is
-    # either entered by the user or calculated in plot_recruitment.R
+  # recruitment.end.year : added with add_more_key_quants
 
 
   ## relative recruitment
@@ -544,8 +573,7 @@ write_captions <- function(dat, # converted model output object
     as.numeric()
 
   # end year of recruitment deviations plot
-  # recruit.dev.end.year <- # this will take some thought, since end_year is
-  # either entered by the user or calculated in plot_recruitment_deviations.R
+  # recruit.dev.end.year : added with add_more_key_quants
 
   # minimum recruitment deviation
   recruit.dev.min <- dat |>
@@ -599,12 +627,10 @@ write_captions <- function(dat, # converted model output object
     round(digits = 2)
 
   # end year of ssb plot
-  # ssb.end.year <- # this will take some thought, since end_year is
-  # either entered by the user or calculated in plot_spawning_biomass.R
+  # ssb.end.year : added with add_more_key_quants
 
   # ssb units (plural)
-  # ssb.units <- # this will take some thought, since unit_label is
-  # entered by the user in plot_spawning_biomass.R
+  # ssb.units : added with add_more_key_quants
 
   # minimum ssb
   ssb.min <- dat |>
@@ -635,8 +661,7 @@ write_captions <- function(dat, # converted model output object
     round(digits = 2)
 
   # ssb reference point
-  # ssb.ref.pt <- # this will take some thought, since ref_line_val is
-  # calculated in plot_spawning_biomass.R
+  # ssb.ref.pt : added with add_more_key_quants
 
   ssbtarg <- dat |>
     dplyr::filter(c(grepl('spawning_biomass', label) & grepl('msy$', label) & estimate >1) | label == 'spawning_biomass_msy$') |>
@@ -749,10 +774,7 @@ write_captions <- function(dat, # converted model output object
    'rel.B.max' = as.character(rel.B.max),
 
    ## Biomass plot
-   # 'B.ref.pt' = as.character(B.ref.pt),
    'B.start.year' = as.character(B.start.year),
-   # 'B.end.year' = as.character(B.end.year),
-   # 'B.units' = as.character(B.units),
    'B.min' = as.character(B.min),
    'B.max' = as.character(B.max),
    'R0' = as.character(R0),
@@ -772,7 +794,6 @@ write_captions <- function(dat, # converted model output object
     ## landings plot
    'landings.start.year' = as.character(landings.start.year),
    'landings.end.year' = as.character(landings.end.year),
-   # 'landings.units' = as.character(landings.units),
    'landings.min' = as.character(landings.min),
    'landings.max' = as.character(landings.max),
 
@@ -830,7 +851,6 @@ write_captions <- function(dat, # converted model output object
    ## CPUE indices plot
    # 'cpue.start.year' = as.character(cpue.start.year),
    # 'cpue.end.year' = as.character(cpue.end.year),
-   # 'cpue.units' = as.character(cpue.units),
    # 'cpue.min' = as.character(cpue.min),
    # 'cpue.max' = as.character(cpue.max),
 
@@ -867,10 +887,8 @@ write_captions <- function(dat, # converted model output object
 
    ## estimated stock recruitment (aka spawning stock biomass)
    # 'sr.age.min' = as.character(sr.age.min),
-   # 'sr.ssb.units' = as.character(sr.ssb.units),
    'sr.ssb.min' = as.character(sr.ssb.min),
    'sr.ssb.max' = as.character(sr.ssb.max),
-   # 'sr.units' = as.character(sr.units),
    'sr.min' = as.character(sr.min),
    'sr.max' = as.character(sr.max),
 
@@ -881,13 +899,10 @@ write_captions <- function(dat, # converted model output object
    'rel.recruitment.max' = as.character(rel.recruitment.max),
 
    ## recruitment ts
-   # 'recruitment.units' = as.character(recruitment.units),
    'recruitment.start.year' = as.character(recruitment.start.year),
-   # 'recruitment.end.year' = as.character(recruitment.end.year),
 
    ## recruitment deviations
    'recruit.dev.start.year' = as.character(recruit.dev.start.year),
-   # 'recruit.dev.end.year' = as.character(recruit.dev.end.year),
    'recruit.dev.min' = as.character(recruit.dev.min),
    'recruit.dev.max' = as.character(recruit.dev.max),
 
@@ -899,11 +914,8 @@ write_captions <- function(dat, # converted model output object
 
    ## spawning.biomass (ssb)
    'ssb.start.year' = as.character(ssb.start.year),
-   # 'ssb.end.year' = as.character(ssb.end.year),
-   # 'ssb.units' = as.character(ssb.units),
    'ssb.min' = as.character(ssb.min),
    'ssb.max' = as.character(ssb.max),
-   # 'ssb.ref.pt' = as.character(ssb.ref.pt),
    # 'ssbtarg' = as.character(ssbtarg),
 
 

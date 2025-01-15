@@ -79,14 +79,22 @@ add_more_key_quants <- function(
     dplyr::filter(label == topic,
                   type == fig_or_table)
 
-  # replace placeholders
+  # replace placeholders (e.g., if "end.year" is found in topic_alt, replace it with end_year)
   ## end_year
   ### alt text
-  # if "end.year " is found in topic_alt, replace it with end_year
+  ### this regex preserves the comma after the end year
+  topic_cap_alt <- topic_cap_alt |>
+    dplyr::mutate(alt_text = stringr::str_replace_all(alt_text,
+                                                      stringr::regex("(\\S*end\\.year\\S*)(?=\\s?,)"),
+                                                      end_year))
+
+  ### this regex removes a potential trailing space after the end year
   topic_cap_alt <- topic_cap_alt |>
     dplyr::mutate(alt_text = stringr::str_replace_all(alt_text,
                                                       stringr::regex("\\S*end\\.year\\S*\\s*"),
                                                       end_year))
+
+
 
   ## units
   ### caption

@@ -70,8 +70,10 @@ export_rda <- function(final = final,
 add_more_key_quants <- function(
     topic = topic_label,
     fig_or_table = fig_or_table,
+    dir = NULL,
     end_year = NULL,
-    units = NULL){
+    units = NULL,
+    ref_pt = NULL){
 
   # import csv
   caps_alt_df <- read.csv(fs::path(getwd(), "captions_alt_text.csv"))
@@ -86,34 +88,69 @@ add_more_key_quants <- function(
     dplyr::filter(label == topic,
                   type == fig_or_table)
 
-  # select caption
-  # topic_cap <- topic_cap_alt |>
-  #   dplyr::select(caption)
-
-  # select alt text
-  topic_alt <- topic_cap_alt |>
-    dplyr::select(alt_text)
-
-  # replace placeholders in alt text
+  # replace placeholders
   ## end_year
-  # if "end.year" is found in topic_alt, replace it with end_year
-  topic_alt <- sub("\\S*end\\.year\\S*",
-                   as.character(end_year),
-                   topic_alt)
+  ### alt text
+  # if "end.year " is found in topic_alt, replace it with end_year
+  topic_cap_alt <- topic_cap_alt |>
+    dplyr::mutate(alt_text = stringr::str_replace_all(alt_text,
+                                                      stringr::regex("\\S*end\\.year\\S*\\s*"),
+                                                      end_year))
 
   ## units
-  topic_alt <- sub("\\S*units\\S*",
-                   as.character(units),
-                   topic_alt)
+  ### caption
+  ### this regex preserves the closing ) after the units
+  topic_cap_alt <- topic_cap_alt |>
+    dplyr::mutate(caption = stringr::str_replace_all(caption,
+                                                      stringr::regex("(\\S*units\\S*)(?=\\s?\\))"),
+                                                      as.character(units)))
+
+  ### this regex preserves the period after the units
+  topic_cap_alt <- topic_cap_alt |>
+    dplyr::mutate(caption = stringr::str_replace_all(caption,
+                                                     stringr::regex("(\\S*units\\S*)(?=\\s?.)"),
+                                                     as.character(units)))
+
+  ### this regex replaces the units if it's not found with the previous two commands
+  ### (i.e., there's no parenthesis or period adjacent to the units variable)
+  topic_cap_alt <- topic_cap_alt |>
+    dplyr::mutate(caption = stringr::str_replace_all(caption,
+                                                     stringr::regex("\\S*units\\S*"),
+                                                     as.character(units)))
+
+  ### alt text
+  ### this regex preserves the comma after the units
+  topic_cap_alt <- topic_cap_alt |>
+    dplyr::mutate(alt_text = stringr::str_replace_all(alt_text,
+                                                      stringr::regex("(\\S*units\\S*)(?=\\s?,)"),
+                                                      as.character(units)))
+
+  ### this regex replaces the units if it's not found with the previous command
+  ### (i.e., there's no comma adjacent to the units variable)
+  topic_cap_alt <- topic_cap_alt |>
+    dplyr::mutate(alt_text = stringr::str_replace_all(alt_text,
+                                                     stringr::regex("\\S*units\\S*"),
+                                                     as.character(units)))
 
   ## reference points
-  ## TODO: ADD HERE
+  ### caption
+  ### this regex preserves the opening ( before the ref pt
+  topic_cap_alt <- topic_cap_alt |>
+    dplyr::mutate(caption = stringr::str_replace_all(caption,
+                                                     stringr::regex("\\(\\S*ref\\.pt*\\S*"),
+                                                     paste0("(", as.character(ref_pt))))
 
-  # replace old alt text with new alt text
- test <- caps_alt_df[caps_alt_df$type == fig_or_table,
-                    # caps_alt_df$label == topic
-                     ]
+  # remove row with old caption/alt text, then add new row
+  replaced_df <- dplyr::anti_join(caps_alt_df,
+                                  topic_cap_alt,
+                                  by = c("label", "type")) |>
+    dplyr::full_join(topic_cap_alt)
 
+  # export df with updated captions and alt text to csv
+  utils::write.csv(x = replaced_df,
+                   file = fs::path(dir,
+                                   "captions_alt_text.csv"),
+                   row.names=FALSE)
 
   }
 

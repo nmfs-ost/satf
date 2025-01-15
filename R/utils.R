@@ -73,6 +73,8 @@ add_more_key_quants <- function(
     dir = NULL,
     end_year = NULL,
     units = NULL,
+    sr_ssb_units = NULL,
+    sr_recruitment_units = NULL,
     ref_pt = NULL){
 
   # import csv
@@ -89,7 +91,7 @@ add_more_key_quants <- function(
                   type == fig_or_table)
 
   # replace placeholders (e.g., if "end.year" is found in topic_alt, replace it with end_year)
-  ## end_year
+  ## end_year-----
   ### alt text
   ### this regex preserves the comma after the end year
   topic_cap_alt <- topic_cap_alt |>
@@ -102,10 +104,8 @@ add_more_key_quants <- function(
     dplyr::mutate(alt_text = stringr::str_replace_all(alt_text,
                                                       stringr::regex("\\S*end\\.year\\S*\\s*"),
                                                       end_year))
-
-
-
-  ## units
+  ## units-----
+  if(!is.null(units)){
   ### caption
   ### this regex preserves the closing ) after the units
   topic_cap_alt <- topic_cap_alt |>
@@ -125,7 +125,27 @@ add_more_key_quants <- function(
     dplyr::mutate(caption = stringr::str_replace_all(caption,
                                                      stringr::regex("\\S*units\\S*"),
                                                      as.character(units)))
+  }
 
+  if(!is.null(sr_ssb_units)){
+  ### this is for plot_spawn_recruitment, since there are two units
+  #### replace sr.ssb.units with sr_ssb_units
+  topic_cap_alt <- topic_cap_alt |>
+    dplyr::mutate(alt_text = stringr::str_replace_all(alt_text,
+                                                      "sr.ssb.units",
+                                                      as.character(sr_ssb_units)))
+  }
+
+  if(!is.null(sr_recruitment_units)){
+  ### this is for plot_spawn_recruitment, since there are two units
+  #### replace sr.units with sr_recruitment_units
+  topic_cap_alt <- topic_cap_alt |>
+    dplyr::mutate(alt_text = stringr::str_replace_all(alt_text,
+                                                      "sr.units",
+                                                      as.character(sr_recruitment_units)))
+  }
+
+  if(!is.null(units)){
   ### alt text
   ### this regex preserves the comma after the units
   topic_cap_alt <- topic_cap_alt |>
@@ -140,7 +160,8 @@ add_more_key_quants <- function(
                                                      stringr::regex("\\S*units\\S*"),
                                                      as.character(units)))
 
-  ## reference points
+  }
+  ## reference points-----
   ### caption
   ### this regex preserves the opening ( before the ref pt
   topic_cap_alt <- topic_cap_alt |>
@@ -161,4 +182,3 @@ add_more_key_quants <- function(
                    row.names=FALSE)
 
   }
-

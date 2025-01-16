@@ -1,0 +1,25 @@
+---
+title: "manual"
+output:
+  html_document:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{manual}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# General manual
+
+This manual is a work in progress. In the meantime, please read the function documentation and refer to the documentation of [the companion package, `asar`](https://github.com/nmfs-ost/asar).
+
+## Updating alternative text and captions
+
+

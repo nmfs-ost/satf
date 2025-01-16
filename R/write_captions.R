@@ -159,23 +159,50 @@ write_captions <- function(dat, # converted model output object
   # round(digits = 2)
 
   # minimum F
-  # F.min <- dat |>
-  #   dplyr::filter(label == 'fishing_mortality')
-  #
-  # if (F.min$age)
-  #
-  #   dplyr::slice(which.min(year)) |>
-  #   as.numeric() |>
-  # round(digits = 2)
-  # --if age = na, then take min(time series)
-  # --if age & year != na, then group_by(age) |> summarize(val = max(estimate)) |>
-  # pull(min(val))
+  F.min <- dat |>
+    dplyr::filter(label == 'fishing_mortality')
+
+  if(length(unique(F.min$age)) == 1){
+    if(is.na(unique(F.min$age))){
+    F.min <- F.min |>
+      dplyr::filter(module_name %in% c("TIME_SERIES","t.series")) |>
+      dplyr::slice(which.min(estimate)) |>
+      as.numeric() |>
+      round(digits = 2)
+    }
+    } else {
+    F.min <- F.min |>
+      dplyr::group_by(age)|>
+      dplyr::summarize(val = min(estimate)) |>
+      dplyr::slice(which.min(val)) |>
+      dplyr::select(val) |>
+      as.numeric() |>
+      round(digits = 2)
+  }
+
 
   # maximum F
-  # F.max <-
-  # --if age = na, then take max(time series)
-  # --if age & year != na, then group_by(age) |> summarize(val = max(estimate))
-  # pull(max(val))
+  F.max <- dat |>
+    dplyr::filter(label == 'fishing_mortality')
+
+  if(length(unique(F.max$age)) == 1){
+    if(is.na(unique(F.max$age))){
+      F.min <- F.min |>
+        dplyr::filter(module_name %in% c("TIME_SERIES","t.series")) |>
+        dplyr::slice(which.max(estimate)) |>
+        as.numeric() |>
+        signif(2)
+    }
+  } else {
+    F.max <- F.max |>
+      dplyr::group_by(age)|>
+      dplyr::summarize(val = max(estimate)) |>
+      dplyr::slice(which.max(val)) |>
+      dplyr::select(val) |>
+      as.numeric() |>
+      signif(2)
+  }
+
 
   # fishing mortality at msy
   Ftarg <- dat |>
@@ -434,11 +461,11 @@ write_captions <- function(dat, # converted model output object
 
   ## estimated stock recruitment
   # youngest-age recruited fish (instead of age-0)
-  # sr.age.min <- dat |>
-  #   dplyr::filter(!is.na(year) & !is.na(age)) # |>
-  #   dplyr::slice(which.min(age)) |>
-  #   dplyr::select(age) |>
-  #   as.numeric()
+  sr.age.min <- dat |>
+    dplyr::filter(!is.na(year) & !is.na(age)) |>
+    dplyr::slice(which.min(age)) |>
+    dplyr::select(age) |>
+    as.numeric()
 
   # ssb units (plural)
   # sr.ssb.units : added with add_more_key_quants
@@ -786,8 +813,8 @@ write_captions <- function(dat, # converted model output object
    'F.ref.pt' = as.character(F.ref.pt),
    'F.start.year' = as.character(F.start.year),
    # 'F.end.year' = as.character(F.end.year),
-   # 'F.min' = as.character(F.min),
-   # 'F.max' = as.character(F.max),
+   'F.min' = as.character(F.min),
+   'F.max' = as.character(F.max),
    'Ftarg' = as.character(Ftarg),
    # 'F.Ftarg' = as.character(F.Ftarg),
 

@@ -24,6 +24,11 @@ write_captions <- function(dat, # converted model output object
     system.file("resources", "captions_alt_text_template.csv", package = "satf")
   )
 
+  dat <- dat |>
+    dplyr::mutate(estimate = as.numeric(estimate),
+                  year = as.numeric(year),
+                  age = as.numeric(age))
+
   # extract key quantities
   # REMINDERS:
   # -the variable names must exactly match those in the captions/alt text csv.
@@ -63,7 +68,6 @@ write_captions <- function(dat, # converted model output object
                   module_name == "TIME_SERIES" | module_name == "t.series", # SS3 and BAM target module names
                   is.na(fleet),
                   is.na(age)) |>
-    dplyr::mutate(estimate = as.numeric(estimate)) |>
     dplyr::slice(which.min(year)) |>
     dplyr::select(year) |>
     as.numeric()
@@ -80,7 +84,6 @@ write_captions <- function(dat, # converted model output object
                   module_name == "TIME_SERIES" | module_name == "t.series", # SS3 and BAM target module names
                   is.na(fleet),
                   is.na(age)) |>
-    dplyr::mutate(estimate = as.numeric(estimate)) |>
     dplyr::slice(which.min(estimate)) |>
     dplyr::select(estimate) |>
     as.numeric() |>
@@ -92,7 +95,6 @@ write_captions <- function(dat, # converted model output object
                   module_name == "TIME_SERIES" | module_name == "t.series", # SS3 and BAM target module names
                   is.na(fleet),
                   is.na(age)) |>
-    dplyr::mutate(estimate = as.numeric(estimate)) |>
     dplyr::slice(which.max(estimate)) |>
     dplyr::select(estimate) |>
     as.numeric() |>
@@ -173,7 +175,7 @@ write_captions <- function(dat, # converted model output object
     } else {
     F.min <- F.min |>
       dplyr::group_by(age)|>
-      dplyr::summarize(val = min(estimate)) |>
+      dplyr::summarize(val = max(estimate)) |>
       dplyr::slice(which.min(val)) |>
       dplyr::select(val) |>
       as.numeric() |>
@@ -191,7 +193,7 @@ write_captions <- function(dat, # converted model output object
         dplyr::filter(module_name %in% c("TIME_SERIES","t.series")) |>
         dplyr::slice(which.max(estimate)) |>
         as.numeric() |>
-        signif(2)
+        round(digits = 2)
     }
   } else {
     F.max <- F.max |>
@@ -200,7 +202,7 @@ write_captions <- function(dat, # converted model output object
       dplyr::slice(which.max(val)) |>
       dplyr::select(val) |>
       as.numeric() |>
-      signif(2)
+      round(digits = 2)
   }
 
 
@@ -227,9 +229,6 @@ write_captions <- function(dat, # converted model output object
       # t.series is associated with a conversion from BAM output and CATCH with SS3 converted output
       !is.na(fleet)
     ) |>
-    dplyr::mutate(
-      year = as.numeric(year)
-    ) |>
     dplyr::slice(which.min(year)) |>
     dplyr::select(year) |>
     as.numeric()
@@ -240,9 +239,6 @@ write_captions <- function(dat, # converted model output object
       c(module_name == "t.series" & grepl("landings_observed", label)) | c(module_name == "CATCH" & grepl("ret_bio", label)),
       # t.series is associated with a conversion from BAM output and CATCH with SS3 converted output
       !is.na(fleet)
-    ) |>
-    dplyr::mutate(
-      year = as.numeric(year)
     ) |>
     dplyr::slice(which.max(year)) |>
     dplyr::select(year) |>
@@ -258,10 +254,6 @@ write_captions <- function(dat, # converted model output object
       # t.series is associated with a conversion from BAM output and CATCH with SS3 converted output
       !is.na(fleet)
     ) |>
-    dplyr::mutate(
-      estimate = as.numeric(estimate),
-      year = as.numeric(year)
-    ) |>
     dplyr::slice(which.min(estimate)) |>
     dplyr::select(estimate) |>
     as.numeric() |>
@@ -274,17 +266,13 @@ write_captions <- function(dat, # converted model output object
       # t.series is associated with a conversion from BAM output and CATCH with SS3 converted output
       !is.na(fleet)
     ) |>
-    dplyr::mutate(
-      estimate = as.numeric(estimate),
-      year = as.numeric(year)
-    ) |>
     dplyr::slice(which.max(estimate)) |>
     dplyr::select(estimate) |>
     as.numeric() |>
     round(digits = 2)
 
-  ## natural mortality (M)
-  ## Should this be filtered by label = natural_mortality too?
+  ## natural mortality (M)- bam examples have label as natural_mortality
+  ## but other formats don't (in input) (use if statement)
   # minimum age of M
   # M.age.min <- dat |>
   #   dplyr::select(age) |>
@@ -300,13 +288,13 @@ write_captions <- function(dat, # converted model output object
   #   as.numeric()
 
   # minimum M rate
-  # The "petrale_sole_std_output.csv" doesn't have a natural_mortality label...
-  # doesn't work
   # M.rate.min <- dat |>
   #   dplyr::filter(
   #     grepl("natural_mortality", label)) |>
   # -label = natural_mortality (min); est in est col
-  # M.rate.max <- # maximum M rate
+
+  # maximum M rate
+  # M.rate.max <-
   # -label = natural_mortality (min); est in est col
 
 
@@ -481,8 +469,6 @@ write_captions <- function(dat, # converted model output object
                 is.na(growth_pattern) | length(unique(growth_pattern)) <= 1,
                 !year %in% year_exclusions
   ) |> # SS3 and BAM target module names
-    dplyr::mutate(estimate = as.numeric(estimate),
-                  year = as.numeric(year)) |>
     dplyr::slice(which.min(estimate)) |>
     dplyr::select(estimate) |>
     as.numeric() |>
@@ -499,8 +485,6 @@ write_captions <- function(dat, # converted model output object
                   is.na(growth_pattern) | length(unique(growth_pattern)) <= 1,
                   !year %in% year_exclusions
     ) |> # SS3 and BAM target module names
-    dplyr::mutate(estimate = as.numeric(estimate),
-                  year = as.numeric(year)) |>
     dplyr::slice(which.max(estimate)) |>
     dplyr::select(estimate) |>
     as.numeric() |>
@@ -520,8 +504,6 @@ write_captions <- function(dat, # converted model output object
                 is.na(growth_pattern) | length(unique(growth_pattern)) <= 1,
                 !year %in% year_exclusions
   ) |> # SS3 and BAM target module names
-    dplyr::mutate(estimate = as.numeric(estimate),
-                  year = as.numeric(year)) |>
     dplyr::slice(which.min(estimate)) |>
     dplyr::select(estimate) |>
     as.numeric() |>
@@ -538,8 +520,6 @@ write_captions <- function(dat, # converted model output object
                   is.na(growth_pattern) | length(unique(growth_pattern)) <= 1,
                   !year %in% year_exclusions
     ) |> # SS3 and BAM target module names
-    dplyr::mutate(estimate = as.numeric(estimate),
-                  year = as.numeric(year)) |>
     dplyr::slice(which.max(estimate)) |>
     dplyr::select(estimate) |>
     as.numeric() |>
@@ -561,8 +541,6 @@ write_captions <- function(dat, # converted model output object
                   is.na(growth_pattern) | length(unique(growth_pattern)) <= 1,
                   !year %in% year_exclusions
     ) |> # SS3 and BAM target module names
-    dplyr::mutate(estimate = as.numeric(estimate),
-                  year = as.numeric(year)) |>
     dplyr::slice(which.min(year)) |>
     dplyr::select(year) |>
     as.numeric()
@@ -593,8 +571,6 @@ write_captions <- function(dat, # converted model output object
                   is.na(growth_pattern) | length(unique(growth_pattern)) <= 1,
                   !year %in% year_exclusions
     ) |> # SS3 and BAM target module names
-    dplyr::mutate(estimate = as.numeric(estimate),
-                  year = as.numeric(year)) |>
     dplyr::slice(which.min(year)) |>
     dplyr::select(year) |>
     as.numeric()
@@ -613,8 +589,6 @@ write_captions <- function(dat, # converted model output object
                   is.na(growth_pattern) | length(unique(growth_pattern)) <= 1,
                   !year %in% year_exclusions
     ) |> # SS3 and BAM target module names
-    dplyr::mutate(estimate = as.numeric(estimate),
-                  year = as.numeric(year)) |>
     dplyr::slice(which.min(estimate)) |>
     dplyr::select(estimate) |>
     as.numeric() |>
@@ -645,9 +619,6 @@ write_captions <- function(dat, # converted model output object
     label == "spawning_biomass",
     module_name %in% c("DERIVED_QUANTITIES", "t.series")
   ) |>
-    dplyr::mutate(
-      estimate = as.numeric(estimate),
-      year = as.numeric(year)) |>
     dplyr::slice(which.min(year)) |>
     dplyr::select(year) |>
     as.numeric() |>
@@ -665,9 +636,6 @@ write_captions <- function(dat, # converted model output object
       label == "spawning_biomass",
       module_name %in% c("DERIVED_QUANTITIES", "t.series")
     ) |>
-    dplyr::mutate(
-      estimate = as.numeric(estimate),
-      year = as.numeric(year)) |>
     dplyr::slice(which.min(estimate)) |>
     dplyr::select(estimate) |>
     as.numeric() |>
@@ -679,9 +647,6 @@ write_captions <- function(dat, # converted model output object
       label == "spawning_biomass",
       module_name %in% c("DERIVED_QUANTITIES", "t.series")
     ) |>
-    dplyr::mutate(
-      estimate = as.numeric(estimate),
-      year = as.numeric(year)) |>
     dplyr::slice(which.max(estimate)) |>
     dplyr::select(estimate) |>
     as.numeric() |>
@@ -732,35 +697,67 @@ write_captions <- function(dat, # converted model output object
     as.numeric() |>
     round(digits = 2)
 
-  #TODO: LEFT OFF HERE (identifying how to extract quantities with Sam, Steve)
+
   ## pop_naa_baa (population numbers at age and population biomass at age)
-  # pop.naa.baa.start.year <- # start year of spr plot
-  # pop.naa.baa.end.year <- # end year of spr plot
-  # pop.naa.baa.fish.min <- # minimum number of fish
-  # pop.naa.baa.fish.max <- # maximum number of fish
+  # start year of pop_naa_baa plot
+  pop.naa.baa.start.year <- dat |>
+    dplyr::filter(label == "abundance") |>
+    dplyr::slice(which.min(year)) |>
+    dplyr::select(year) |>
+    as.numeric()
+
+  # end year of pop_naa_baa plot
+  pop.naa.baa.end.year <- landings.end.year
+
+  # minimum number of fish
+  pop.naa.baa.fish.min <- dat |>
+    dplyr::filter(label == "abundance") |>
+    dplyr::group_by(year) |>
+    dplyr::summarize(val = max(estimate)) |>
+    dplyr::slice(which.min(val)) |>
+    dplyr::select(val) |>
+    as.numeric() |>
+    round(digits = 2)
+
+  # maximum number of fish
+  pop.naa.baa.fish.max <- dat |>
+    dplyr::filter(label == "abundance") |>
+    dplyr::group_by(year) |>
+    dplyr::summarize(val = max(estimate)) |>
+    dplyr::slice(which.max(val)) |>
+    dplyr::select(val) |>
+    as.numeric() |>
+    round(digits = 2)
+
 
   ## proj_catch (projected catch)
-  # proj.catch.units <- # projected catch units (plural)
-  # proj.catch.start.year <- # start year of projected catch plot
-  # proj.catch.end.year <- # end year of projected catch plot
-  # proj.catch.min <- # minimum projected catch
-  # proj.catch.max <- # maximum projected catch
+  # projected catch units (plural)
+  # proj.catch.units <- # probably mt, but wait until figure coded
+  # --then add into add_more_key_quants()
 
-  ## proj_biomass (projected biomass)
-  # proj.biomass.units <- # projected biomass units (plural)
-  # proj.biomass.start.year <- # start year of projected biomass plot
-  # proj.biomass.end.year <- # end year of projected biomass plot
-  # proj.biomass.min <- # minimum projected biomass
-  # proj.biomass.max <- # maximum projected biomass
-  # proj.biomass.ref.pt <- # projected biomass reference point
-  # proj.biomass.ref.pt.units <- # projected biomass reference point units
+  # start year of projected catch plot
+  proj.catch.start.year <- landings.end.year + 1
 
-  ## Other
-  # tot.catch <-
-  # M <-
-  # steep <-
-  # SBmsy <-
-  # fSB <-
+  # end year of projected catch plot
+  proj.catch.end.year <- dat |>
+    dplyr::filter(label == "catch" & module_name == "DERIVED_QUANTITIES") |>
+    dplyr::slice(which.max(year)) |>
+    dplyr::select(year) |>
+    as.numeric()
+
+  # minimum projected catch
+  proj.catch.min <- dat |>
+    dplyr::filter(label == "catch" & module_name == "DERIVED_QUANTITIES") |>
+    dplyr::slice(which.min(estimate)) |>
+    dplyr::select(estimate) |>
+    as.numeric()
+
+  # maximum projected catch
+  proj.catch.max <- dat |>
+    dplyr::filter(label == "catch" & module_name == "DERIVED_QUANTITIES") |>
+    dplyr::slice(which.max(estimate)) |>
+    dplyr::select(estimate) |>
+    as.numeric()
 
   # TABLES-----
 
@@ -949,38 +946,21 @@ write_captions <- function(dat, # converted model output object
    ## spr (spawning potential ratio)
    'spr.min' = as.character(spr.min),
    'spr.max' = as.character(spr.max),
-   'spr.ref.pt' = as.character(spr.ref.pt)#,
+   'spr.ref.pt' = as.character(spr.ref.pt),
 
    # ## pop_naa_baa (population numbers at age and population biomass at age)
-   # 'pop.naa.baa.start.year' = as.character(pop.naa.baa.start.year),
-   # 'pop.naa.baa.end.year' = as.character(pop.naa.baa.end.year),
-   # 'pop.naa.baa.fish.min' = as.character(pop.naa.baa.fish.min),
-   # 'pop.naa.baa.fish.max' = as.character(pop.naa.baa.fish.max),
-   #
-   # ## proj_catch (projected catch)
+   'pop.naa.baa.start.year' = as.character(pop.naa.baa.start.year),
+   'pop.naa.baa.end.year' = as.character(pop.naa.baa.end.year),
+   'pop.naa.baa.fish.min' = as.character(pop.naa.baa.fish.min),
+   'pop.naa.baa.fish.max' = as.character(pop.naa.baa.fish.max),
+
+   ## proj_catch (projected catch)
    # 'proj.catch.units' = as.character(proj.catch.units),
-   # 'proj.catch.start.year' = as.character(proj.catch.start.year),
-   # 'proj.catch.end.year' = as.character(proj.catch.end.year),
-   # 'proj.catch.min' = as.character(proj.catch.min),
-   # 'proj.catch.max' = as.character(proj.catch.max),
-   #
-   # ## proj_biomass (projected biomass)
-   # 'proj.biomass.units' = as.character(proj.biomass.units),
-   # 'proj.biomass.start.year' = as.character(proj.biomass.start.year),
-   # 'proj.biomass.end.year' = as.character(proj.biomass.end.year),
-   # 'proj.biomass.min' = as.character(proj.biomass.min),
-   # 'proj.biomass.max' = as.character(proj.biomass.max),
-   # 'proj.biomass.ref.pt' = as.character(proj.biomass.ref.pt),
-   # 'proj.biomass.ref.pt.units' = as.character(proj.biomass.ref.pt.units),
-   #
-   # ## Other
-   # 'tot.catch' = as.character(tot.catch),
-   # 'M' = as.character(M),
-   # 'steep' = as.character(steep),
-   # 'SBmsy' = as.character(SBmsy),
-   # 'fSB' = as.character(fSB),
-   # 'sbtarg' = as.character(sbtarg),
-   #
+   'proj.catch.start.year' = as.character(proj.catch.start.year),
+   'proj.catch.end.year' = as.character(proj.catch.end.year),
+   'proj.catch.min' = as.character(proj.catch.min),
+   'proj.catch.max' = as.character(proj.catch.max)#,
+
    # # TABLES-----
    #
    # ## catch
@@ -994,6 +974,7 @@ write_captions <- function(dat, # converted model output object
    #
    # ## catchability
    # 'catchability.fleet' = as.character(catchability.fleet)
+
   )
 
   # take the values associated with the quantities and replace the df's

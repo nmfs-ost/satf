@@ -44,7 +44,9 @@ Remotes:
 Depends: 
     R (>= 2.10)
 Suggests: 
+    rmarkdown,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 Config/testthat/parallel: false
 Language: en-US
+VignetteBuilder: knitr

@@ -81,6 +81,45 @@ add_more_key_quants <- function(
     dplyr::filter(label == topic,
                   type == fig_or_table)
 
+
+  # calculate key quantities that rely on end_year for calculation
+  ## terminal fishing mortality
+  if (topic_cap_alt$label == "fishing.mortality") {
+
+    F.end.year <- dat |>
+      dplyr::filter(
+        c(label == 'fishing_mortality' &
+            year == end_year) |
+          c(label == 'terminal_fishing_mortality' & is.na(year))
+      ) |>
+      dplyr::pull(estimate) |>
+      as.numeric() |>
+      round(digits = 2)
+
+    # COMMENTING OUT THESE LINES because the current alt text/captions csv
+    # doesn't include Ftarg or F.Ftarg. If we alter them to include them,
+    # then uncomment these lines and add code that would substitute the key
+    # quantities into the df, like at the bottom of write_captions.
+    #
+    # # recalculate Ftarg for F.Ftarg, below
+    # Ftarg <- dat |>
+    #   dplyr::filter(grepl('f_target', label) |
+    #                   grepl('f_msy', label) |
+    #                   c(grepl('fishing_mortality_msy', label) &
+    #                       is.na(year))) |>
+    #   dplyr::pull(estimate) |>
+    #   as.numeric() |>
+    #   round(digits = 2)
+    #
+    # # Terminal year F respective to F target
+    # F.Ftarg <- F.end.year / Ftarg
+
+    if (!is.null(F.end.year)){
+      end_year <- as.character(F.end.year)
+    }
+  }
+
+
   # replace placeholders (e.g., if "end.year" is found in topic_alt, replace it with end_year)
   ## end_year-----
   if(!is.null(end_year)){

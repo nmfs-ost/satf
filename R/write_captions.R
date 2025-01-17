@@ -135,8 +135,15 @@ write_captions <- function(dat, # converted model output object
     dplyr::filter(
       label == stringr::str_to_lower("F_targ") |
         label == stringr::str_to_lower("F_proxy") |
-        label == stringr::str_to_lower("F_msy")
+        label == stringr::str_to_lower("F_msy") |
+        label == "F_target"
+        # label == "F40"
+        # label == "F30"
+        # label == "F50"
+        # label == "F_initial"
+        # label == "Fmsy"
     ) |>
+    dplyr::filter(module_name == "DERIVED_QUANTITIES" | module_name == "parms") |>
     dplyr::pull(estimate) |>
     as.numeric() |>
     round(digits = 2)
@@ -149,16 +156,7 @@ write_captions <- function(dat, # converted model output object
     as.numeric()
 
   # terminal fishing mortality
-  # TODO: Put this in utils function, since F.end.year needs end_year
-  # F.end.year <- dat |>
-  #   dplyr::filter(
-  #     c(label == 'fishing_mortality' &
-  #         year == end_year) |
-  #       c(label == 'terminal_fishing_mortality' & is.na(year))
-  #   ) |>
-  #   dplyr::pull(estimate) |>
-  #   as.numeric() |>
-  # round(digits = 2)
+  # F.end.year : added with add_more_key_quants
 
   # minimum F
   F.min <- dat |>
@@ -216,8 +214,7 @@ write_captions <- function(dat, # converted model output object
     round(digits = 2)
 
   # Terminal year F respective to F target
-  # TODO: Put this in utils function, since F.end.year needs end_year
-  # F.Ftarg <- F.end.year / Ftarg
+  # F.Ftarg : added with add_more_key_quants
 
 
   ## landings plot
@@ -809,11 +806,9 @@ write_captions <- function(dat, # converted model output object
     ## mortality (F) plot
    'F.ref.pt' = as.character(F.ref.pt),
    'F.start.year' = as.character(F.start.year),
-   # 'F.end.year' = as.character(F.end.year),
    'F.min' = as.character(F.min),
    'F.max' = as.character(F.max),
    'Ftarg' = as.character(Ftarg),
-   # 'F.Ftarg' = as.character(F.Ftarg),
 
     ## landings plot
    'landings.start.year' = as.character(landings.start.year),

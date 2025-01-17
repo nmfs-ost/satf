@@ -22,4 +22,16 @@ This manual is a work in progress. In the meantime, please read the function doc
 
 ## Updating alternative text and captions
 
+When a plotting function (e.g., `plot_biomass()`, `table_indices()`, `exp_all_figs_tables()`) is run, placeholders within the plot's associated alternative text and captions are replaced with key quantities (see the [`asar` package's Accessibility vignette](https://nmfs-ost.github.io/asar/articles/accessibility_guide.html) and/or the [`satf::write_captions()` function](https://github.com/nmfs-ost/satf/blob/master/R/write_captions.R) for more details). As stated in the Accessibility vignette, *you should always check that these alternative texts and captions have been assembled correctly.*
 
+There are multiple reasons why you may want to edit these. For instance, maybe you entered an incorrect value for the units when running `plot_biomass()`. Maybe you need to add some extra information to the alternative text accurately describe the plot. In any case, **here's what to do if you want to alter the alternative text and/or captions in `satf`**, depending on which plotting function you're using:
+
+### `exp_all_figs_tables()`
+
+1.  Delete the captions_alt_text.csv file
+
+2.  Rerun `exp_all_figs_tables()` with the correct arguments
+
+### individual fxns
+
+-edit the rda directly (easier if editing, for instance, units instead of an extracted key quantity) -replace the fxn's existing row in the caps_alt_text.csv with the analogous row from the alt text/csv template, then rerun the plotting fxn so that the KQs can be replaced correctly

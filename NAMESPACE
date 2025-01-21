@@ -2,6 +2,8 @@
 
 export(add_theme)
 export(exp_all_figs_tables)
+export(export_rda)
+export(extract_caps_alttext)
 export(plot_biomass)
 export(plot_indices)
 export(plot_landings)

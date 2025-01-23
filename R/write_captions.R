@@ -263,8 +263,13 @@ write_captions <- function(dat, # converted model output object
       # t.series is associated with a conversion from BAM output and CATCH with SS3 converted output
       !is.na(fleet)
     ) |>
-    dplyr::slice(which.max(estimate)) |>
-    dplyr::select(estimate) |>
+    dplyr::group_by(fleet, year) |>
+    dplyr::summarise(max_est = max(estimate)) |>
+    dplyr::filter(!is.na(max_est)) |>
+    dplyr::group_by(year) |>
+    dplyr::summarise(max_est_yr = sum(max_est)) |>
+    dplyr::slice(which.max(max_est_yr)) |>
+    dplyr::select(max_est_yr) |>
     as.numeric() |>
     round(digits = 2)
 

@@ -102,8 +102,15 @@ write_captions <- function(dat, # converted model output object
 
   # R0
   R0 <- dat |>
-    dplyr::filter(grepl('R0', label) | grepl('recruitment_virgin', label)) |>
+    dplyr::filter(
+      # pull from BAM
+      grepl('^recruitment$', label) & module_name == "parms" |
+         grepl('^R0', label) |
+      # pull from SS3
+        grepl('recruitment_virgin', label)
+                   ) |>
     dplyr::pull(estimate) |>
+    unique() |>
     as.numeric() |>
     round(digits = 2)
 
@@ -383,28 +390,28 @@ write_captions <- function(dat, # converted model output object
 
   ## NAA (numbers at age)
   # start year of NAA plot
-  bubble.start.year.min <- dat |>
+  pop.naa.start.year.min <- dat |>
     dplyr::filter(label == "abundance" & !is.na(year)) |>
     dplyr::slice(which.min(year)) |>
     dplyr::select(year) |>
     as.numeric()
 
   # end year of NAA plot
-  bubble.end.year.max <- dat |>
+  pop.naa.end.year.max <- dat |>
   dplyr::filter(label == "abundance" & !is.na(year)) |>
     dplyr::slice(which.max(year)) |>
     dplyr::select(year) |>
     as.numeric()
 
   # minimum age
-  bubble.age.min <- dat |>
+  pop.naa.age.min <- dat |>
     dplyr::filter(label == "abundance" & !is.na(year)) |>
     dplyr::slice(which.min(age)) |>
     dplyr::select(age) |>
     as.numeric()
 
   # maximum age
-  bubble.age.max <- dat |>
+  pop.naa.age.max <- dat |>
     dplyr::filter(label == "abundance" & !is.na(year)) |>
     dplyr::slice(which.max(age)) |>
     dplyr::select(age) |>
@@ -677,7 +684,9 @@ write_captions <- function(dat, # converted model output object
   # minimum spr
   spr.min <- dat |>
     dplyr::filter(c(grepl('spr', label) |
-                      label == "spr") & !is.na(year) & !is.na(estimate)) |>
+                      label == "spr") &
+                    !is.na(year) &
+                    !is.na(estimate)) |>
     dplyr::slice(which.min(estimate)) |>
     dplyr::select(estimate) |>
     as.numeric() |>
@@ -696,38 +705,35 @@ write_captions <- function(dat, # converted model output object
   spr.ref.pt <- dat |>
   dplyr::filter(label == "spr_msy") |>
     dplyr::select(estimate) |>
-    as.numeric() |>
+    as.numeric()# |>
     round(digits = 2)
 
 
-  ## pop_naa_baa (population numbers at age and population biomass at age)
-  # start year of pop_naa_baa plot
-  pop.naa.baa.start.year <- dat |>
+  ## pop.baa (population biomass at age)
+  # start year of pop.baa plot
+  pop.baa.start.year <- dat |>
     dplyr::filter(label == "abundance") |>
     dplyr::slice(which.min(year)) |>
     dplyr::select(year) |>
     as.numeric()
 
-  # end year of pop_naa_baa plot
-  pop.naa.baa.end.year <- landings.end.year
+  # end year of pop.baa plot
+  pop.baa.end.year <- landings.end.year
 
   # minimum number of fish
-  pop.naa.baa.fish.min <- dat |>
-    dplyr::filter(label == "abundance") |>
-    dplyr::group_by(year) |>
-    dplyr::summarize(val = max(estimate)) |>
-    dplyr::slice(which.min(val)) |>
-    dplyr::select(val) |>
+  pop.baa.fish.min <- dat |>
+    dplyr::filter(label == "abundance" & !is.na(year)) |>
+    dplyr::slice(which.min(estimate)) |>
+    dplyr::select(estimate) |>
     as.numeric() |>
     round(digits = 2)
 
+
   # maximum number of fish
-  pop.naa.baa.fish.max <- dat |>
-    dplyr::filter(label == "abundance") |>
-    dplyr::group_by(year) |>
-    dplyr::summarize(val = max(estimate)) |>
-    dplyr::slice(which.max(val)) |>
-    dplyr::select(val) |>
+  pop.baa.fish.max <- dat |>
+    dplyr::filter(label == "abundance" & !is.na(year)) |>
+    dplyr::slice(which.max(estimate)) |>
+    dplyr::select(estimate) |>
     as.numeric() |>
     round(digits = 2)
 
@@ -749,6 +755,7 @@ write_captions <- function(dat, # converted model output object
 
   # minimum projected catch
   proj.catch.min <- dat |>
+    # no BAM file has catch; will be NA
     dplyr::filter(label == "catch" & module_name == "DERIVED_QUANTITIES") |>
     dplyr::slice(which.min(estimate)) |>
     dplyr::select(estimate) |>
@@ -879,10 +886,10 @@ write_captions <- function(dat, # converted model output object
    # 'cpue.max' = as.character(cpue.max),
 
    ## NAA (numbers at age)
-   'bubble.start.year.min' = as.character(bubble.start.year.min),
-   'bubble.end.year.max' = as.character(bubble.end.year.max),
-   'bubble.age.min' = as.character(bubble.age.min),
-   'bubble.age.max' = as.character(bubble.age.max),
+   'pop.naa.start.year.min' = as.character(pop.naa.start.year.min),
+   'pop.naa.end.year.max' = as.character(pop.naa.end.year.max),
+   'pop.naa.age.min' = as.character(pop.naa.age.min),
+   'pop.naa.age.max' = as.character(pop.naa.age.max),
 
    ## mod_fit_catch (model fit to catch ts)
    # 'mod.fit.catch.start.year' = as.character(mod.fit.catch.start.year),
@@ -948,11 +955,11 @@ write_captions <- function(dat, # converted model output object
    'spr.max' = as.character(spr.max),
    'spr.ref.pt' = as.character(spr.ref.pt),
 
-   # ## pop_naa_baa (population numbers at age and population biomass at age)
-   'pop.naa.baa.start.year' = as.character(pop.naa.baa.start.year),
-   'pop.naa.baa.end.year' = as.character(pop.naa.baa.end.year),
-   'pop.naa.baa.fish.min' = as.character(pop.naa.baa.fish.min),
-   'pop.naa.baa.fish.max' = as.character(pop.naa.baa.fish.max),
+   # ## pop.baa (population biomass at age)
+   'pop.baa.start.year' = as.character(pop.baa.start.year),
+   'pop.baa.end.year' = as.character(pop.baa.end.year),
+   'pop.baa.fish.min' = as.character(pop.baa.fish.min),
+   'pop.baa.fish.max' = as.character(pop.baa.fish.max),
 
    ## proj_catch (projected catch)
    # 'proj.catch.units' = as.character(proj.catch.units),

@@ -100,60 +100,63 @@ write_captions <- function(dat, # converted model output object
     as.numeric() |>
     round(digits = 2)
 
+  # TODO: uncomment and recode once we get clarity about how to extract this value properly
   # R0
-  R0 <- dat |>
-    dplyr::filter(
-      # pull from BAM
-      grepl('^recruitment$', label) & module_name == "parms" |
-         grepl('^R0', label) |
-      # pull from SS3
-        grepl('recruitment_virgin', label)
-                   ) |>
-    dplyr::pull(estimate) |>
-    unique() |>
-    as.numeric() |>
-    round(digits = 2)
+  # R0 <- dat |>
+  #   dplyr::filter(
+  #     # pull from BAM
+  #     grepl('^recruitment$', label) & module_name == "parms" |
+  #        grepl('^R0', label) |
+  #     # pull from SS3
+  #       grepl('recruitment_virgin', label)
+  #                  ) |>
+  #   dplyr::pull(estimate) |>
+  #   unique() |>
+  #   as.numeric() |>
+  #   round(digits = 2)
 
   # Bend <-
 
+  # TODO: uncomment and recode once we get clarity about how to extract this value properly
   # Target biomass
-  Btarg <- dat |>
-    dplyr::filter(c(grepl('biomass', label) & grepl('target', label) & estimate >1) | label == 'biomass_msy') |>
-    dplyr::pull(estimate) |>
-    as.numeric() |>
-    round(digits = 2)
+  # Btarg <- dat |>
+  #   dplyr::filter(c(grepl('biomass', label) & grepl('target', label) & estimate >1) | label == 'biomass_msy') |>
+  #   dplyr::pull(estimate) |>
+  #   as.numeric() |>
+  #   round(digits = 2)
 
   # Bmsy <-
 
 
+  # TODO: uncomment and recode once we get clarity about how to extract Btarg properly
   ## relative B
   # relative B min
-  rel.B.min <- (B.min / Btarg) |>
-    round(digits = 2)
+  # rel.B.min <- (B.min / Btarg) |>
+  #   round(digits = 2)
+  #
+  # # relative B max
+  # rel.B.max <- (B.max / Btarg) |>
+  #   round(digits = 2)
 
-  # relative B max
-  rel.B.max <- (B.max / Btarg) |>
-    round(digits = 2)
-
-
+  # TODO: uncomment and recode once we get clarity about how to extract this value properly
   ## mortality (F) plot
   # F reference point
-  F.ref.pt <- dat |>
-    dplyr::filter(
-      label == stringr::str_to_lower("F_targ") |
-        label == stringr::str_to_lower("F_proxy") |
-        label == stringr::str_to_lower("F_msy") |
-        label == "F_target"
-        # label == "F40"
-        # label == "F30"
-        # label == "F50"
-        # label == "F_initial"
-        # label == "Fmsy"
-    ) |>
-    dplyr::filter(module_name == "DERIVED_QUANTITIES" | module_name == "parms") |>
-    dplyr::pull(estimate) |>
-    as.numeric() |>
-    round(digits = 2)
+  # F.ref.pt <- dat |>
+  #   dplyr::filter(
+  #     label == stringr::str_to_lower("F_targ") |
+  #       label == stringr::str_to_lower("F_proxy") |
+  #       label == stringr::str_to_lower("F_msy") |
+  #       label == "F_target"
+  #       # label == "F40"
+  #       # label == "F30"
+  #       # label == "F50"
+  #       # label == "F_initial"
+  #       # label == "Fmsy"
+  #   ) |>
+  #   dplyr::filter(module_name == "DERIVED_QUANTITIES" | module_name == "parms") |>
+  #   dplyr::pull(estimate) |>
+  #   as.numeric() |>
+  #   round(digits = 2)
 
   # start year of F plot
   F.start.year <- dat |>
@@ -210,15 +213,15 @@ write_captions <- function(dat, # converted model output object
       round(digits = 2)
   }
 
-
+  # TODO: uncomment and recode once we get clarity about how to extract this value properly
   # fishing mortality at msy
-  Ftarg <- dat |>
-    dplyr::filter(grepl('f_target', label) |
-                    grepl('f_msy', label) |
-                    c(grepl('fishing_mortality_msy', label) & is.na(year))) |>
-    dplyr::pull(estimate) |>
-    as.numeric() |>
-    round(digits = 2)
+  # Ftarg <- dat |>
+  #   dplyr::filter(grepl('f_target', label) |
+  #                   grepl('f_msy', label) |
+  #                   c(grepl('fishing_mortality_msy', label) & is.na(year))) |>
+  #   dplyr::pull(estimate) |>
+  #   as.numeric() |>
+  #   round(digits = 2)
 
   # Terminal year F respective to F target
   # F.Ftarg : added with add_more_key_quants
@@ -557,15 +560,15 @@ write_captions <- function(dat, # converted model output object
   # end year of recruitment ts plot
   # recruitment.end.year : added with add_more_key_quants
 
-
+  # TODO: uncomment and recode once we get clarity about how to extract R0 properly
   ## relative recruitment
-  # minimum relative recruitment
-  rel.recruitment.min <- (sr.min / R0) |>
-    round(digits = 2)
-
-  # maximum relative recruitment
-  rel.recruitment.max <- (sr.max / R0) |>
-    round(digits = 2)
+  # # minimum relative recruitment
+  # rel.recruitment.min <- (sr.min / R0) |>
+  #   round(digits = 2)
+  #
+  # # maximum relative recruitment
+  # rel.recruitment.max <- (sr.max / R0) |>
+  #   round(digits = 2)
 
 
   ## recruitment deviations
@@ -664,20 +667,22 @@ write_captions <- function(dat, # converted model output object
   # ssb reference point
   # ssb.ref.pt : added with add_more_key_quants
 
-  ssbtarg <- dat |>
-    dplyr::filter(c(grepl('spawning_biomass', label) & grepl('msy$', label) & estimate >1) | label == 'spawning_biomass_msy$') |>
-    dplyr::pull(estimate) |>
-    as.numeric() |>
-    round(digits = 2)
+  # TODO: uncomment and recode once we get clarity about how to extract this value properly
+  # ssbtarg <- dat |>
+  #   dplyr::filter(c(grepl('spawning_biomass', label) & grepl('msy$', label) & estimate >1) | label == 'spawning_biomass_msy$') |>
+  #   dplyr::pull(estimate) |>
+  #   as.numeric() |>
+  #   round(digits = 2)
 
+  # TODO: uncomment and recode once we get clarity about how to extract ssbtarg properly
   ## relative ssb
   # relative ssb min
-  rel.ssb.min <- (ssb.min / ssbtarg) |>
-    round(digits = 2)
-
-  # relative ssb max
-  rel.ssb.max <- (ssb.max / ssbtarg) |>
-    round(digits = 2)
+  # rel.ssb.min <- (ssb.min / ssbtarg) |>
+  #   round(digits = 2)
+  #
+  # # relative ssb max
+  # rel.ssb.max <- (ssb.max / ssbtarg) |>
+  #   round(digits = 2)
 
 
   ## spr (spawning potential ratio)
@@ -701,12 +706,13 @@ write_captions <- function(dat, # converted model output object
     as.numeric() |>
     round(digits = 2)
 
+  # TODO: uncomment and recode once we get clarity about how to extract this value properly
   # spr reference point
-  spr.ref.pt <- dat |>
-  dplyr::filter(label == "spr_msy") |>
-    dplyr::select(estimate) |>
-    as.numeric()# |>
-    round(digits = 2)
+  # spr.ref.pt <- dat |>
+  # dplyr::filter(label == "spr_msy") |>
+  #   dplyr::select(estimate) |>
+  #   as.numeric()# |>
+  #   round(digits = 2)
 
 
   ## pop.baa (population biomass at age)
@@ -789,6 +795,8 @@ write_captions <- function(dat, # converted model output object
   # the real values, extracted above
 
 
+
+
   # make list with all placeholders
   # uncomment placeholders once uncommented, above
   patterns_replacements <- c(
@@ -803,24 +811,24 @@ write_captions <- function(dat, # converted model output object
 
    ## Relative biomass plot
    # NOTE: moving this above biomass so rel.B.min isn't changed to "rel." + B.min (etc.)
-   'rel.B.min' = as.character(rel.B.min),
-   'rel.B.max' = as.character(rel.B.max),
+   # 'rel.B.min' = as.character(rel.B.min),
+   # 'rel.B.max' = as.character(rel.B.max),
 
    ## Biomass plot
    'B.start.year' = as.character(B.start.year),
    'B.min' = as.character(B.min),
    'B.max' = as.character(B.max),
-   'R0' = as.character(R0),
+  # 'R0' = as.character(R0),
    # 'Bend' = as.character(Bend),
-   'Btarg' = as.character(Btarg),
+  # 'Btarg' = as.character(Btarg),
    # 'Bmsy' = as.character(Bmsy),
 
     ## mortality (F) plot
-   'F.ref.pt' = as.character(F.ref.pt),
+  # 'F.ref.pt' = as.character(F.ref.pt),
    'F.start.year' = as.character(F.start.year),
    'F.min' = as.character(F.min),
    'F.max' = as.character(F.max),
-   'Ftarg' = as.character(Ftarg),
+  # 'Ftarg' = as.character(Ftarg),
 
     ## landings plot
    'landings.start.year' = as.character(landings.start.year),
@@ -926,8 +934,8 @@ write_captions <- function(dat, # converted model output object
    # relative recruitment ts
    # NOTE: moving this above recruitment so rel.recruitment.min isn't changed
    # to "rel." + recruitment.min (etc.)
-   'rel.recruitment.min' = as.character(rel.recruitment.min),
-   'rel.recruitment.max' = as.character(rel.recruitment.max),
+  # 'rel.recruitment.min' = as.character(rel.recruitment.min),
+  # 'rel.recruitment.max' = as.character(rel.recruitment.max),
 
    ## recruitment ts
    'recruitment.start.year' = as.character(recruitment.start.year),
@@ -940,8 +948,8 @@ write_captions <- function(dat, # converted model output object
    # relative ssb
    # NOTE: moving this above recruitment so rel.ssb.min isn't changed to
    # "rel." + ssb.min), etc.
-   'rel.ssb.min' = as.character(rel.ssb.min),
-   'rel.ssb.max' = as.character(rel.ssb.max),
+ #  'rel.ssb.min' = as.character(rel.ssb.min),
+ #  'rel.ssb.max' = as.character(rel.ssb.max),
 
    ## spawning.biomass (ssb)
    'ssb.start.year' = as.character(ssb.start.year),
@@ -953,7 +961,7 @@ write_captions <- function(dat, # converted model output object
    ## spr (spawning potential ratio)
    'spr.min' = as.character(spr.min),
    'spr.max' = as.character(spr.max),
-   'spr.ref.pt' = as.character(spr.ref.pt),
+ #  'spr.ref.pt' = as.character(spr.ref.pt),
 
    # ## pop.baa (population biomass at age)
    'pop.baa.start.year' = as.character(pop.baa.start.year),
@@ -983,6 +991,10 @@ write_captions <- function(dat, # converted model output object
    # 'catchability.fleet' = as.character(catchability.fleet)
 
   )
+
+  # If a value in patterns_replacements = NA, then make it "NA"
+  # to avoid errors
+  patterns_replacements <- tidyr::replace_na(patterns_replacements, "NA")
 
   # take the values associated with the quantities and replace the df's
   # placeholders with them. For example, if ssb_min = 10, this will replace

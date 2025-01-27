@@ -83,6 +83,17 @@ plot_spawn_recruitment <- function(
                            year = end_year)
     }
 
+    # add more key quantities included as arguments in this fxn
+    add_more_key_quants(
+      topic = topic_label,
+      fig_or_table = fig_or_table,
+      dir = rda_dir,
+      end_year = end_year,
+      sr_ssb_units = spawning_biomass_label,
+      sr_recruitment_units = recruitment_label,
+      units = NULL
+    )
+
     # extract this plot's caption and alt text
     caps_alttext <- extract_caps_alttext(topic_label = topic_label,
                                          fig_or_table = fig_or_table,

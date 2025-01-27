@@ -30,6 +30,7 @@ test_that("rda file made when indicated",{
   # export rda
   plot_landings(dat,
                 make_rda = TRUE,
+                unit_label = "metric tons",
                 rda_dir = getwd())
 
   # expect that both rda_files dir and the landings_figure.rda file exist

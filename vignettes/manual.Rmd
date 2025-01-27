@@ -32,7 +32,7 @@ As stated in the [Accessibility vignette's "Your to-do list" section](https://nm
 
 Here's how to alter the alternative text and/or captions in `satf`, depending on what you wish to change:
 
-### I want to add or remove text
+### Add or Remove Text
 
 Directly edit the rda's caption or alt_text objects. To do so, assign a new value to the text you wish to change. For example:
 

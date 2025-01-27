@@ -39,6 +39,8 @@ Imports:
     tidyr,
     tidyselect,
     utils
+Suggests:
+    usethis
 Remotes:
     nmfs-fish-tools/nmfspalette
 Depends: 

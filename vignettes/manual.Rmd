@@ -52,7 +52,7 @@ Directly edit the rda's caption or alt_text objects. To do so, assign a new valu
 
 We recommend saving a version of your altered text elsewhere to ensure you can reuse it if it were to be overwritten.
 
-### I want to change/update the arguments or key quantities
+### Change/Update Arguments or Key Quantities
 
 #### `exp_all_figs_tables()`
 

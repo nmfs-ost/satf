@@ -284,28 +284,48 @@ write_captions <- function(dat, # converted model output object
     round(digits = 2)
 
   ## natural mortality (M)- bam examples have label as natural_mortality
-  ## but other formats don't (in input) (use if statement)
+  ## but other formats don't (in input)
   # minimum age of M
-  # M.age.min <- dat |>
-  #   dplyr::select(age) |>
-  #   dplyr::filter(!is.na(age)) |>
-  #   dplyr::slice(which.min(age)) |>
-  #   as.numeric()
-  #
-  # # maximum age of M
-  # M.age.max <- dat |>
-  # dplyr::select(age) |>
-  #   dplyr::filter(!is.na(age)) |>
-  #   dplyr::slice(which.max(age)) |>
-  #   as.numeric()
+  if ("natural_mortality" %in% dat$label){
+    M.age.min <- dat |>
+      dplyr::filter(label == "natural_mortality") |>
+      dplyr::select(age) |>
+      dplyr::filter(!is.na(age)) |>
+      dplyr::slice(which.min(age)) |>
+      as.numeric()
+  } else {
+    M.age.min <- dat |>
+    #  dplyr::filter(label == "natural_mortality") |>
+      dplyr::select(age) |>
+      dplyr::filter(!is.na(age)) |>
+      dplyr::slice(which.min(age)) |>
+      as.numeric()
+  }
 
-  # minimum M rate
+  # maximum age of M
+  if ("natural_mortality" %in% dat$label){
+    M.age.max <- dat |>
+      dplyr::filter(label == "natural_mortality") |>
+      dplyr::select(age) |>
+      dplyr::filter(!is.na(age)) |>
+      dplyr::slice(which.max(age)) |>
+      as.numeric()
+  } else {
+    M.age.max <- dat |>
+      #  dplyr::filter(label == "natural_mortality") |>
+      dplyr::select(age) |>
+      dplyr::filter(!is.na(age)) |>
+      dplyr::slice(which.max(age)) |>
+      as.numeric()
+  }
+
+  # minimum M rate- don't code quantities yet (see how it's coded in future fig)
   # M.rate.min <- dat |>
   #   dplyr::filter(
   #     grepl("natural_mortality", label)) |>
   # -label = natural_mortality (min); est in est col
 
-  # maximum M rate
+  # maximum M rate- don't code quantities yet (see how it's coded in future fig)
   # M.rate.max <-
   # -label = natural_mortality (min); est in est col
 
@@ -837,8 +857,8 @@ write_captions <- function(dat, # converted model output object
    'landings.max' = as.character(landings.max),
 
    ## natural mortality (M)
-   # 'M.age.min' = as.character(M.age.min),
-   # 'M.age.max' = as.character(M.age.max),
+   'M.age.min' = as.character(M.age.min),
+   'M.age.max' = as.character(M.age.max),
    # 'M.rate.min' = as.character(M.rate.min),
    # 'M.rate.max' = as.character(M.rate.max),
 

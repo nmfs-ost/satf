@@ -11,7 +11,8 @@ add_more_key_quants <- function(
     units = NULL,
     sr_ssb_units = NULL,
     sr_recruitment_units = NULL,
-    ref_pt = NULL){
+    ref_pt = NULL,
+    scaling = NULL){
 
   # import csv
   caps_alt_df <- read.csv(fs::path(getwd(), "captions_alt_text.csv"))
@@ -65,6 +66,124 @@ add_more_key_quants <- function(
   }
 
 
+  # calculate key quantities that rely on scaling for calculation
+  ## biomass
+  if (topic_cap_alt$label == "biomass") {
+
+    # minimum biomass
+    B.min <- dat |>
+      dplyr::filter(label == "biomass",
+                    module_name == "TIME_SERIES" | module_name == "t.series", # SS3 and BAM target module names
+                    is.na(fleet),
+                    is.na(age)) |>
+      dplyr::slice(which.min(estimate)) |>
+      dplyr::select(estimate) |>
+      as.numeric() |>
+      round(digits = 2)
+
+    # maximum biomass
+    B.max <- dat |>
+      dplyr::filter(label == "biomass",
+                    module_name == "TIME_SERIES" | module_name == "t.series", # SS3 and BAM target module names
+                    is.na(fleet),
+                    is.na(age)) |>
+      dplyr::slice(which.max(estimate)) |>
+      dplyr::select(estimate) |>
+      as.numeric() |>
+      round(digits = 2)
+
+    if (!is.null(scaling)){
+      B.min <- B.min / scaling
+      B.max <- B.max / scaling
+    }
+    # TODO: add these into csv
+  }
+
+  ## spawning biomass
+  if (topic_cap_alt$label == "spawning.biomass") {
+
+    # minimum ssb
+    sr.ssb.min <- dat |>
+      dplyr::filter(label == "spawning_biomass",
+                    module_name == "TIME_SERIES" | module_name == "t.series",
+                    !is.na(year),
+                    is.na(fleet) | length(unique(fleet)) <= 1,
+                    is.na(sex) | length(unique(sex)) <= 1,
+                    is.na(area) | length(unique(area)) <= 1,
+                    is.na(growth_pattern) | length(unique(growth_pattern)) <= 1,
+                    !year %in% year_exclusions
+      ) |> # SS3 and BAM target module names
+      dplyr::slice(which.min(estimate)) |>
+      dplyr::select(estimate) |>
+      as.numeric() |>
+      round(digits = 2)
+
+    # maximum ssb
+    sr.ssb.max <- dat |>
+      dplyr::filter(label == "spawning_biomass",
+                    module_name == "TIME_SERIES" | module_name == "t.series",
+                    !is.na(year),
+                    is.na(fleet) | length(unique(fleet)) <= 1,
+                    is.na(sex) | length(unique(sex)) <= 1,
+                    is.na(area) | length(unique(area)) <= 1,
+                    is.na(growth_pattern) | length(unique(growth_pattern)) <= 1,
+                    !year %in% year_exclusions
+      ) |> # SS3 and BAM target module names
+      dplyr::slice(which.max(estimate)) |>
+      dplyr::select(estimate) |>
+      as.numeric() |>
+      round(digits = 2)
+
+    if (!is.null(scaling)){
+      sr.ssb.min <- sr.ssb.min / scaling
+      sr.ssb.max <- sr.ssb.max / scaling
+    }
+    # TODO: add these into csv
+  }
+
+  ## recruitment
+  if (topic_cap_alt$label == "recruitment") {
+
+    # minimum recruitment
+    sr.min <- dat |>
+      dplyr::filter(label == "recruitment",
+                    module_name == "TIME_SERIES" | module_name == "t.series",
+                    !is.na(year),
+                    is.na(fleet) | length(unique(fleet)) <= 1,
+                    is.na(sex) | length(unique(sex)) <= 1,
+                    is.na(area) | length(unique(area)) <= 1,
+                    is.na(growth_pattern) | length(unique(growth_pattern)) <= 1,
+                    !year %in% year_exclusions
+      ) |> # SS3 and BAM target module names
+      dplyr::slice(which.min(estimate)) |>
+      dplyr::select(estimate) |>
+      as.numeric() |>
+      round(digits = 2)
+
+    # maximum recruitment
+    sr.max <- dat |>
+      dplyr::filter(label == "recruitment",
+                    module_name == "TIME_SERIES" | module_name == "t.series",
+                    !is.na(year),
+                    is.na(fleet) | length(unique(fleet)) <= 1,
+                    is.na(sex) | length(unique(sex)) <= 1,
+                    is.na(area) | length(unique(area)) <= 1,
+                    is.na(growth_pattern) | length(unique(growth_pattern)) <= 1,
+                    !year %in% year_exclusions
+      ) |> # SS3 and BAM target module names
+      dplyr::slice(which.max(estimate)) |>
+      dplyr::select(estimate) |>
+      as.numeric() |>
+      round(digits = 2)
+
+    if (!is.null(scaling)){
+      sr.min <- sr.min / scaling
+      sr.max <- sr.max / scaling
+    }
+    # TODO: add these into csv
+  }
+
+
   # replace placeholders (e.g., if "end.year" is found in topic_alt, replace it with end_year)
   ## end_year-----
   if(!is.null(end_year)){
@@ -82,6 +201,31 @@ add_more_key_quants <- function(
                                                       end_year))
   }
   ## units-----
+
+  if (is.null(scaling)){
+    scale_label = FALSE
+  } else {
+    scale_label = TRUE
+    magnitude <- floor(log10(scaling))
+    if (magnitude == 0){
+      units <- units
+    } else if (magnitude > 0 & magnitude < 10) {
+      scale_unit <- c("tens of ",
+                      "hundreds of ",
+                      "thousands of",
+                      "tens of thousands of ",
+                      "hundreds of thousands of ",
+                      "millions of ",
+                      "tens of millions of ",
+                      "hundreds of millions of ",
+                      "billions of ")
+      unit_mag <- paste(scale_unit[magnitude])
+    } else {
+      stop("Scaling out of bounds. Please choose a value ranging from 1-1000000000 (one billion) in orders of magnitude (e.g., 1, 10, 100, 1000, etc.)")
+    }
+  }
+
+
   if(!is.null(units)){
   ### caption
   ### this regex preserves the closing ) after the units
@@ -128,14 +272,18 @@ add_more_key_quants <- function(
   topic_cap_alt <- topic_cap_alt |>
     dplyr::mutate(alt_text = stringr::str_replace_all(alt_text,
                                                       stringr::regex("(\\S*units\\S*)(?=\\s?,)"),
-                                                      as.character(units)))
+                                                      ifelse(scale_label,
+                                                             paste0(unit_mag, as.character(units)),
+                                                             as.character(units))))
 
   ### this regex replaces the units if it's not found with the previous command
   ### (i.e., there's no comma adjacent to the units variable)
   topic_cap_alt <- topic_cap_alt |>
     dplyr::mutate(alt_text = stringr::str_replace_all(alt_text,
                                                      stringr::regex("\\S*units\\S*"),
-                                                     as.character(units)))
+                                                     ifelse(scale_label,
+                                                            paste0(unit_mag, as.character(units)),
+                                                            as.character(units))))
 
   }
   ## reference points-----

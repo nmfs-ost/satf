@@ -131,7 +131,8 @@ plot_recruitment <- function(
       fig_or_table = fig_or_table,
       dir = rda_dir,
       end_year = end_year,
-      units = unit_label
+      units = unit_label,
+      scaling = scale_amount
     )
 
     # extract this plot's caption and alt text

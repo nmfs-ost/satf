@@ -186,7 +186,8 @@ plot_biomass <- function(
       dir = rda_dir,
       end_year = end_year,
       units = unit_label,
-      ref_pt = ref_point
+      ref_pt = ref_point,
+      scaling = scale_amount
     )
 
     # extract this plot's caption and alt text

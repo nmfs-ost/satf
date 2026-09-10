@@ -27,7 +27,7 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::pak, any::usethis, local::.
+          extra-packages: any::usethis, local::.
 
       - name: Update example data
         run: Rscript data-raw/DATASET.R

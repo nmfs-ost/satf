@@ -1,4 +1,13 @@
 ## code to prepare `DATASET` dataset goes here
+script_file <- grep("^--file=", commandArgs(trailingOnly = FALSE), value = TRUE)
+repo_root <- if (length(script_file) == 1) {
+  normalizePath(file.path(dirname(sub("^--file=", "", script_file)), ".."))
+} else {
+  normalizePath(".")
+}
+old_wd <- setwd(repo_root)
+on.exit(setwd(old_wd), add = TRUE)
+
 # Path to SS3 output file
 EX_REPORT_PATH <- file.path("inst", "extdata", "Report.sso")
 # Install stockplotr

@@ -11,7 +11,7 @@ repo_root <- if (length(script_file) == 1) {
 } else if (interactive() && file.exists("DESCRIPTION")) {
   normalizePath(".")
 } else {
-  stop("Run DATASET.R with Rscript, or source it after setting the working directory to the repository root.")
+  stop("Run DATASET.R with Rscript, or run/source it from the repository root.")
 }
 old_wd <- setwd(repo_root)
 on.exit(setwd(old_wd), add = TRUE)

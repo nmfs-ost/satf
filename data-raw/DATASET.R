@@ -18,6 +18,7 @@ script_path <- if (length(script_file) == 1) {
 
   sourced_paths[[length(sourced_paths)]]
 }
+script_path <- normalizePath(script_path)
 repo_root <- normalizePath(file.path(dirname(script_path), ".."))
 old_wd <- setwd(repo_root)
 on.exit(setwd(old_wd), add = TRUE)

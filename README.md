@@ -10,20 +10,11 @@
 
 ***Previously named 'satf'***
 
-The goal of {stockplotr} is to create a centralized package that contains all of
-the figures and tables for a stock assessment report used to inform management. 
-There are multiple current packages that perform a 
-similar function, but they are typically region and/or model dependent. Across 
-the US, there are multiple packages that create plots that are directly used in 
-a stock assessment report used for management. For example, an analyst that uses 
-Stock Synthesis (SS3) to assess a stock will utilize [`r4ss`](https://github.com/r4ss/r4ss/), 
-a package that reads outputs, plots key parameters, and more to increase 
-throughput and reduce tedious tasks for an analyst.
+The goal of {stockplotr} is to create a centralized package that contains all of the figures and tables for a stock assessment report used to inform management. 
+There are multiple current packages that perform a similar function, but they are typically region and/or model dependent. Across the US, there are multiple packages that create plots that are directly used in 
+a stock assessment report used for management. For example, an analyst that uses Stock Synthesis (SS3) to assess a stock will utilize [`r4ss`](https://github.com/r4ss/r4ss/), a package that reads outputs, plots key parameters, and more to increase throughput and reduce tedious tasks for an analyst.
 
-Please note that this package is still in development. As such, some functions 
-are unstable and might not perform as intended. We encourage anyone who tests 
-out this package to leave an [issue](https://github.com/nmfs-ost/stockplotr/issues)
-for any errors you find or for a feature request.
+Please note that this package is still in development. As such, some functions are unstable and might not perform as intended. We encourage anyone who tests out this package to leave an [issue](https://github.com/nmfs-ost/stockplotr/issues) for any errors you find or for a feature request.
 
 ## Installation
 
@@ -93,10 +84,7 @@ All contributors participating and contributing to the asar project are expected
 
 ## User Community
 
-We hope that this package will be able to be a one stop shop for plots regarding 
-interpreting assessment models and presenting the results to managers and relevant 
-stakeholders. We encourage interested users to contribute to this package using 
-their custom code when they find it may be useful across the nation.
+We hope that this package will be able to be a one stop shop for plots regarding interpreting assessment models and presenting the results to managers and relevant stakeholders. We encourage interested users to contribute to this package using their custom code when they find it may be useful across the nation.
 
 > [!NOTE]
 > Model diagnostic plots within the [{Fisheries Integrated Modelling System (FIMS)}] (https://github.com/NOAA-FIMS/FIMS) are in development.

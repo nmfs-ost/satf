@@ -10,8 +10,6 @@ on.exit(setwd(old_wd), add = TRUE)
 
 # Path to SS3 output file
 EX_REPORT_PATH <- file.path("inst", "extdata", "Report.sso")
-# Install stockplotr
-pak::local_install(".")
 # Convert output
 example_data <- stockplotr::convert_output(EX_REPORT_PATH)
 # Save object as rda into raw_data

@@ -1,7 +1,7 @@
 module_name,label,alt_label
 DERIVED_QUANTITIES,SSB_Virgin,spawning_biomass_unfished
 DERIVED_QUANTITIES,SSB_Initial,spawning_biomass_initial
-DERIVED_QUANTITIES,SSB,spawning_biomass
+DERIVED_QUANTITIES,SSB,spawning_biomass_testing_name
 DERIVED_QUANTITIES,Recr_Virgin,spawning_biomass
 DERIVED_QUANTITIES,Recr_Initial,recruitment_initial
 DERIVED_QUANTITIES,Recr,recruitment

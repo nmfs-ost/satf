@@ -194,7 +194,7 @@ t.series,F,fishing_mortality
 t.series,F.D,fishing_mortality_discards
 t.series,Fsum,total_fishing_mortality
 t.series,N,abundance
-t.series,recruits,recruitment
+t.series,recruits,recruitment_testing_name
 t.series,logR.dev,log_recruitment_deviations
 t.series,SSB.SSBmsy,sb_sb_msy
 t.series,SSB.msst,sb_msst
@@ -304,7 +304,7 @@ parms,l.f30.knum,landings_f30_numbers
 parms,l.f30.mt,landings_f30_weight
 parms,msy.mt,msy_weight
 parms,ssb.f30,spawning_biomass_f30
-projection,b.proj,biomass
+projection,b.proj,biomass_testing_name
 projection,f.proj,fishing_mortality
 projection,l.knum.proj,landings_numbers
 projection,l.my.proj,landings_weight
@@ -318,4 +318,3 @@ spr.brps,r.f30,recruitment_f30
 spr.brps,ssb.f30,spawning_biomass_f30
 spr.brps,ssbend.ssbf30,spawning_biomass_end_spawning_biomass_f30
 t.series,total.l.mt,landings_weight
-t.series,newnm,new_name

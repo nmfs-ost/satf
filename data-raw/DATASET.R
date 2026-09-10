@@ -8,7 +8,7 @@ repo_root <- if (length(script_file) == 1) {
 } else if (!is.na(file_index) && length(args) > file_index) {
   script_path <- normalizePath(args[[file_index + 1]])
   normalizePath(file.path(dirname(script_path), ".."))
-} else if (interactive() && file.exists("DESCRIPTION")) {
+} else if (file.exists("DESCRIPTION")) {
   normalizePath(".")
 } else {
   stop("Run DATASET.R with Rscript, or run/source it from the repository root.")

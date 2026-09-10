@@ -2,15 +2,17 @@
 args <- commandArgs(trailingOnly = FALSE)
 script_file <- grep("^--file=", args, value = TRUE)
 file_index <- match("--file", args)
-script_path <- if (length(script_file) == 1) {
-  sub("^--file=", "", script_file)
+repo_root <- if (length(script_file) == 1) {
+  script_path <- normalizePath(sub("^--file=", "", script_file))
+  normalizePath(file.path(dirname(script_path), ".."))
 } else if (!is.na(file_index) && length(args) > file_index) {
-  args[[file_index + 1]]
+  script_path <- normalizePath(args[[file_index + 1]])
+  normalizePath(file.path(dirname(script_path), ".."))
+} else if (interactive() && file.exists("DESCRIPTION")) {
+  normalizePath(".")
 } else {
-  stop("Run DATASET.R with Rscript so the repository root can be resolved.")
+  stop("Run DATASET.R with Rscript or source it from the repository root.")
 }
-script_path <- normalizePath(script_path)
-repo_root <- normalizePath(file.path(dirname(script_path), ".."))
 old_wd <- setwd(repo_root)
 on.exit(setwd(old_wd), add = TRUE)
 
